@@ -99,7 +99,7 @@ local function searchForNameTag(ast)
 end
 
 DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwargs)
-	if kwargTypes["unit"] == "string" then
+	if kwargTypes["unit"] then
 		t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
 		t[#t+1] = extraKwargs["unit"][1]
 		t[#t+1] = [=[] then return ("Bad unit: %q"):format(]=]
@@ -121,7 +121,7 @@ end)
 
 DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, extraKwargs, compiledKwargs)
 	if compiledKwargs["unit"] and kwargs["unit"] ~= extraKwargs then
-		if type(kwargs["unit"]) == "string" then
+		if type(kwargs["unit"]) ~= "table" then
 		 	if not IsLegitimateUnit[kwargs["unit"]] then
 				t[#t+1] = [=[do return ]=]
 				t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]

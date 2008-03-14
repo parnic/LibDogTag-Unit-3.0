@@ -111,6 +111,7 @@ assert_equal(DogTag:Evaluate("[MaxHP('fakeunit')]", "Unit"), 'Bad unit: "fakeuni
 assert_equal(DogTag:Evaluate("[MaxHP(unit='fakeunit')]", "Unit"), 'Bad unit: "fakeunit"')
 assert_equal(DogTag:Evaluate("[HP]", "Unit", { unit = 'fakeunit'}), 'Bad unit: "fakeunit"')
 assert_equal(DogTag:Evaluate("[MaxHP]", "Unit", { unit = 'fakeunit'}), 'Bad unit: "fakeunit"')
+assert_equal(DogTag:Evaluate("[HP]", "Unit", { unit = 50 }), 'Bad unit: "50"')
 
 MyUnit_data = "player"
 assert_equal(DogTag:Evaluate("[HP(MyUnit)]", "Unit"), 1500)
