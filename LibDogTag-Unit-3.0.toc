@@ -1,0 +1,11 @@
+## Interface: 20300
+## LoadOnDemand: 1
+## Title: LibDogTag-Unit-3.0
+## Notes: A library to provide unit-oriented tags to LibDogTag-3.0
+## Author: ckknight
+## eMail: ckknight@gmail.com
+## Version: 1.0
+## X-Category: Library
+## Dependencies: LibDogTag-3.0
+
+lib.xml
