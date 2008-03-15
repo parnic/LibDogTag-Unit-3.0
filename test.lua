@@ -14,9 +14,19 @@ local units = {
 		maxhp = 2000,
 		exists = true,
 	},
+	pet = {
+		hp = 0,
+		maxhp = 1000,
+		exists = true,
+	},
 	target = {
 		hp = 2500,
 		maxhp = 2500,
+		exists = true,
+	},
+	pettarget = {
+		hp = 50,
+		maxhp = 100,
 		exists = true,
 	},
 	focus = {
@@ -94,6 +104,13 @@ assert_equal(DogTag:Evaluate("[HP(unit='player')]", "Unit"), 1500)
 assert_equal(DogTag:Evaluate("[HP]", "Unit", { unit = 'player'}), 1500)
 assert_equal(DogTag:Evaluate("[MaxHP('player')]", "Unit"), 2000)
 assert_equal(DogTag:Evaluate("[MaxHP(unit='player')]", "Unit"), 2000)
+assert_equal(DogTag:Evaluate("[PercentHP(unit='player')]", "Unit"), 75)
+assert_equal(DogTag:Evaluate("[MissingHP(unit='player')]", "Unit"), 500)
+assert_equal(DogTag:Evaluate("[FractionalHP(unit='player')]", "Unit"), "1500/2000")
+assert_equal(DogTag:Evaluate("[HP(unit='pettarget', known=true)]", "Unit"), nil)
+assert_equal(DogTag:Evaluate("[MissingHP(unit='pettarget', known=true)]", "Unit"), nil)
+print(DogTag:CreateFunctionFromCode("[FractionalHP(unit='pettarget', known=true)]", "Unit"))
+assert_equal(DogTag:Evaluate("[FractionalHP(unit='pettarget', known=true)]", "Unit"), nil)
 
 assert_equal(DogTag:Evaluate("[HP('target')]", "Unit"), 2500)
 assert_equal(DogTag:Evaluate("[MaxHP('target')]", "Unit"), 2500)
@@ -126,6 +143,19 @@ assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), 'Bad unit: "fakeunit"')
 MyValue_data = 50
 assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), 'Bad unit: "50"')
 MyValue_data = nil
-assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), 'Bad unit: "nil"')
+assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), nil)
+
+local frame = CreateFrame("Frame")
+local fs = frame:CreateFontString(nil, "ARTWORK")
+DogTag:AddFontString(fs, frame, "[HP]", "Unit", { unit = "player" })
+assert_equal(fs:GetText(), 1500)
+units.player.hp = 1600
+FireEvent("UNIT_HEALTH", "player")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 1600)
+
+assert_equal(DogTag:Evaluate("[HPColor(unit='target')]", "Unit"), "|cff00ff00")
+assert_equal(DogTag:Evaluate("[HPColor(unit='pet')]", "Unit"), "|cffff0000")
+assert_equal(DogTag:Evaluate("[HPColor(unit='player')]", "Unit"), "|cff65ff00")
 
 print("LibDogTag-Unit-3.0: Tests succeeded")
