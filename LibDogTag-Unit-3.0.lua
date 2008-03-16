@@ -206,6 +206,7 @@ end)
 local fsToKwargs = DogTag.fsToKwargs
 local fsToNSList = DogTag.fsToNSList
 local fsNeedUpdate = DogTag.fsNeedUpdate
+local fsNeedQuickUpdate = DogTag.fsNeedQuickUpdate
 local unpackNamespaceList = DogTag.unpackNamespaceList
 
 local nsListHasUnit = setmetatable({}, { __index = function(self, key)
@@ -221,8 +222,9 @@ end })
 
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler(function(num, currentTime)
-	if inMouseover and not UnitExists("mouseover") then
-		inMouseover = false
+	local exists = not not UnitExists("mouseover")
+	if inMouseover ~= exists then
+		inMouseover = exists
 		DogTag:FireEvent("UnitChanged", "mouseover")
 	end
 	if currentTime >= nextUpdateWackyUnitsTime then
@@ -238,6 +240,21 @@ DogTag:AddTimerHandler(function(num, currentTime)
 		end
 	end
 end)
+
+DogTag:AddTimerHandler(function(num, currentTime)
+	local exists = not not UnitExists("mouseover")
+	if not exists then
+		for fs, nsList in pairs(fsToNSList) do
+			if nsListHasUnit[nsList] then
+				local kwargs = fsToKwargs[fs]
+				if kwargs and kwargs["unit"] == "mouseover" then
+					fsNeedUpdate[fs] = nil
+					fsNeedQuickUpdate[fs] = nil
+				end
+			end
+		end
+	end
+end, 9)
 
 DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, tag, tagData, kwargs, extraKwargs, compiledKwargs, events)
 	if compiledKwargs["unit"] then

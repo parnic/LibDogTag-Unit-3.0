@@ -3,6 +3,7 @@
 	<Script file="Localization\enUS.lua" />
 	<Script file="Localization\koKR.lua" />
 	<Script file="LibDogTag-Unit-3.0.lua" />
+	<Script file="Modules\Characteristics.lua" />
 	<Script file="Modules\Health.lua" />
 	<Script file="Cleanup.lua" />
 </Ui>

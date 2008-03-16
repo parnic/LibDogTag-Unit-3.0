@@ -63,7 +63,7 @@ DogTag:AddTag("Unit", "HP", {
 	end,
 	arg = {
 		'unit', 'string', '@req',
-		'known', 'string;nil', false,
+		'known', 'boolean', false,
 	},
 	ret = function(args)
 		if args.known.types == "nil" then
@@ -137,7 +137,7 @@ DogTag:AddTag("Unit", "MaxHP", {
 	end,
 	arg = {
 		'unit', 'string', '@req',
-		'known', 'string;nil', false,
+		'known', 'boolean', false,
 	},
 	ret = function(args)
 		if args.known.types == "nil" then
@@ -181,7 +181,7 @@ DogTag:AddTag("Unit", "MissingHP", {
 	alias = [=[MaxHP(unit=unit, known=known) - HP(unit=unit, known=known)]=],
 	arg = {
 		'unit', 'string', '@req',
-		'known', 'string;nil', false,
+		'known', 'boolean', false,
 	},
 	ret = "number",
 	doc = L["Return the missing health of unit, will use MobHealth if found"],
@@ -193,7 +193,7 @@ DogTag:AddTag("Unit", "FractionalHP", {
 	alias = [=[HP(unit=unit, known=known):Append("/") MaxHP(unit=unit, known=known)]=],
 	arg = {
 		'unit', 'string', '@req',
-		'known', 'string;nil', false,
+		'known', 'boolean', false,
 	},
 	ret = "string",
 	doc = L["Return the current health and maximum health of unit, will use MobHealth if found"],
@@ -202,11 +202,12 @@ DogTag:AddTag("Unit", "FractionalHP", {
 })
 
 DogTag:AddTag("Unit", "IsMaxHP", {
-	alias = ([=[PercentHP(unit=unit) = 100 ? %q]=]):format(L["True"]),
+	code = [=[return UnitHealth(${unit}) == UnitHealthMax(${unit})]=],
 	arg = {
 		'unit', 'string', '@req',
 	},
-	ret = 'number;nil',
+	ret = "boolean",
+	globals = "UnitHealth;UnitHealthMax",
 	doc = L["Return True if unit is at full health"],
 	example = ('[IsMaxHP] => %q; [IsMaxHP] => ""'):format(L["True"]),
 	category = L["Health"]
@@ -218,12 +219,12 @@ DogTag:AddTag("Unit", "HPColor", {
 	local r2, g2, b2
 	if perc <= 0.5 then
 		perc = perc * 2
-		r1, g1, b1 = 1, 0, 0
-		r2, g2, b2 = 1, 1, 0
+		r1, g1, b1 = unpack(colors.minHP)
+		r2, g2, b2 = unpack(colors.midHP)
 	else
 		perc = perc * 2 - 1
-		r1, g1, b1 = 1, 1, 0
-		r2, g2, b2 = 0, 1, 0
+		r1, g1, b1 = unpack(colors.midHP)
+		r2, g2, b2 = unpack(colors.maxHP)
 	end
 	local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
 	if ${value} then
