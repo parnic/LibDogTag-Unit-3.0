@@ -31,6 +31,9 @@ local units = {
 	},
 	focus = {
 		exists = false,
+	},
+	mouseover = {
+		exists = false,
 	}
 }
 
@@ -80,6 +83,16 @@ function UnitHealthMax(unit)
 	return units[unit] and units[unit].maxhp
 end
 
+function UnitIsUnit(alpha, bravo)
+	if not IsLegitimateUnit(alpha) then
+		error(("Not a legitimate unit: %q"):format(alpha), 2)
+	end
+	if not IsLegitimateUnit(bravo) then
+		error(("Not a legitimate unit: %q"):format(bravo), 2)
+	end
+	return units[alpha] and units[bravo] and units[alpha] == units[bravo]
+end
+
 MyUnit_data = "player"
 DogTag:AddTag("Unit", "MyUnit", {
 	code = [=[return _G.MyUnit_data]=],
@@ -109,7 +122,6 @@ assert_equal(DogTag:Evaluate("[MissingHP(unit='player')]", "Unit"), 500)
 assert_equal(DogTag:Evaluate("[FractionalHP(unit='player')]", "Unit"), "1500/2000")
 assert_equal(DogTag:Evaluate("[HP(unit='pettarget', known=true)]", "Unit"), nil)
 assert_equal(DogTag:Evaluate("[MissingHP(unit='pettarget', known=true)]", "Unit"), nil)
-print(DogTag:CreateFunctionFromCode("[FractionalHP(unit='pettarget', known=true)]", "Unit"))
 assert_equal(DogTag:Evaluate("[FractionalHP(unit='pettarget', known=true)]", "Unit"), nil)
 
 assert_equal(DogTag:Evaluate("[HP('target')]", "Unit"), 2500)
@@ -154,8 +166,99 @@ FireEvent("UNIT_HEALTH", "player")
 FireOnUpdate(0.05)
 assert_equal(fs:GetText(), 1600)
 
+DogTag:AddFontString(fs, frame, "[HP]", "Unit", { unit = "target" })
+assert_equal(fs:GetText(), 2500)
+units.target.hp = 2000
+units.target.maxhp = 2000
+FireEvent("PLAYER_TARGET_CHANGED", "player")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 2000)
+units.target.hp = 2500
+units.target.maxhp = 2500
+FireEvent("PLAYER_TARGET_CHANGED", "player")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 2500)
+
 assert_equal(DogTag:Evaluate("[HPColor(unit='target')]", "Unit"), "|cff00ff00")
 assert_equal(DogTag:Evaluate("[HPColor(unit='pet')]", "Unit"), "|cffff0000")
 assert_equal(DogTag:Evaluate("[HPColor(unit='player')]", "Unit"), "|cff65ff00")
+
+assert_equal(DogTag:Evaluate("['Hello':HPColor(unit='target')]", "Unit"), "|cff00ff00Hello|r")
+assert_equal(DogTag:Evaluate("['Hello':HPColor(unit='pet')]", "Unit"), "|cffff0000Hello|r")
+assert_equal(DogTag:Evaluate("['Hello':HPColor(unit='player')]", "Unit"), "|cff65ff00Hello|r")
+
+DogTag:AddFontString(fs, frame, "[HP]", "Unit", { unit = "mouseover" })
+assert_equal(fs:GetText(), nil)
+units.mouseover.hp = 100
+units.mouseover.maxhp = 100
+units.mouseover.exists = true
+FireEvent("UPDATE_MOUSEOVER_UNIT")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 100)
+units.mouseover.hp = 80
+FireEvent("UNIT_HEALTH", "mouseover")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 80)
+FireEvent("UNIT_HEALTH", "target")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 80)
+local old_target = units.target
+units.target = units.mouseover
+FireEvent("PLAYER_TARGET_CHANGED")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 80)
+units.mouseover.hp = 60
+FireEvent("UNIT_HEALTH", "target")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 60)
+units.target = old_target
+FireEvent("PLAYER_TARGET_CHANGED")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 60)
+units.mouseover.hp = 100
+FireEvent("UNIT_HEALTH", "target")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 60)
+FireEvent("UNIT_HEALTH", "mouseover")
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 100)
+
+DogTag:AddFontString(fs, frame, "[HP]", "Unit", { unit = "mouseovertarget" })
+assert_equal(fs:GetText(), nil)
+FireOnUpdate(0.25)
+assert_equal(fs:GetText(), nil)
+units.mouseovertarget = {
+	exists = true,
+	hp = 10,
+	maxhp = 15,
+}
+FireOnUpdate(0.2)
+assert_equal(fs:GetText(), nil)
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 10)
+units.mouseovertarget = nil
+FireOnUpdate(0.2)
+assert_equal(fs:GetText(), 10)
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), nil)
+
+DogTag:AddFontString(fs, frame, "[HP(unit='mouseovertarget')]", "Unit")
+assert_equal(fs:GetText(), nil)
+FireOnUpdate(0.25)
+assert_equal(fs:GetText(), nil)
+units.mouseovertarget = {
+	exists = true,
+	hp = 10,
+	maxhp = 15,
+}
+FireOnUpdate(0.2)
+assert_equal(fs:GetText(), nil)
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), 10)
+units.mouseovertarget = nil
+FireOnUpdate(0.2)
+assert_equal(fs:GetText(), 10)
+FireOnUpdate(0.05)
+assert_equal(fs:GetText(), nil)
 
 print("LibDogTag-Unit-3.0: Tests succeeded")

@@ -17,6 +17,34 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
+local frame
+if DogTag_Unit.oldLib and DogTag_Unit.oldLib.frame then
+	frame = DogTag_Unit.oldLib.frame
+	frame:UnregisterAllEvents()
+	frame:SetScript("OnEvent", nil)
+	frame:SetScript("OnUpdate", nil)
+	frame:Show()
+else
+	frame = CreateFrame("Frame")
+end
+DogTag_Unit.frame = frame
+frame:RegisterAllEvents()
+frame:SetScript("OnEvent", function(this, event, ...)
+	if (...) == "target" then
+	 	if UnitIsUnit("mouseover", "target") then
+			DogTag:FireEvent(event, "mouseover", select(2, ...))
+		end
+		DogTag:FireEvent(event, "playertarget", select(2, ...))
+	elseif (...) == "pet" then
+		DogTag:FireEvent(event, "playerpet", select(2, ...))
+	elseif type((...)) == "string" then
+	 	local num = (...):match("^partypet(%d)$")
+		if num then
+			DogTag:FireEvent(event, "party" .. num .. "pet", select(2, ...))
+		end
+	end
+end)
+
 local UnitToLocale = {player = L["Player"], target = L["Target"], pet = L["%s's pet"]:format(L["Player"]), focus = L["Focus-target"], mouseover = L["Mouse-over"]}
 setmetatable(UnitToLocale, {__index=function(self, unit)
 	if unit:find("pet$") then
@@ -52,13 +80,19 @@ DogTag.UnitToLocale = UnitToLocale
 
 local IsLegitimateUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true }
 DogTag.IsLegitimateUnit = IsLegitimateUnit
+local IsNormalUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true }
+DogTag.IsNormalUnit = IsNormalUnit
 for i = 1, 4 do
 	IsLegitimateUnit["party" .. i] = true
 	IsLegitimateUnit["partypet" .. i] = true
 	IsLegitimateUnit["party" .. i .. "pet"] = true
+	IsNormalUnit["party" .. i] = true
+	IsNormalUnit["partypet" .. i] = true
+	IsNormalUnit["party" .. i .. "pet"] = true
 end
 for i = 1, 40 do
 	IsLegitimateUnit["raid" .. i] = true
+	IsNormalUnit["raid" .. i] = true
 	IsLegitimateUnit["raidpet" .. i] = true
 	IsLegitimateUnit["raid" .. i .. "pet"] = true
 end
@@ -76,6 +110,7 @@ end, __call = function(self, key)
 	return self[key]
 end})
 
+
 local function searchForNameTag(ast)
 	if type(ast) ~= "table" then
 		return false
@@ -90,7 +125,7 @@ local function searchForNameTag(ast)
 	end
 	if ast.kwarg then
 		for k, v in pairs(ast.kwarg) do
-			if searchForNametag(v) then
+			if searchForNameTag(v) then
 				return true
 			end
 		end
@@ -137,6 +172,80 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 			t[#t+1] = compiledKwargs["unit"][1]	
 			t[#t+1] = [=[));]=]
 			t[#t+1] = [=[end;]=]
+		end
+	end
+end)
+
+DogTag:AddEventHandler("PLAYER_TARGET_CHANGED", function(event, ...)
+	DogTag:FireEvent("UnitChanged", "target")
+	DogTag:FireEvent("UnitChanged", "playertarget")
+end)
+
+DogTag:AddEventHandler("PLAYER_FOCUS_CHANGED", function(event, ...)
+	DogTag:FireEvent("UnitChanged", "focus")
+end)
+
+DogTag:AddEventHandler("PLAYER_PET_CHANGED", function(event, ...)
+	DogTag:FireEvent("UnitChanged", "pet")
+end)
+
+DogTag:AddEventHandler("UNIT_TARGET", function(event, unit)
+	DogTag:FireEvent("UnitChanged", unit .. "target")
+end)
+
+DogTag:AddEventHandler("UNIT_PET", function(event, unit)
+	DogTag:FireEvent("UnitChanged", unit .. "pet")
+end)
+
+local inMouseover = false
+DogTag:AddEventHandler("UPDATE_MOUSEOVER_UNIT", function(event, ...)
+	inMouseover = true
+	DogTag:FireEvent("UnitChanged", "mouseover")
+end)
+
+local fsToKwargs = DogTag.fsToKwargs
+local fsToNSList = DogTag.fsToNSList
+local fsNeedUpdate = DogTag.fsNeedUpdate
+local unpackNamespaceList = DogTag.unpackNamespaceList
+
+local nsListHasUnit = setmetatable({}, { __index = function(self, key)
+	for _, ns in ipairs(unpackNamespaceList[key]) do
+		if ns == "Unit" then
+			self[key] = true
+			return true
+		end
+	end
+	self[key] = false
+	return false
+end })
+
+local nextUpdateWackyUnitsTime = 0
+DogTag:AddTimerHandler(function(num, currentTime)
+	if inMouseover and not UnitExists("mouseover") then
+		inMouseover = false
+		DogTag:FireEvent("UnitChanged", "mouseover")
+	end
+	if currentTime >= nextUpdateWackyUnitsTime then
+		nextUpdateWackyUnitsTime = currentTime + 0.25
+		DogTag:FireEvent("UpdateWackyUnits")
+		for fs, nsList in pairs(fsToNSList) do
+			if nsListHasUnit[nsList] then
+				local kwargs = fsToKwargs[fs]
+				if kwargs and kwargs["unit"] and not IsNormalUnit[kwargs["unit"]] then
+					fsNeedUpdate[fs] = true
+				end
+			end
+		end
+	end
+end)
+
+DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, tag, tagData, kwargs, extraKwargs, compiledKwargs, events)
+	if compiledKwargs["unit"] then
+		events["UnitChanged#$unit"] = true
+		events["PARTY_MEMBERS_CHANGED"] = true
+		events["PLAYER_ENTERING_WORLD"] = true
+		if kwargs["unit"] ~= extraKwargs and (type(kwargs["unit"]) ~= "string" or not IsNormalUnit[kwargs["unit"]]) then
+			events["UpdateWackyUnits"] = true
 		end
 	end
 end)
