@@ -149,6 +149,12 @@ function UnitClass(unit)
 	end
 end
 
+UnitClassBase = UnitClass
+
+function UnitGUID(unit)
+	return units[unit] and units[unit].guid or "0x0000000000000000"
+end
+
 function UnitLevel(unit)
 	return units[unit] and (units[unit].level or 0)
 end
@@ -526,5 +532,7 @@ assert_equal(DogTag:Evaluate("[ClassColor(unit='pet')]", "Unit"), "|cffc69b6d") 
 assert_equal(DogTag:Evaluate("[DifficultyColor(unit='player')]", "Unit"), "|cffffff00") -- yellow
 assert_equal(DogTag:Evaluate("[DifficultyColor(unit='pet')]", "Unit"), "|cffffff00") -- yellow
 assert_equal(DogTag:Evaluate("[DifficultyColor(unit='target')]", "Unit"), "|cffff1919") -- red
+
+assert_equal(DogTag:Evaluate("[Guid(unit='player')]", "Unit"), "0x0000000000000000") -- red
 
 print("LibDogTag-Unit-3.0: Tests succeeded")
