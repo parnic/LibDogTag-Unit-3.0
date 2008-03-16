@@ -190,7 +190,7 @@ DogTag:AddTag("Unit", "MissingHP", {
 })
 
 DogTag:AddTag("Unit", "FractionalHP", {
-	alias = [=[HP(unit=unit, known=known):Append("/") MaxHP(unit=unit, known=known)]=],
+	alias = [=[Concatenate(HP(unit=unit, known=known), "/", MaxHP(unit=unit, known=known))]=],
 	arg = {
 		'unit', 'string', '@req',
 		'known', 'boolean', false,

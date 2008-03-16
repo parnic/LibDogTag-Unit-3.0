@@ -56,7 +56,7 @@ DogTag:AddTag("Unit", "MissingMP", {
 })
 
 DogTag:AddTag("Unit", "FractionalMP", {
-	alias = "MP(unit=unit) '/':Append(MaxMP(unit=unit))",
+	alias = "Concatenate(MP(unit=unit), '/', MaxMP(unit=unit))",
 	arg {
 		'unit', 'string', '@req',
 	},

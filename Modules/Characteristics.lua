@@ -89,7 +89,7 @@ DogTag:AddTag("Unit", "Realm", {
 })
 
 DogTag:AddTag("Unit", "NameRealm", {
-	alias = [=[Name(unit=unit) "-":Append(Realm(unit=unit))]=],
+	alias = [=[Name(unit=unit) Concatenate("-", Realm(unit=unit))]=],
 	arg = {
 		'unit', 'string', '@req'
 	},

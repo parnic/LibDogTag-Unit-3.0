@@ -6,5 +6,6 @@
 	<Script file="Modules\Characteristics.lua" />
 	<Script file="Modules\Health.lua" />
 	<Script file="Modules\Power.lua" />
+	<Script file="Modules\Reputation.lua" />
 	<Script file="Cleanup.lua" />
 </Ui>
