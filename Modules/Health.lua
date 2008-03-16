@@ -227,6 +227,21 @@ DogTag:AddTag("Unit", "HPColor", {
 		r2, g2, b2 = unpack(colors.maxHP)
 	end
 	local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
+	if r < 0 then
+		r = 0
+	elseif r > 1 then
+		r = 1
+	end
+	if g < 0 then
+		g = 0
+	elseif g > 1 then
+		g = 1
+	end
+	if b < 0 then
+		b = 0
+	elseif b > 1 then
+		b = 1
+	end
 	if ${value} then
 		return ("|cff%02x%02x%02x%s|r"):format(r*255, g*255, b*255, ${value})
 	else
