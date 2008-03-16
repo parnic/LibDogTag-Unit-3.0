@@ -152,7 +152,7 @@ DogTag:AddTag("Unit", "IsMaxMP", {
 })
 
 DogTag:AddTag("Unit", "HasMP", {
-	alias = "Boolean(MaxMP(unit=unit) > 0)"
+	alias = "Boolean(MaxMP(unit=unit) > 0)",
 	arg = {
 		'unit', 'string', '@req',
 	},
@@ -183,7 +183,7 @@ DogTag:AddTag("Unit", "PowerColor", {
 	arg = {
 		'value', 'string;undef', '@undef',
 		'unit', 'string', '@req',
-	}
+	},
 	ret = "string",
 	events = "UNIT_DISPLAYPOWER#$unit",
 	globals = "UnitPowerType",
