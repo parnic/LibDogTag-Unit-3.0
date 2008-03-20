@@ -15,6 +15,8 @@ local units = {
 		creatureType = "Humanoid",
 		hp = 1500,
 		maxhp = 2000,
+		mp = 100,
+		maxmp = 100,
 		exists = true,
 		friend = true,
 		level = 10,
@@ -109,6 +111,20 @@ function UnitHealthMax(unit)
 		error(("Not a legitimate unit: %q"):format(unit), 2)
 	end
 	return units[unit] and units[unit].maxhp
+end
+
+function UnitMana(unit)
+	if not IsLegitimateUnit(unit) then
+		error(("Not a legitimate unit: %q"):format(unit), 2)
+	end
+	return units[unit] and units[unit].mp
+end
+
+function UnitManaMax(unit)
+	if not IsLegitimateUnit(unit) then
+		error(("Not a legitimate unit: %q"):format(unit), 2)
+	end
+	return units[unit] and units[unit].maxmp
 end
 
 function UnitIsUnit(alpha, bravo)
@@ -245,6 +261,14 @@ UnitReactionColor = {
 	{ r = 0, g = 1, b = 0 },
 }
 
+function UnitIsCharmed(unit)
+	return nil
+end
+
+function UnitIsVisible(unit)
+	return units[unit] and units[unit].exists
+end
+
 function GetDifficultyColor(number)
 	local playerLevel = units.player.level
 	if playerLevel >= number+5 then
@@ -260,26 +284,57 @@ function GetDifficultyColor(number)
 	end
 end
 
+function GetWatchedFactionInfo()
+	return "Exodar", 5, 1000, 5000, 3000
+end
+
+function IsResting()
+	return nil
+end
+
+function UnitIsPartyLeader(unit)
+	return unit == "player"
+end
+
+function UnitAffectingCombat(unit)
+	return unit == "player" or unit == "target"
+end
+
+PET_HAPPINESS3 = "Happy"
+PET_HAPPINESS2 = "Content"
+PET_HAPPINESS1 = "Unhappy"
+
+_G.FACTION_STANDING_LABEL5 = "Normal"
+_G.FACTION_STANDING_LABEL6 = "Friendly"
+
 _G.MAX_PLAYER_LEVEL = 70
 _G.UNKNOWN = "Unknown"
 _G.PVP_RANK_10_1 = "Warlord"
 
-MyUnit_data = "player"
+local MyUnit_data = "player"
 DogTag:AddTag("Unit", "MyUnit", {
-	code = [=[return _G.MyUnit_data]=],
+	code = function()
+		return MyUnit_data
+	end,
 	ret = "string",
 })
 
-MyValue_data = nil
+local MyValue_data = nil
 DogTag:AddTag("Unit", "MyValue", {
-	code = [=[return _G.MyValue_data]=],
+	code = function()
+		return MyValue_data
+	end,
 	ret = "nil;number;string",
 })
 
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
-dofile("Modules/Characteristics.lua")
-dofile("Modules/Health.lua")
+dofile("Categories/Characteristics.lua")
+dofile("Categories/Experience.lua")
+dofile("Categories/Health.lua")
+dofile("Categories/Power.lua")
+dofile("Categories/Reputation.lua")
+dofile("Categories/Status.lua")
 dofile("Cleanup.lua")
 
 assert_equal(DogTag:Evaluate("[HP('player')]"), "Unknown tag HP")

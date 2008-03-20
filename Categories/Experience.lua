@@ -9,49 +9,51 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-DogTag:AddEventListener("UNIT_PET_EXPERIENCE", function(event, ...)
+DogTag:AddEventHandler("UNIT_PET_EXPERIENCE", function(event, ...)
 	DogTag:FireEvent("UpdateExperience", "pet")
 	DogTag:FireEvent("UpdateExperience", "playerpet")
 end)
 
-DogTag:AddEventListener("PLAYER_XP_UPDATE", function(event, ...)
+DogTag:AddEventHandler("PLAYER_XP_UPDATE", function(event, ...)
 	DogTag:FireEvent("UpdateExperience", "player")
 end)
 
 DogTag:AddTag("Unit", "XP", {
-	code = [[if ${unit} == "player" then
-	 	return UnitXP(${unit})
-	elseif ${unit} == "pet" or ${unit} == "playerpet" then
-		return GetPetExperience()
-	else
-		return 0
-	end]],
+	code = function(unit)
+		if unit == "player" then
+		 	return UnitXP(unit)
+		elseif unit == "pet" or unit == "playerpet" then
+			return GetPetExperience()
+		else
+			return 0
+		end
+	end,
 	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
-	globals = "GetPetExperience;UnitXP",
 	doc = L["Return the current experience of unit"],
 	example = '[XP] => "8540"',
 	category = L["Experience"]
 })
 
 DogTag:AddTag("Unit", "MaxXP", {
-	code = [[if ${unit} == "player" then
-	 	return UnitXPMax(${unit})
-	elseif ${unit} == "pet" or ${unit} == "playerpet" then
-		local _, max = GetPetExperience()
-		return max
-	else
-		return 0
-	end]],
+	code = function(unit)
+		if unit == "player" then
+		 	return UnitXPMax(unit)
+		elseif unit == "pet" or unit == "playerpet" then
+			local _, max = GetPetExperience()
+			return max
+		else
+			return 0
+		end
+	end,
 	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
-	globals = "GetPetExperience;UnitXPMax",
 	doc = L["Return the current experience of unit"],
 	example = '[MaxXP] => "10000"',
 	category = L["Experience"]
@@ -88,17 +90,18 @@ DogTag:AddTag("Unit", "MissingXP", {
 })
 
 DogTag:AddTag("Unit", "RestXP", {
-	code = [[if ${unit} == "player" then
-	 	return GetXPExhaustion()
-	else
-		return 0
-	end]],
+	code = function()
+		if unit == "player" then
+		 	return GetXPExhaustion()
+		else
+			return 0
+		end
+	end,
 	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
-	globals = "GetXPExhaustion",
 	doc = L["Return the accumulated rest experience of unit"],
 	example = '[RestXP] => "5000"',
 	category = L["Experience"]

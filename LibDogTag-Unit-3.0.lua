@@ -45,6 +45,18 @@ frame:SetScript("OnEvent", function(this, event, ...)
 	end
 end)
 
+local function GetNameServer(unit)
+	local name, realm = UnitName(unit)
+	if name then
+		if realm and realm ~= "" then
+			return name .. "-" .. realm
+		else
+			return name
+		end
+	end
+end
+DogTag_Unit.GetNameServer = GetNameServer
+
 local UnitToLocale = {player = L["Player"], target = L["Target"], pet = L["%s's pet"]:format(L["Player"]), focus = L["Focus-target"], mouseover = L["Mouse-over"]}
 setmetatable(UnitToLocale, {__index=function(self, unit)
 	if unit:find("pet$") then
@@ -110,6 +122,32 @@ end, __call = function(self, key)
 	return self[key]
 end})
 
+local unitToGUID = {}
+local function refreshGUIDs(unit)
+	if not unit then
+		for unit in pairs(IsNormalUnit) do
+			unitToGUID[unit] = UnitGUID(unit)
+		end
+	else
+		unitToGUID[unit] = UnitGUID(unit)
+	end
+end
+
+DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", refreshGUIDs)
+
+local t = {}
+local function IterateUnitsWithGUID(guid)
+	for k in pairs(t) do
+		t[k] = nil
+	end
+	for unit, g in pairs(unitToGUID) do
+		if g == guid then
+			t[unit] = true
+		end
+	end
+	return pairs(t)
+end
+DogTag_Unit.IterateUnitsWithGUID = IterateUnitsWithGUID
 
 local function searchForNameTag(ast)
 	if type(ast) ~= "table" then
@@ -174,18 +212,40 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 			t[#t+1] = [=[end;]=]
 		end
 	end
+	if tag == "IsUnit" then
+		if type(kwargs["other"]) ~= "table" then
+		 	if not IsLegitimateUnit[kwargs["other"]] then
+				t[#t+1] = [=[do return ]=]
+				t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
+				t[#t+1] = compiledKwargs["other"][1]
+				t[#t+1] = [=[));]=]
+				t[#t+1] = [=[end;]=]
+			end
+		else
+			t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
+			t[#t+1] = compiledKwargs["other"][1]
+			t[#t+1] = [=[] then return ]=]
+			t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
+			t[#t+1] = compiledKwargs["other"][1]	
+			t[#t+1] = [=[));]=]
+			t[#t+1] = [=[end;]=]
+		end
+	end
 end)
 
 DogTag:AddEventHandler("PLAYER_TARGET_CHANGED", function(event, ...)
+	refreshGUIDs("target")
 	DogTag:FireEvent("UnitChanged", "target")
 	DogTag:FireEvent("UnitChanged", "playertarget")
 end)
 
 DogTag:AddEventHandler("PLAYER_FOCUS_CHANGED", function(event, ...)
+	refreshGUIDs("focus")
 	DogTag:FireEvent("UnitChanged", "focus")
 end)
 
 DogTag:AddEventHandler("PLAYER_PET_CHANGED", function(event, ...)
+	refreshGUIDs("pet")
 	DogTag:FireEvent("UnitChanged", "pet")
 end)
 
@@ -194,12 +254,15 @@ DogTag:AddEventHandler("UNIT_TARGET", function(event, unit)
 end)
 
 DogTag:AddEventHandler("UNIT_PET", function(event, unit)
-	DogTag:FireEvent("UnitChanged", unit .. "pet")
+	local unit_pet = unit .. "pet"
+	refreshGUIDs(unit_pet)
+	DogTag:FireEvent("UnitChanged", unit_pet)
 end)
 
 local inMouseover = false
 DogTag:AddEventHandler("UPDATE_MOUSEOVER_UNIT", function(event, ...)
 	inMouseover = true
+	refreshGUIDs("mouseover")
 	DogTag:FireEvent("UnitChanged", "mouseover")
 end)
 

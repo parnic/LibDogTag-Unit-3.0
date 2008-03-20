@@ -7,7 +7,9 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local DogTag_Unit, oldMinor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
+_G.DogTag_Unit_MINOR_VERSION = nil
 if not DogTag_Unit then
+	_G.DogTag_Unit_funcs = nil
 	return
 end
 

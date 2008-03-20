@@ -10,60 +10,48 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 
 DogTag:AddTag("Unit", "Reputation", {
-	code = [=[local _, name, min, value
-	if not ${faction} then
-		name, _, min, _, value = GetWatchedFactionInfo()
-	else
-		for i = 1, GetNumFactions() do
-			local n
-			n, _, _, min, _, value = GetFactionInfo(i)
-			if ${faction} == n then
-				name = n
-				break
+	code = function(faction)
+		if not faction then
+			local _, _, min, _, value = GetWatchedFactionInfo()
+			return value - min
+		else
+			for i = 1, GetNumFactions() do
+				local name, _, _, min, _, value = GetFactionInfo(i)
+				if faction == n then
+					return value - min
+				end
 			end
 		end
-	end
-	if name then
-		return value - min
-	else
-		return nil
-	end]=],
+	end,
 	arg = {
 		'faction', 'string;undef', "@undef"
 	},
 	ret = "number;nil",
 	events = "UNIT_FACTION",
-	globals = "GetWatchedFactionInfo;GetNumFactions;GetFactionInfo",
 	doc = L["Return the current reputation of the watched faction or specified"],
 	example = ('[Reputation] => "1234"; [Reputation(%s)] => "2345"'):format(L["Exodar"]),
 	category = L["Reputation"]
 })
 
 DogTag:AddTag("Unit", "MaxReputation", {
-	code = [=[local _, name, min, max
-	if not ${faction} then
-		name, _, min, max = GetWatchedFactionInfo()
-	else
-		for i = 1, GetNumFactions() do
-			local n
-			n, _, _, min, max = GetFactionInfo(i)
-			if ${faction} == n then
-				name = n
-				break
+	code = function(faction)
+		if not faction then
+			local _, _, min, max = GetWatchedFactionInfo()
+			return max - min
+		else
+			for i = 1, GetNumFactions() do
+				local name, _, _, min, max = GetFactionInfo(i)
+				if faction == n then
+					return max - min
+				end
 			end
 		end
-	end
-	if name then
-		return max - min
-	else
-		return nil
-	end]=],
+	end,
 	arg = {
 		'faction', 'string;undef', "@undef"
 	},
 	ret = "number;nil",
 	events = "UNIT_FACTION",
-	globals = "GetWatchedFactionInfo;GetNumFactions;GetFactionInfo",
 	doc = L["Return the maximum reputation of the watched faction or specified"],
 	example = ('[MaxReputation] => "12000"; [MaxReputation(%s)] => "21000"'):format(L["Exodar"]),
 	category = L["Reputation"]
@@ -100,9 +88,8 @@ DogTag:AddTag("Unit", "MissingReputation", {
 })
 
 DogTag:AddTag("Unit", "ReputationName", {
-	code = [=[return GetWatchedFactionInfo()]=],
+	code = GetWatchedFactionInfo,
 	ret = "string;nil",
-	globals = "GetWatchedFactionInfo",
 	events = "UNIT_FACTION",
 	doc = L["Return the name of the currently watched faction"],
 	example = ('[ReputationName] => %q'):format(L["Exodar"]),
@@ -110,29 +97,23 @@ DogTag:AddTag("Unit", "ReputationName", {
 })
 
 DogTag:AddTag("Unit", "ReputationReaction", {
-	code = [=[local _, name, reaction
-	if not ${faction} then
-		name, reaction = GetWatchedFactionInfo()
-	else
-		for i = 1, GetNumFactions() do
-			local n
-			n, _, reaction = GetFactionInfo(i)
-			if ${faction} == n then
-				name = n
-				break
+	code = function(faction)
+		if not faction then
+			local _, reaction = GetWatchedFactionInfo()
+			return _G["FACTION_STANDING_LABEL" .. reaction]
+		else
+			for i = 1, GetNumFactions() do
+				local name, _, reaction = GetFactionInfo(i)
+				if faction == name then
+					return _G["FACTION_STANDING_LABEL" .. reaction]
+				end
 			end
 		end
-	end
-	if name then
-		return _G["FACTION_STANDING_LABEL" .. reaction]
-	else
-		return nil
-	end]=],
+	end,
 	arg = {
 		'faction', 'string;undef', "@undef",
 	},
 	ret = "string;nil",
-	globals = "GetWatchedFactionInfo;GetNumFactions;GetFactionInfo",
 	events = "UNIT_FACTION",
 	doc = L["Return your current reputation rank with the watched faction or argument"],
 	example = ('[ReputationReaction] => %q; [ReputationReaction(%s)] => %q'):format(_G.FACTION_STANDING_LABEL5, "Exodar", _G.FACTION_STANDING_LABEL6),
@@ -140,35 +121,36 @@ DogTag:AddTag("Unit", "ReputationReaction", {
 })
 
 DogTag:AddTag("Unit", "ReputationColor", {
-	code = [=[local _, name, reaction
-	if not ${faction} then
-		name, reaction = GetWatchedFactionInfo()
-	else
-		for i = 1, GetNumFactions() do
-			local n
-			n, _, reaction = GetFactionInfo(i)
-			if ${faction} == n then
-				name = n
-				break
+	code = function(value, faction)
+		local _, name, reaction
+		if not faction then
+			name, reaction = GetWatchedFactionInfo()
+		else
+			for i = 1, GetNumFactions() do
+				local n
+				n, _, reaction = GetFactionInfo(i)
+				if faction == n then
+					name = n
+					break
+				end
 			end
 		end
-	end
-	if name then
-		local color = FACTION_BAR_COLORS[reaction]
-		if ${value} then
-			return ("|cff%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, ${value})
+		if name then
+			local color = FACTION_BAR_COLORS[reaction]
+			if value then
+				return ("|cff%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, value)
+			else
+				return ("|cff%02x%02x%02x"):format(color.r * 255, color.g * 255, color.b * 255)
+			end
 		else
-			return ("|cff%02x%02x%02x"):format(color.r * 255, color.g * 255, color.b * 255)
+			return value
 		end
-	else
-		return ${value}
-	end]=],
+	end,
 	arg = {
 		'value', 'string;undef', '@undef',
 		'faction', 'string;undef', "@undef",
 	},
 	ret = "string;nil",
-	globals = "GetWatchedFactionInfo;GetNumFactions;GetFactionInfo;FACTION_BAR_COLORS",
 	events = "UNIT_FACTION",
 	doc = L["Return the color or wrap value with the color associated with either the currently watched faction or the given argument"],
 	example = ('["Hello":ReputationColor] => "|cff7f0000Hello|r"; ["Hello":ReputationColor(%s)] => "|cff007f00Hello|r"; [ReputationColor(faction=%s) "Hello")] => "|cff007f00Hello"'):format(L["Exodar"], L["Exodar"]),

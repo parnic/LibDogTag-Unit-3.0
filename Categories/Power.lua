@@ -10,26 +10,24 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 
 DogTag:AddTag("Unit", "MP", {
-	code = [[return UnitMana(${unit})]],
-	arg {
+	code = UnitMana,
+	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "number",
 	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
-	globals = "UnitMana",
 	doc = L["Return the current mana/rage/energy of unit"],
 	example = ('[MP] => "%d"'):format(UnitManaMax("player")*.632),
 	category = L["Power"]
 })
 
 DogTag:AddTag("Unit", "MaxMP", {
-	code = [[return UnitManaMax(${unit})]],
-	arg {
+	code = UnitManaMax,
+	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "number",
 	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
-	globals = "UnitManaMax",
 	doc = L["Return the maximum mana/rage/energy of unit"],
 	example = ('[MaxMP] => "%d"'):format(UnitManaMax("player")),
 	category = L["Power"]
@@ -37,7 +35,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 
 DogTag:AddTag("Unit", "PercentMP", {
 	alias = "[MP(unit=unit) / MaxMP(unit=unit) * 100]:Round(1)",
-	arg {
+	arg = {
 		'unit', 'string', '@req',
 	},
 	doc = L["Return the percentage mana/rage/energy of unit"],
@@ -47,7 +45,7 @@ DogTag:AddTag("Unit", "PercentMP", {
 
 DogTag:AddTag("Unit", "MissingMP", {
 	alias = "MaxMP(unit=unit) - CurMP(unit=unit)",
-	arg {
+	arg = {
 		'unit', 'string', '@req',
 	},
 	doc = L["Return the missing mana/rage/energy of unit"],
@@ -57,7 +55,7 @@ DogTag:AddTag("Unit", "MissingMP", {
 
 DogTag:AddTag("Unit", "FractionalMP", {
 	alias = "Concatenate(MP(unit=unit), '/', MaxMP(unit=unit))",
-	arg {
+	arg = {
 		'unit', 'string', '@req',
 	},
 	doc = L["Return the current and maximum mana/rage/energy of unit"],
@@ -66,22 +64,23 @@ DogTag:AddTag("Unit", "FractionalMP", {
 })
 
 DogTag:AddTag("Unit", "TypePower", {
-	([[local p = UnitPowerType(${unit})
-	if p == 1 then
-		return %q
-	elseif p == 2 then
-	 	return %q
-	elseif p == 3 then
-		return %q
-	else
-		return %q
-	end]]):format(L["Rage"], L["Focus"], L["Energy"], L["Mana"]),
-	arg {
+	code = function(unit)
+		local p = UnitPowerType(unit)
+		if p == 1 then
+			return L["Rage"]
+		elseif p == 2 then
+		 	return L["Focus"]
+		elseif p == 3 then
+			return L["Energy"]
+		else
+			return L["Mana"]
+		end
+	end,
+	arg = {
 		'unit', 'string', '@req',
 	},
 	ret = "string",
 	events = "UNIT_DISPLAYPOWER#$unit",
-	globals = "UnitPowerType",
 	doc = L["Return whether unit currently uses Rage, Focus, Energy, or Mana"],
 	example = ('[TypePower] => %q; [TypePower] => %q'):format(L["Rage"], L["Mana"]),
 	category = L["Power"]
@@ -95,7 +94,6 @@ DogTag:AddTag("Unit", "IsPowerType", {
 	},
 	ret = "boolean",
 	events = "UNIT_DISPLAYPOWER#$unit",
-	globals = "UnitPowerType",
 	doc = L["Return True if unit currently uses the power of argument"],
 	example = ('[HasPower(%q)] => %q; [HasPower(%q)] => ""'):format(L["Rage"], L["True"], L["Mana"]),
 	category = L["Power"]
@@ -162,31 +160,32 @@ DogTag:AddTag("Unit", "HasMP", {
 })
 
 DogTag:AddTag("Unit", "PowerColor", {
-	code = [[local powerType = UnitPowerType(${unit})
-	local r,g,b
-	if powerType == 0 then
-		r,g,b = unpack(colors.mana)
-	elseif powerType == 1 then
-		r,g,b = unpack(colors.rage)
-	elseif powerType == 2 then
-		r,g,b = unpack(colors.focus)
-	elseif powerType == 3 then
-		r,g,b = unpack(colors.energy)
-	else
-		r,g,b = unpack(colors.unknown)
-	end
-	if ${value} then
-		return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, ${value})
-	else
-		return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
-	end]],
+	code = function(value, unit)
+		local powerType = UnitPowerType(unit)
+		local r,g,b
+		if powerType == 0 then
+			r,g,b = unpack(colors.mana)
+		elseif powerType == 1 then
+			r,g,b = unpack(colors.rage)
+		elseif powerType == 2 then
+			r,g,b = unpack(colors.focus)
+		elseif powerType == 3 then
+			r,g,b = unpack(colors.energy)
+		else
+			r,g,b = unpack(colors.unknown)
+		end
+		if value then
+			return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
+		else
+			return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+		end
+	end,
 	arg = {
 		'value', 'string;undef', '@undef',
 		'unit', 'string', '@req',
 	},
 	ret = "string",
 	events = "UNIT_DISPLAYPOWER#$unit",
-	globals = "UnitPowerType",
 	doc = L["Return the color or wrap value with current power color of unit, whether rage, mana, or energy"],
 	example = '["Hello":PowerColor] => "|cff3071bfHello|r"; [PowerColor "Hello"] => "|cff3071bfHello"',
 	category = L["Power"]
