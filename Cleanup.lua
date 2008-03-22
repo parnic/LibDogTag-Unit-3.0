@@ -5,11 +5,13 @@ local MINOR_VERSION = tonumber(("$Revision$"):match("%d+")) or 0
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
+MINOR_VERSION = _G.DogTag_Unit_MINOR_VERSION
+_G.DogTag_Unit_MINOR_VERSION = nil
 
 local DogTag_Unit, oldMinor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
-_G.DogTag_Unit_MINOR_VERSION = nil
+local DogTag_Unit_funcs = _G.DogTag_Unit_funcs
+_G.DogTag_Unit_funcs = nil
 if not DogTag_Unit then
-	_G.DogTag_Unit_funcs = nil
 	return
 end
 
@@ -28,8 +30,24 @@ if next(DogTag_Unit) ~= nil then
 end
 DogTag_Unit.oldLib = oldLib
 
-for _,v in ipairs(_G.DogTag_Unit_funcs) do
+for _,v in ipairs(DogTag_Unit_funcs) do
 	v(DogTag_Unit, DogTag)
 end
 
-_G.DogTag_Unit_funcs = nil
+local function DogTag_Unit_RefreshLibrary(self)
+	local oldLib = {}
+	for k, v in pairs(DogTag_Unit) do
+		oldLib[k] = v
+		DogTag_Unit[k] = nil
+	end
+	DogTag_Unit.oldLib = oldLib
+	
+	for _,v in ipairs(_G.DogTag_Unit_funcs) do
+		v(DogTag_Unit, DogTag)
+	end
+	
+	DogTag_Unit.RefreshLibrary = DogTag_Unit_RefreshLibrary
+end
+DogTag_Unit.RefreshLibrary = DogTag_Unit_RefreshLibrary
+
+DogTag:AddSubLibrary(MAJOR_VERSION)

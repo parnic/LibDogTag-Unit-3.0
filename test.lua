@@ -1,3 +1,15 @@
+--[[
+TODO:
+
+Abbreviations
+AddonVersion? - probably not gonna do this
+Auras
+DruidMana
+Talent
+Threat
+TooltipScanning
+]]
+
 local old_dofile = dofile
 
 function dofile(file)
@@ -300,6 +312,10 @@ function UnitAffectingCombat(unit)
 	return unit == "player" or unit == "target"
 end
 
+function IsInGuild()
+	return nil
+end
+
 PET_HAPPINESS3 = "Happy"
 PET_HAPPINESS2 = "Content"
 PET_HAPPINESS1 = "Unhappy"
@@ -307,9 +323,16 @@ PET_HAPPINESS1 = "Unhappy"
 _G.FACTION_STANDING_LABEL5 = "Normal"
 _G.FACTION_STANDING_LABEL6 = "Friendly"
 
+_G.FAILED = "Failed"
+_G.INTERRUPTED = "Interrupted"
+
 _G.MAX_PLAYER_LEVEL = 70
 _G.UNKNOWN = "Unknown"
 _G.PVP_RANK_10_1 = "Warlord"
+
+function GetComboPoints()
+	return 0
+end
 
 local MyUnit_data = "player"
 DogTag:AddTag("Unit", "MyUnit", {
@@ -329,10 +352,14 @@ DogTag:AddTag("Unit", "MyValue", {
 
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
+dofile("Categories/Cast.lua")
 dofile("Categories/Characteristics.lua")
 dofile("Categories/Experience.lua")
+dofile("Categories/GuildNote.lua")
 dofile("Categories/Health.lua")
+dofile("Categories/Misc.lua")
 dofile("Categories/Power.lua")
+dofile("Categories/Range.lua")
 dofile("Categories/Reputation.lua")
 dofile("Categories/Status.lua")
 dofile("Cleanup.lua")
