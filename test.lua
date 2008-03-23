@@ -630,6 +630,8 @@ assert_equal(DogTag:Evaluate("[DifficultyColor(unit='player')]", "Unit"), "|cfff
 assert_equal(DogTag:Evaluate("[DifficultyColor(unit='pet')]", "Unit"), "|cffffff00") -- yellow
 assert_equal(DogTag:Evaluate("[DifficultyColor(unit='target')]", "Unit"), "|cffff1919") -- red
 
-assert_equal(DogTag:Evaluate("[Guid(unit='player')]", "Unit"), "0x0000000000000000") -- red
+assert_equal(DogTag:Evaluate("[Guid(unit='player')]", "Unit"), "0x0000000000000000")
+
+assert_equal(DogTag:Evaluate("[HasMP]", "Unit", { unit = 'player' }), "True")
 
 print("LibDogTag-Unit-3.0: Tests succeeded")

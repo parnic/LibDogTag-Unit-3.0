@@ -192,7 +192,10 @@ DogTag:AddTag("Unit", "DeadType", {
 })
 
 DogTag:AddTag("Unit", "Dead", {
-	alias = "DeadType Concatenate(' ', DeadDuration:FormatDuration:Paren))",
+	alias = "DeadType(unit=unit) Concatenate(' ', DeadDuration(unit=unit):FormatDuration:Paren)",
+	arg = {
+		'unit', 'string', '@req',
+	},
 	doc = L["Return Dead or Ghost and the duration dead if unit is dead"],
 	example = ('[Dead] => "%s (1:34)"; [Dead] => "%s"; [Dead] => ""'):format(L["Dead"], L["Ghost"]),
 	category = L["Status"]
@@ -633,6 +636,17 @@ DogTag:AddTag("Unit", "HappyColor", {
 	events = "UNIT_HAPPINESS",
 	doc = L["Return the color or wrap value with the color associated with your pet's happiness"],
 	example = '[Text(Hello):HappyColor] => "|cff00ff00Hello|r"; [Text([HappyColor]Hello)] => "|cff00ff00Hello"',
+	category = L["Status"]
+})
+
+local DIVINE_INTERVENTION = GetSpellInfo(19752)
+DogTag:AddTag("Unit", "Status", {
+	alias = ("Offline(unit=unit) or (HasDivineIntervention(unit=unit) ? %q) or (IsFeignedDeath(unit=unit) ? %q) or [if Dead(unit=unit) then ((HasSoulstone(unit=unit) ? %q) or Dead(unit=unit))]"):format(DIVINE_INTERVENTION, L["Feigned Death"], L["Soulstoned"]),
+	arg = {
+		'unit', 'string', '@req',
+	},
+	doc = L["Return whether unit is offline, has divine intervention, is dead, feigning death, or has a soulstone while dead"],
+	example = ('[Status] => "Offline"; [Status] => "Dead"; [Status] => ""'),
 	category = L["Status"]
 })
 

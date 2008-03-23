@@ -13,6 +13,9 @@ local newList = DogTag.newList
 
 local hasEvent = DogTag.hasEvent
 
+local IsNormalUnit = DogTag.IsNormalUnit
+local newList, del = DogTag.newList, DogTag.del
+
 local currentAuras, currentDebuffTypes, currentAuraTimes, currentNumDebuffs
 
 local function func(self, unit)
