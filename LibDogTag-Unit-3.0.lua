@@ -123,17 +123,16 @@ end, __call = function(self, key)
 end})
 
 local unitToGUID = {}
-local function refreshGUIDs(unit)
-	if not unit then
-		for unit in pairs(IsNormalUnit) do
-			unitToGUID[unit] = UnitGUID(unit)
-		end
-	else
-		unitToGUID[unit] = UnitGUID(unit)
-	end
+local function refreshGUID(unit)
+	unitToGUID[unit] = UnitGUID(unit)
 end
 
-DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", refreshGUIDs)
+DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", function()
+	for unit in pairs(IsNormalUnit) do
+		refreshGUID(unit)
+		DogTag:FireEvent("UnitChanged", unit)
+	end
+end)
 
 local t = {}
 local function IterateUnitsWithGUID(guid)
@@ -234,18 +233,18 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 end)
 
 DogTag:AddEventHandler("PLAYER_TARGET_CHANGED", function(event, ...)
-	refreshGUIDs("target")
+	refreshGUID("target")
 	DogTag:FireEvent("UnitChanged", "target")
 	DogTag:FireEvent("UnitChanged", "playertarget")
 end)
 
 DogTag:AddEventHandler("PLAYER_FOCUS_CHANGED", function(event, ...)
-	refreshGUIDs("focus")
+	refreshGUID("focus")
 	DogTag:FireEvent("UnitChanged", "focus")
 end)
 
 DogTag:AddEventHandler("PLAYER_PET_CHANGED", function(event, ...)
-	refreshGUIDs("pet")
+	refreshGUID("pet")
 	DogTag:FireEvent("UnitChanged", "pet")
 end)
 
@@ -255,14 +254,14 @@ end)
 
 DogTag:AddEventHandler("UNIT_PET", function(event, unit)
 	local unit_pet = unit .. "pet"
-	refreshGUIDs(unit_pet)
+	refreshGUID(unit_pet)
 	DogTag:FireEvent("UnitChanged", unit_pet)
 end)
 
 local inMouseover = false
 DogTag:AddEventHandler("UPDATE_MOUSEOVER_UNIT", function(event, ...)
 	inMouseover = true
-	refreshGUIDs("mouseover")
+	refreshGUID("mouseover")
 	DogTag:FireEvent("UnitChanged", "mouseover")
 end)
 

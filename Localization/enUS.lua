@@ -152,6 +152,12 @@ DogTag_Unit.L = {
 	["Warlock_Tree_1"] = "Affliction",
 	["Warlock_Tree_2"] = "Demonology",
 	["Warlock_Tree_3"] = "Destruction",
+	
+	-- dispel types
+	["Magic"] = "Magic",
+	["Curse"] = "Curse",
+	["Poison"] = "Poison",
+	["Disease"] = "Disease",
 }
 for k,v in pairs(DogTag_Unit.L) do
 	if type(v) ~= "string" then -- some evil addon messed it up

@@ -3,11 +3,7 @@ TODO:
 
 Abbreviations
 AddonVersion? - probably not gonna do this
-Auras
-DruidMana
 Talent
-Threat
-TooltipScanning
 ]]
 
 local old_dofile = dofile
@@ -330,8 +326,23 @@ _G.MAX_PLAYER_LEVEL = 70
 _G.UNKNOWN = "Unknown"
 _G.PVP_RANK_10_1 = "Warlord"
 
+_G.UNITNAME_TITLE_CHARM = "%s's Minion"; -- %s is the name of the unit's charmer
+_G.UNITNAME_TITLE_COMPANION = "%s's Companion";
+_G.UNITNAME_TITLE_CREATION = "%s's Creation";
+_G.UNITNAME_TITLE_GUARDIAN = "%s's Guardian";
+_G.UNITNAME_TITLE_MINION = "%s's Minion";
+_G.UNITNAME_TITLE_PET = "%s's Pet"; -- %s is the name of the unit's summoner
+
 function GetComboPoints()
 	return 0
+end
+
+function GetSpellInfo(num)
+	return "Spell_" .. num
+end
+
+function UnitIsFeignDeath(unit)
+	return nil
 end
 
 local MyUnit_data = "player"
@@ -352,8 +363,10 @@ DogTag:AddTag("Unit", "MyValue", {
 
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
+dofile("Categories/Auras.lua")
 dofile("Categories/Cast.lua")
 dofile("Categories/Characteristics.lua")
+dofile("Categories/DruidMana.lua")
 dofile("Categories/Experience.lua")
 dofile("Categories/GuildNote.lua")
 dofile("Categories/Health.lua")
@@ -362,6 +375,8 @@ dofile("Categories/Power.lua")
 dofile("Categories/Range.lua")
 dofile("Categories/Reputation.lua")
 dofile("Categories/Status.lua")
+dofile("Categories/Threat.lua")
+dofile("Categories/TooltipScanning.lua")
 dofile("Cleanup.lua")
 
 assert_equal(DogTag:Evaluate("[HP('player')]"), "Unknown tag HP")

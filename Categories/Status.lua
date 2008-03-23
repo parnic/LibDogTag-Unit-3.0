@@ -277,7 +277,18 @@ DogTag:AddTag("Unit", "IsLeader", {
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is a party leader"],
-	example = ('[IsResting] => %q; [IsResting] => ""'):format(L["True"]),
+	example = ('[IsLeader] => %q; [IsLeader] => ""'):format(L["True"]),
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "IsFeignedDeath", {
+	code = UnitIsFeignDeath,
+	arg = {
+		'unit', 'string', '@req',
+	},
+	ret = "boolean",
+	doc = L["Return True if unit is feigning death"],
+	example = ('[IsFeignedDeath] => "%q"; [IsFeignedDeath] => ""'):format(L["True"]),
 	category = L["Status"]
 })
 
