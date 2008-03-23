@@ -122,36 +122,6 @@ DogTag_Unit.L = {
 	["Female_short"] = "f",
 
 	["Leader"] = "Leader",
-
-	-- spell trees
-	["Hybrid"] = "Hybrid", -- for all 3 trees
-	["Druid_Tree_1"] = "Balance",
-	["Druid_Tree_2"] = "Feral Combat",
-	["Druid_Tree_3"] = "Restoration",
-	["Hunter_Tree_1"] = "Beast Mastery",
-	["Hunter_Tree_2"] = "Marksmanship",
-	["Hunter_Tree_3"] = "Survival",
-	["Mage_Tree_1"] = "Arcane",
-	["Mage_Tree_2"] = "Fire",
-	["Mage_Tree_3"] = "Frost",
-	["Paladin_Tree_1"] = "Holy",
-	["Paladin_Tree_2"] = "Protection",
-	["Paladin_Tree_3"] = "Retribution",
-	["Priest_Tree_1"] = "Discipline",
-	["Priest_Tree_2"] = "Holy",
-	["Priest_Tree_3"] = "Shadow",
-	["Rogue_Tree_1"] = "Assassination",
-	["Rogue_Tree_2"] = "Combat",
-	["Rogue_Tree_3"] = "Subtlety",
-	["Shaman_Tree_1"] = "Elemental",
-	["Shaman_Tree_2"] = "Enhancement",
-	["Shaman_Tree_3"] = "Restoration",
-	["Warrior_Tree_1"] = "Arms",
-	["Warrior_Tree_2"] = "Fury",
-	["Warrior_Tree_3"] = "Protection",
-	["Warlock_Tree_1"] = "Affliction",
-	["Warlock_Tree_2"] = "Demonology",
-	["Warlock_Tree_3"] = "Destruction",
 	
 	-- dispel types
 	["Magic"] = "Magic",

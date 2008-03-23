@@ -124,36 +124,6 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Female_short"] = "여"
 	
 	L["Leader"] = "지휘관"
-
-	-- spell trees
-	L["Hybrid"] = "혼성" -- for all 3 trees
-	L["Druid_Tree_1"] = "조화"
-	L["Druid_Tree_2"] = "야성"
-	L["Druid_Tree_3"] = "회복"
-	L["Hunter_Tree_1"] = "야수"
-	L["Hunter_Tree_2"] = "사격"
-	L["Hunter_Tree_3"] = "생존"
-	L["Mage_Tree_1"] = "비전"
-	L["Mage_Tree_2"] = "화염"
-	L["Mage_Tree_3"] = "냉기"
-	L["Paladin_Tree_1"] = "신성"
-	L["Paladin_Tree_2"] = "보호"
-	L["Paladin_Tree_3"] = "징벌"
-	L["Priest_Tree_1"] = "수양"
-	L["Priest_Tree_2"] = "신성"
-	L["Priest_Tree_3"] = "암흑"
-	L["Rogue_Tree_1"] = "암살"
-	L["Rogue_Tree_2"] = "전투"
-	L["Rogue_Tree_3"] = "잠행"
-	L["Shaman_Tree_1"] = "정기"
-	L["Shaman_Tree_2"] = "고양"
-	L["Shaman_Tree_3"] = "복원"
-	L["Warrior_Tree_1"] = "무기"
-	L["Warrior_Tree_2"] = "분노"
-	L["Warrior_Tree_3"] = "방어"
-	L["Warlock_Tree_1"] = "고통"
-	L["Warlock_Tree_2"] = "악마"
-	L["Warlock_Tree_3"] = "파괴"
 end
 
 end

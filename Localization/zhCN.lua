@@ -123,36 +123,6 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 	L["Female_short"] = "女"
 
 	L["Leader"] = "队长"
-
-	-- spell trees
-	L["Hybrid"] = "混合" -- for all 3 trees
-	L["Druid_Tree_1"] = "平衡"
-	L["Druid_Tree_2"] = "野性战斗"
-	L["Druid_Tree_3"] = "恢复"
-	L["Hunter_Tree_1"] = "野兽掌握"
-	L["Hunter_Tree_2"] = "射击"
-	L["Hunter_Tree_3"] = "生存"
-	L["Mage_Tree_1"] = "奥术"
-	L["Mage_Tree_2"] = "火焰"
-	L["Mage_Tree_3"] = "冰霜"
-	L["Paladin_Tree_1"] = "神圣"
-	L["Paladin_Tree_2"] = "防护"
-	L["Paladin_Tree_3"] = "惩戒"
-	L["Priest_Tree_1"] = "戒律"
-	L["Priest_Tree_2"] = "神圣"
-	L["Priest_Tree_3"] = "暗影"
-	L["Rogue_Tree_1"] = "刺杀"
-	L["Rogue_Tree_2"] = "战斗"
-	L["Rogue_Tree_3"] = "敏锐"
-	L["Shaman_Tree_1"] = "元素战斗"
-	L["Shaman_Tree_2"] = "增强"
-	L["Shaman_Tree_3"] = "恢复"
-	L["Warrior_Tree_1"] = "武器"
-	L["Warrior_Tree_2"] = "狂怒"
-	L["Warrior_Tree_3"] = "防御"
-	L["Warlock_Tree_1"] = "痛苦"
-	L["Warlock_Tree_2"] = "恶魔学识"
-	L["Warlock_Tree_3"] = "毁灭"
 end
 
 end

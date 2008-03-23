@@ -1,9 +1,7 @@
 --[[
 TODO:
 
-Abbreviations
 AddonVersion? - probably not gonna do this
-Talent
 ]]
 
 local old_dofile = dofile
@@ -363,6 +361,7 @@ DogTag:AddTag("Unit", "MyValue", {
 
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
+dofile("Categories/Abbrev.lua")
 dofile("Categories/Auras.lua")
 dofile("Categories/Cast.lua")
 dofile("Categories/Characteristics.lua")
@@ -375,6 +374,7 @@ dofile("Categories/Power.lua")
 dofile("Categories/Range.lua")
 dofile("Categories/Reputation.lua")
 dofile("Categories/Status.lua")
+dofile("Categories/Talent.lua")
 dofile("Categories/Threat.lua")
 dofile("Categories/TooltipScanning.lua")
 dofile("Cleanup.lua")
