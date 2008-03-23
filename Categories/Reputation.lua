@@ -89,7 +89,6 @@ DogTag:AddTag("Unit", "MissingReputation", {
 
 DogTag:AddTag("Unit", "ReputationName", {
 	code = function()
-		Rock("LibRockConsole-1.0"):Print("ReputationName", GetWatchedFactionInfo())
 		return GetWatchedFactionInfo()
 	end,
 	ret = "string;nil",
