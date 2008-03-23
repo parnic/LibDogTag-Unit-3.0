@@ -544,8 +544,8 @@ DogTag:AddTag("Unit", "InGroup", {
 DogTag:AddTag("Unit", "IsUnit", {
 	code = UnitIsUnit,
 	arg = {
-		'unit', 'string', '@req',
 		'other', 'string', '@req',
+		'unit', 'string', '@req',
 	},
 	ret = "boolean",
 	events = "UNIT_FACTION#$unit",
