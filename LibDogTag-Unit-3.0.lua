@@ -174,12 +174,19 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 	if kwargTypes["unit"] then
 		t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
 		t[#t+1] = extraKwargs["unit"][1]
-		t[#t+1] = [=[] then return ("Bad unit: %q"):format(]=]
+		t[#t+1] = [=[] then]=]
+		t[#t+1] = "\n"
+		t[#t+1] = [=[return ("Bad unit: %q"):format(]=]
 		t[#t+1] = extraKwargs["unit"][1]
-		t[#t+1] = [=[), nil;end;]=]
+		t[#t+1] = [=[), nil;]=]
+		t[#t+1] = "\n"
+		t[#t+1] = [=[end;]=]
+		t[#t+1] = "\n"
 		t[#t+1] = [=[if not UnitExists(]=]
 		t[#t+1] = extraKwargs["unit"][1]
-		t[#t+1] = [=[) then return ]=]
+		t[#t+1] = [=[) then]=]
+		t[#t+1] = "\n"
+		t[#t+1] = [=[return ]=]
 		if searchForNameTag(ast) then
 			t[#t+1] = [=[DogTag.UnitToLocale[]=]
 			t[#t+1] = extraKwargs["unit"][1]
@@ -187,7 +194,10 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		else
 			t[#t+1] = [=[nil]=]
 		end
-		t[#t+1] = [=[, nil;end;]=]
+		t[#t+1] = [=[, nil;]=]
+		t[#t+1] = "\n"
+		t[#t+1] = [=[end;]=]
+		t[#t+1] = "\n"
 	end
 end)
 
@@ -195,39 +205,69 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 	if compiledKwargs["unit"] and kwargs["unit"] ~= extraKwargs then
 		if type(kwargs["unit"]) ~= "table" then
 		 	if not IsLegitimateUnit[kwargs["unit"]] then
-				t[#t+1] = [=[do return ]=]
+				t[#t+1] = [=[do]=]
+				t[#t+1] = "\n"
+				t[#t+1] = [=[return ]=]
 				t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
 				t[#t+1] = compiledKwargs["unit"][1]
 				t[#t+1] = [=[));]=]
+				t[#t+1] = "\n"
 				t[#t+1] = [=[end;]=]
+				t[#t+1] = "\n"
 			end
 		else
 			t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
 			t[#t+1] = compiledKwargs["unit"][1]
-			t[#t+1] = [=[] then return ]=]
+			t[#t+1] = [=[] then]=]
+			t[#t+1] = "\n"
+			t[#t+1] = [=[return ]=]
 			t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
 			t[#t+1] = compiledKwargs["unit"][1]	
 			t[#t+1] = [=[));]=]
+			t[#t+1] = "\n"
 			t[#t+1] = [=[end;]=]
+			t[#t+1] = "\n"
 		end
 	end
 	if tag == "IsUnit" then
 		if type(kwargs["other"]) ~= "table" then
 		 	if not IsLegitimateUnit[kwargs["other"]] then
-				t[#t+1] = [=[do return ]=]
+				t[#t+1] = [=[do]=]
+				t[#t+1] = "\n"
+				t[#t+1] = [=[return ]=]
 				t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
 				t[#t+1] = compiledKwargs["other"][1]
 				t[#t+1] = [=[));]=]
+				t[#t+1] = "\n"
 				t[#t+1] = [=[end;]=]
+				t[#t+1] = "\n"
 			end
 		else
 			t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
 			t[#t+1] = compiledKwargs["other"][1]
-			t[#t+1] = [=[] then return ]=]
+			t[#t+1] = [=[] then]=]
+			t[#t+1] = "\n"
+			t[#t+1] = [=[return ]=]
 			t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
 			t[#t+1] = compiledKwargs["other"][1]	
 			t[#t+1] = [=[));]=]
+			t[#t+1] = "\n"
 			t[#t+1] = [=[end;]=]
+			t[#t+1] = "\n"
+		end
+	end
+end)
+
+DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, u, tag, tagData, kwargs, extraKwargs, compiledKwargs, events, returns)
+	if compiledKwargs["unit"] and kwargs["unit"] ~= extraKwargs and kwargs["unit"] ~= "player" then
+		t[#t+1] = [=[if UnitExists(]=]
+		t[#t+1] = compiledKwargs["unit"][1]
+		t[#t+1] = [=[) then]=]
+		t[#t+1] = "\n"
+		u[#u+1] = [=[end;]=]
+		u[#u+1] = "\n"
+		if not returns["boolean"] then
+			returns["nil"] = true
 		end
 	end
 end)
@@ -318,7 +358,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 	end
 end, 9)
 
-DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, tag, tagData, kwargs, extraKwargs, compiledKwargs, events)
+DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, u, tag, tagData, kwargs, extraKwargs, compiledKwargs, events, returns)
 	if compiledKwargs["unit"] then
 		events["UnitChanged#$unit"] = true
 		events["PARTY_MEMBERS_CHANGED"] = true

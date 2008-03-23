@@ -104,7 +104,7 @@ DogTag:AddTag("Unit", "MaxThreat", {
 })
 
 DogTag:AddTag("Unit", "PercentThreat", {
-	alias = [=[(CurThreat(unit=unit) / MaxThreat(unit=unit) * 100):Round(1)]=],
+	alias = [=[(Threat(unit=unit) / MaxThreat(unit=unit) * 100):Round(1)]=],
 	arg = {
 		'unit', 'string', '@req',
 	},
