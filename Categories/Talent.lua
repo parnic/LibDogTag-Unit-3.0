@@ -19,21 +19,15 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 	local function mySort(alpha, bravo)
 		return alpha[2] > bravo[2]
 	end
-	LibTalentQuery.RegisterCallback(DogTag_Unit, function(event, name, realm)
-		local fullName = realm and name .. "-" .. realm or name
-		
-		local data = newList()
-		for i = 1, 3 do
-			local name, _, points = GetTalentTabInfo(i, true)
-			data[i] = newList(name, points)
-		end
+	
+	local function update(fullName, data)
 		talentSpecs[fullName] = data[1][2] .. "/" .. data[2][2] .. "/" .. data[3][2]
 		table.sort(data, mySort)
 		
 		if data[1][2] == 0 then
 			talentSpecNames[fullName] = _G.NONE
 		elseif data[1][2]*3/4 <= data[2][2] then
-			if data[1][2]*3/4 <= data[2][3] then
+			if data[1][2]*3/4 <= data[3][2] then
 				talentSpecNames[fullName] = L["Hybrid"]
 			else
 				talentSpecNames[fullName] = data[1][1] .. "/" .. data[2][1]
@@ -41,6 +35,17 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 		else
 			talentSpecNames[fullName] = data[1][1]
 		end
+	end
+	
+	LibTalentQuery.RegisterCallback(DogTag_Unit, "TalentQuery_Ready", function(event, name, realm)
+		local fullName = realm and name .. "-" .. realm or name
+		
+		local data = newList()
+		for i = 1, 3 do
+			local name, _, points = GetTalentTabInfo(i, true)
+			data[i] = newList(name, points)
+		end
+		update(fullName, data)
 		for i = 1, 3 do
 			data[i] = del(data[i])
 		end
@@ -58,6 +63,18 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 	talentSpecs = setmetatable({}, x)
 	talentSpecNames = setmetatable({}, x)
 	x = nil
+	
+	local data = newList()
+	for i = 1, 3 do
+		local name, _, points = GetTalentTabInfo(i)
+		data[i] = newList(name, points)
+	end
+	update(UnitName("player"), data)
+	for i = 1, 3 do
+		data[i] = del(data[i])
+	end
+	data = del(data)
+	
 	local GetNameServer = DogTag_Unit.GetNameServer
 	function TalentSpec_func(unit)
 		if not UnitIsPlayer(unit) then
