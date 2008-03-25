@@ -105,7 +105,7 @@ DogTag:AddAddonFinder("Unit", "_G", "MobHealth_PPP", function(v)
 			local level = UnitLevel(unit)
 			local ppp = MobHealth_PPP(name..":"..level)
 			if ppp > 0 then
-				return math_floor(100 * ppp + 0.5)
+				return math.floor(100 * ppp + 0.5)
 			elseif known then
 				return nil
 			end
