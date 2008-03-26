@@ -48,7 +48,7 @@ local ShortRace_abbrev = {
 
 DogTag:AddTag("Unit", "ShortRace", {
 	code = function(value)
-		return ShortClass_abbrev[value]
+		return ShortRace_abbrev[value]
 	end,
 	arg = {
 		'value', 'string', '@req',
