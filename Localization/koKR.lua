@@ -124,6 +124,12 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Female_short"] = "여"
 	
 	L["Leader"] = "지휘관"
+	
+	-- dispel types
+	["Magic"] = "마법",
+	["Curse"] = "저주",
+	["Poison"] = "독",
+	["Disease"] = "질병",
 end
 
 end
