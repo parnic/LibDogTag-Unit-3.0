@@ -32,6 +32,7 @@ local units = {
 		guildRank = "Guild Leader",
 		pvpRank = "Knight",
 		reaction = 5,
+		powerType = 0,
 	},
 	pet = {
 		name = "Mypet",
@@ -42,7 +43,8 @@ local units = {
 		maxhp = 1000,
 		exists = true,
 		friend = true,
-		level = 9
+		level = 9,
+		powerType = 2,
 	},
 	target = {
 		name = "Mytarget",
@@ -57,6 +59,7 @@ local units = {
 		classification = 'worldboss',
 		reaction = 3,
 		isPlayer = true,
+		powerType = 1,
 	},
 	pettarget = {
 		name = "Mypettarget",
@@ -158,6 +161,10 @@ end
 
 function UnitCanAttack(alpha, bravo)
 	return not UnitIsFriend(alpha, bravo)
+end
+
+function UnitPowerType(unit)
+	return units[unit] and (units[unit].powerType or 0)
 end
 
 function UnitName(unit)
@@ -640,6 +647,11 @@ assert_equal(DogTag:Evaluate("[Guild(unit='player')]", "Unit", { unit = 'target'
 assert_equal(DogTag:Evaluate("[Guild = 'player':Guild]", "Unit", { unit = 'target' }), nil)
 assert_equal(DogTag:Evaluate("[Guild:Angle]", "Unit", { unit = 'target' }), nil)
 assert_equal(DogTag:Evaluate("[Guild = 'player':Guild] [Guild:Angle]", "Unit", { unit = 'target' }), nil)
+
+assert_equal(DogTag:Evaluate("[IsMana]", "Unit", { unit = 'player' }), "True")
+assert_equal(DogTag:Evaluate("[~IsMana]", "Unit", { unit = 'player' }), nil)
+assert_equal(DogTag:Evaluate("[IsMana]", "Unit", { unit = 'target' }), nil)
+assert_equal(DogTag:Evaluate("[~IsMana]", "Unit", { unit = 'target' }), "True")
 
 --[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
 
