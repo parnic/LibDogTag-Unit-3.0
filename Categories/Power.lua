@@ -44,7 +44,7 @@ DogTag:AddTag("Unit", "PercentMP", {
 })
 
 DogTag:AddTag("Unit", "MissingMP", {
-	alias = "MaxMP(unit=unit) - CurMP(unit=unit)",
+	alias = "MaxMP(unit=unit) - MP(unit=unit)",
 	arg = {
 		'unit', 'string', '@req',
 	},
