@@ -60,7 +60,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 	end
 end)
 
-DogTag:AddEventHandler("UnitChange", function(unit)
+DogTag:AddEventHandler("UnitChange", function(event, unit)
 	if rawget(castData, unit) then
 		castData[unit] = del(castData[unit])
 	end
