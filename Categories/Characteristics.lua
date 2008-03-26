@@ -530,15 +530,15 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 	category = L["Characteristics"]
 })
 
-if _G.UnitClassBase then
-	DogTag:AddTag("Unit", "Guid", {
-		code = UnitGUID,
-		arg = {
-			'unit', 'string', '@req',
-		},
-		ret = "string",
-		doc = L["Return the GUID for the unit, an internal identifier."]
-	})
-end
+DogTag:AddTag("Unit", "Guid", {
+	code = UnitGUID,
+	arg = {
+		'unit', 'string', '@req',
+	},
+	ret = "string",
+	doc = L["Return the GUID for the unit, an internal identifier."],
+	example = '[Guid] => "0x000000000ff0ad00"',
+	category = L["Characteristics"]
+}) 
 
 end
