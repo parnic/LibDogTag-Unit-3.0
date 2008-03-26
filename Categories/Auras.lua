@@ -250,8 +250,7 @@ local SWIFT_FLIGHT_FORM = GetSpellInfo(40120)
 local TRAVEL_FORM = GetSpellInfo(783)
 local TREE_OF_LIFE = GetSpellInfo(33891)
 
-DogTag:AddTag("Unit", "DruidForm", {
-	code = function(unit)
+local function DruidForm(unit)
 		local _, c = UnitClass(unit)
 		if c ~= "DRUID" then
 			return nil
@@ -275,7 +274,10 @@ DogTag:AddTag("Unit", "DruidForm", {
 			return L["Tree"]
 		end
 		return nil
-	end,
+end
+
+DogTag:AddTag("Unit", "DruidForm", {
+	code = DruidForm,
 	arg = {
 		'unit', 'string', '@req',
 	},
@@ -284,6 +286,30 @@ DogTag:AddTag("Unit", "DruidForm", {
 	doc = L["Return the shapeshift form the unit is in if unit is a druid"],
 	example = ('[DruidForm] => %q; [DruidForm] => %q; [DruidForm] => ""'):format(L["Bear"], L["Cat"]),
 	category = L["Auras"]
+})
+
+local ShortDruidForm_abbrev = {
+	[L["Bear"]] = L["Bear_short"],
+	[L["Cat"]] = L["Cat_short"],
+	[L["Moonkin"]] = L["Moonkin_short"],
+	[L["Aquatic"]] = L["Aquatic_short"],
+	[L["Flight"]] = L["Flight_short"],
+	[L["Travel"]] = L["Travel_short"],
+	[L["Tree"]] = L["Tree_short"],
+}
+
+DogTag:AddTag("Unit", "ShortDruidForm", {
+	code = function(value, unit)
+		return ShortDruidForm_abbrev[value or DruidForm(unit)]
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string', '@req'
+	},
+	ret = "string;nil",
+	doc = L["Return a shortened druid form of unit, or shorten a druid form"],
+	example = ('[ShortDruidForm] => %q, [%q:ShortDruidForm] => %q; ["Hello":ShortDruidForm] => ""'):format(L["Bear_short"], L["Bear"], L["Bear_short"]),
+	category = L["Abbreviations"]
 })
 
 DogTag:AddTag("Unit", "NumDebuffs", {

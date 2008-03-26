@@ -4,7 +4,6 @@
 	<Script file="Localization\koKR.lua" />
 	<Script file="Localization\zhCN.lua" />
 	<Script file="LibDogTag-Unit-3.0.lua" />
-	<Script file="Categories\Abbrev.lua" />
 	<Script file="Categories\Auras.lua" />
 	<Script file="Categories\Cast.lua" />
 	<Script file="Categories\Characteristics.lua" />

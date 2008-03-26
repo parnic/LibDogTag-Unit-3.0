@@ -126,12 +126,16 @@ DogTag:AddTag("Unit", "IsMaxLevel", {
 	category = L["Characteristics"],
 })
 
-DogTag:AddTag("Unit", "Class", {
-	code = _G.UnitClassBase and function(unit)
-		return UnitClassBase(unit) or UNKNOWN
-	end or function(unit)
+local function Class(unit)
+	if UnitIsPlayer(unit) then
 		return UnitClass(unit) or UNKNOWN
-	end,
+	else
+		return UnitClassBase(unit) or UNKNOWN
+	end
+end
+
+DogTag:AddTag("Unit", "Class", {
+	code = Class,
 	arg = {
 		'unit', 'string', '@req'
 	},
@@ -139,6 +143,31 @@ DogTag:AddTag("Unit", "Class", {
 	doc = L["Return the class of unit"],
 	example = ('[Class] => %q'):format((UnitClass("player"))),
 	category = L["Characteristics"]
+})
+
+local ShortClass_abbrev = {
+	[L["Priest"]] = L["Priest_short"],
+	[L["Mage"]] = L["Mage_short"],
+	[L["Shaman"]] = L["Shaman_short"],
+	[L["Paladin"]] = L["Paladin_short"],
+	[L["Warlock"]] = L["Warlock_short"],
+	[L["Druid"]] = L["Druid_short"],
+	[L["Rogue"]] = L["Rogue_short"],
+	[L["Hunter"]] = L["Warrior_short"],
+}
+
+DogTag:AddTag("Unit", "ShortClass", {
+	code = function(value, unit)
+		return ShortClass_abbrev[value or Class(unit)]
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string', '@req'
+	},
+	ret = "string;nil",
+	doc = L["Return a shortened class of unit, or shorten a class name"],
+	example = ('[ShortClass] => %q; [%q:ShortClass] => %q; ["Hello":ShortClass] => ""'):format(L["Priest_short"], L["Priest"], L["Priest_short"]),
+	category = L["Abbreviations"],
 })
 
 DogTag:AddTag("Unit", "Creature", {
@@ -167,22 +196,19 @@ DogTag:AddTag("Unit", "CreatureType", {
 	category = L["Characteristics"]
 })
 
+local Classification_lookup = {
+	rare = L["Rare"],
+	rareelite = L["Rare-Elite"],
+	elite = L["Elite"],
+	worldboss = L["Boss"]
+}
+
+local function Classification(unit)
+	return Classification_lookup[UnitClassification(unit)]
+end
 
 DogTag:AddTag("Unit", "Classification", {
-	code = function(unit)
-		local c = UnitClassification(unit)
-		if c == "rare" then
-			return L["Rare"]
-		elseif c == "rareelite" then
-			return L["Rare-Elite"]
-		elseif c == "elite" then
-			return L["Elite"]
-		elseif c == "worldboss" then
-			return L["Boss"]
-		else
-			return nil
-		end
-	end,
+	code = Classification,
 	arg = {
 		'unit', 'string', '@req'
 	},
@@ -190,6 +216,27 @@ DogTag:AddTag("Unit", "Classification", {
 	doc = L["Return the classification of unit"],
 	example = ('[Classification] => %q; [Classification] => %q; [Classification] => ""'):format(L["Elite"], L["Boss"]),
 	category = L["Characteristics"]
+})
+
+local ShortClassification_abbrev = {
+	[L["Rare"]] = L["Rare_short"],
+	[L["Rare-Elite"]] = L["Rare-Elite_short"],
+	[L["Elite"]] = L["Elite_short"],
+	[L["Boss"]] = L["Boss_short"]
+}
+
+DogTag:AddTag("Unit", "ShortClassification", {
+	code = function(text, unit)
+		return ShortClassification_abbrev[text or Classification(unit)]
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string', '@req'
+	},
+	ret = "string;nil",
+	doc = L["Return a shortened classification of unit, or shorten a classification"],
+	example = ('[ShortClassification] => %q; [%q:ShortClassification] => %q; ["Hello":ShortClassification] => ""'):format(L["Elite_short"], L["Boss"], L["Boss_short"]),
+	category = L["Abbreviations"]
 })
 
 DogTag:AddTag("Unit", "Race", {
@@ -203,6 +250,33 @@ DogTag:AddTag("Unit", "Race", {
 	category = L["Characteristics"]
 })
 
+local ShortRace_abbrev = {
+	[L["Blood Elf"]] = L["Blood Elf_short"],
+	[L["Draenei"]] = L["Draenei_short"],
+	[L["Dwarf"]] = L["Dwarf_short"],
+	[L["Gnome"]] = L["Gnome_short"],
+	[L["Human"]] = L["Human_short"],
+	[L["Night Elf"]] = L["Night Elf_short"],
+	[L["Orc"]] = L["Orc_short"],
+	[L["Tauren"]] = L["Tauren_short"],
+	[L["Troll"]] = L["Troll_short"],
+	[L["Undead"]] = L["Undead_short"],
+}
+
+DogTag:AddTag("Unit", "ShortRace", {
+	code = function(value, unit)
+		return ShortRace_abbrev[value or UnitRace(unit)]
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string', '@req'
+	},
+	ret = "string;nil",
+	doc = L["Return a shortened race of unit, or shorten a race"],
+	example = ('[ShortRace] => %q; [%q:ShortRace] => %q; ["Hello":ShortRace] => ""'):format(L["Blood Elf_short"], L["Blood Elf"], L["Blood Elf_short"]),
+	category = L["Abbreviations"]
+})
+
 DogTag:AddTag("Unit", "SmartRace", {
 	alias = "IsPlayer(unit=unit) ? Race(unit=unit) ! Creature(unit=unit)",
 	arg = {
@@ -213,8 +287,7 @@ DogTag:AddTag("Unit", "SmartRace", {
 	category = L["Characteristics"]
 })
 
-DogTag:AddTag("Unit", "Sex", {
-	code = function(unit)
+local function Sex(unit)
 		local sex = UnitSex(unit)
 		if sex == 2 then
 			return L["Male"]
@@ -223,7 +296,10 @@ DogTag:AddTag("Unit", "Sex", {
 		else
 			return nil
 		end
-	end,
+end
+
+DogTag:AddTag("Unit", "Sex", {
+	code = Sex,
 	arg = {
 		'unit', 'string', '@req'
 	},
@@ -231,6 +307,25 @@ DogTag:AddTag("Unit", "Sex", {
 	doc = L["Return Male, Female, or blank depending on unit"],
 	example = ('[Sex] => %q; [Sex] => %q; [Sex] => ""'):format(L["Male"], L["Female"]),
 	category = L["Characteristics"]
+})
+
+local ShortSex_abbrev = {
+	[L["Male"]] = L["Male_short"],
+	[L["Female"]] = L["Female_short"]
+}
+
+DogTag:AddTag("Unit", "ShortSex", {
+	code = function(value, unit)
+		return ShortSex_abbrev[value or Sex(unit)]
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string', '@req'
+	},
+	ret = "string;nil",
+	doc = L["Return a shortened sex of the unit, or shorten a sex"],
+	example = ('[ShortSex] => %q; [%q:ShortSex] => %q; ["Hello":ShortSex] => ""'):format(L["Male_short"], L["Male"], L["Male_short"]),
+	category = L["Abbreviations"]
 })
 
 DogTag:AddTag("Unit", "GuildRank", {
