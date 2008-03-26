@@ -164,15 +164,15 @@ DogTag:AddTag("Unit", "PowerColor", {
 		local powerType = UnitPowerType(unit)
 		local r,g,b
 		if powerType == 0 then
-			r,g,b = unpack(colors.mana)
+			r,g,b = unpack(DogTag.__colors.mana)
 		elseif powerType == 1 then
-			r,g,b = unpack(colors.rage)
+			r,g,b = unpack(DogTag.__colors.rage)
 		elseif powerType == 2 then
-			r,g,b = unpack(colors.focus)
+			r,g,b = unpack(DogTag.__colors.focus)
 		elseif powerType == 3 then
-			r,g,b = unpack(colors.energy)
+			r,g,b = unpack(DogTag.__colors.energy)
 		else
-			r,g,b = unpack(colors.unknown)
+			r,g,b = unpack(DogTag.__colors.unknown)
 		end
 		if value then
 			return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
