@@ -199,7 +199,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 end)
 
 
-DogTag:AddEventHandler("UnitChanged", function(unit)
+DogTag:AddEventHandler("UnitChanged", function(event, unit)
 	if rawget(currentAuras, unit) then
 		currentAuras[unit] = del(currentAuras[unit])
 		currentDebuffTypes[unit] = del(currentDebuffTypes[unit])
@@ -209,7 +209,7 @@ DogTag:AddEventHandler("UnitChanged", function(unit)
 	end
 end)
 
-DogTag:AddEventHandler("UNIT_AURA", function(unit)
+DogTag:AddEventHandler("UNIT_AURA", function(event, unit)
 	auraQueue[unit] = true
 end)
 
