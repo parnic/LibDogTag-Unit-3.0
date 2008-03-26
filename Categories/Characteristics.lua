@@ -336,8 +336,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 				r, g, b = unpack(DogTag.__colors.civilian)
 			end
 		elseif (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) or UnitIsDead(unit) then
-			--r, g, b = unpack(DogTag.__colors.tapped)
-			r, g, b = unpack(DogTag.__colors.dead) --temporary, ck please fix (tapped doesn't exist in dogtag's colors table)
+			r, g, b = unpack(DogTag.__colors.tapped)
 		else
 			local reaction = UnitReaction(unit, "player")
 			if reaction then
