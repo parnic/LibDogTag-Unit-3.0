@@ -69,7 +69,7 @@ end)
 local nextSpell, nextRank, nextTarget
 local lastPlayerEvent
 
-local function UNIT_SPELLCAST_SENT(unit, spell, rank, target)
+local function UNIT_SPELLCAST_SENT(event, unit, spell, rank, target)
 	if not hasEvent('Cast') then
 		return
 	end
@@ -84,7 +84,7 @@ local function UNIT_SPELLCAST_SENT(unit, spell, rank, target)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_SENT", UNIT_SPELLCAST_SENT)
 
-local function UNIT_SPELLCAST_START(unit)
+local function UNIT_SPELLCAST_START(event, unit)
 	if not hasEvent('Cast') then
 		return
 	end
@@ -103,7 +103,7 @@ end
 DogTag:AddEventHandler("UNIT_SPELLCAST_START", UNIT_SPELLCAST_START)
 DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_START", UNIT_SPELLCAST_START)
 
-local function UNIT_SPELLCAST_STOP(unit)
+local function UNIT_SPELLCAST_STOP(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].fading then
 		return
 	end
@@ -116,7 +116,7 @@ local function UNIT_SPELLCAST_STOP(unit)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_STOP", UNIT_SPELLCAST_STOP)
 
-local function UNIT_SPELLCAST_SUCCEEDED(unit, name, rank)
+local function UNIT_SPELLCAST_SUCCEEDED(event, unit, name, rank)
 	if not hasEvent('Cast') or unit ~= "player" or lastPlayerEvent ~= "UNIT_SPELLCAST_SENT" then
 		return
 	end
@@ -148,7 +148,7 @@ local function UNIT_SPELLCAST_SUCCEEDED(unit, name, rank)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_SUCCEEDED", UNIT_SPELLCAST_SUCCEEDED)
 
-local function UNIT_SPELLCAST_FAILED(unit)
+local function UNIT_SPELLCAST_FAILED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].fading then
 		return
 	end
@@ -159,7 +159,7 @@ local function UNIT_SPELLCAST_FAILED(unit)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_FAILED", UNIT_SPELLCAST_FAILED)
 
-local function UNIT_SPELLCAST_INTERRUPTED(unit)
+local function UNIT_SPELLCAST_INTERRUPTED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) then
 		return
 	end
@@ -171,7 +171,7 @@ end
 DogTag:AddEventHandler("UNIT_SPELLCAST_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
 DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
 
-local function UNIT_SPELLCAST_DELAYED(unit)
+local function UNIT_SPELLCAST_DELAYED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].stopTime then
 		return
 	end
@@ -194,7 +194,7 @@ local function UNIT_SPELLCAST_DELAYED(unit)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_DELAYED", UNIT_SPELLCAST_DELAYED)
 
-local function UNIT_SPELLCAST_CHANNEL_UPDATE(unit)
+local function UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
 		return
 	end
@@ -217,7 +217,7 @@ local function UNIT_SPELLCAST_CHANNEL_UPDATE(unit)
 end
 DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_SPELLCAST_CHANNEL_UPDATE)
 
-local function UNIT_SPELLCAST_CHANNEL_STOP(unit)
+local function UNIT_SPELLCAST_CHANNEL_STOP(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
 		return
 	end
@@ -270,7 +270,7 @@ DogTag:AddTag("Unit", "CastRank", {
 	category = L["Casting"]
 })
 
-DogTag:AddTag("Unit", "CastStartTime", {
+DogTag:AddTag("Unit", "CastStartDuration", {
 	code = function(unit)
 		local t = castData[unit].startTime
 		if t then
@@ -283,7 +283,7 @@ DogTag:AddTag("Unit", "CastStartTime", {
 		'unit', 'string', '@req',
 	},
 	ret = "number;nil",
-	events = "Update;Cast#$unit",
+	events = "FastUpdate;Cast#$unit",
 	doc = L["Return the duration since the current cast started"],
 	example = '[CastStartDuration] => "3.012367"; [CastStartDuration:FormatDuration] => "0:03"',
 	category = L["Casting"]
@@ -302,7 +302,7 @@ DogTag:AddTag("Unit", "CastEndDuration", {
 		'unit', 'string', '@req',
 	},
 	ret = "number;nil",
-	events = "Update;Cast#$unit",
+	events = "FastUpdate;Cast#$unit",
 	globals = "DogTag.__castData",
 	doc = L["Return the duration until the current cast is meant to finish"],
 	example = '[CastEndDuration] => "2.07151"; [CastEndDuration:FormatDuration] => "0:02"',
@@ -350,7 +350,7 @@ DogTag:AddTag("Unit", "CastStopDuration", {
 		'unit', 'string', '@req',
 	},
 	ret = "number;nil",
-	events = "Update;Cast#$unit",
+	events = "FastUpdate;Cast#$unit",
 	doc = L["Return the duration which the current cast has been stopped, blank if not stopped yet"],
 	example = '[CastStopDuration] => "2.06467"; [CastStopDuration:FormatDuration] => "0:02"; [CastStopDuration] => ""',
 	category = L["Casting"]
