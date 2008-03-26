@@ -28,6 +28,7 @@ local units = {
 		level = 10,
 		race = "Tauren",
 		sex = 3,
+		guild = "Southsea Buccaneers",
 		guildRank = "Guild Leader",
 		pvpRank = "Knight",
 		reaction = 5,
@@ -55,6 +56,7 @@ local units = {
 		level = 15,
 		classification = 'worldboss',
 		reaction = 3,
+		isPlayer = true,
 	},
 	pettarget = {
 		name = "Mypettarget",
@@ -361,7 +363,6 @@ DogTag:AddTag("Unit", "MyValue", {
 
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
-dofile("Categories/Abbrev.lua")
 dofile("Categories/Auras.lua")
 dofile("Categories/Cast.lua")
 dofile("Categories/Characteristics.lua")
@@ -612,7 +613,7 @@ assert_equal(DogTag:Evaluate("[IsPet('pet')]", "Unit"), "True")
 
 assert_equal(DogTag:Evaluate("[IsPlayerOrPet('player')]", "Unit"), "True")
 assert_equal(DogTag:Evaluate("[IsPlayerOrPet('pet')]", "Unit"), "True")
-assert_equal(DogTag:Evaluate("[IsPlayerOrPet('target')]", "Unit"), nil)
+assert_equal(DogTag:Evaluate("[IsPlayerOrPet('pettarget')]", "Unit"), nil)
 
 assert_equal(DogTag:Evaluate("[PvPRank(unit='player')]", "Unit"), "Knight")
 assert_equal(DogTag:Evaluate("[NameRealm('player'):PvPRank(unit='player')]", "Unit"), "Knight Me")
@@ -633,5 +634,13 @@ assert_equal(DogTag:Evaluate("[DifficultyColor(unit='target')]", "Unit"), "|cfff
 assert_equal(DogTag:Evaluate("[Guid(unit='player')]", "Unit"), "0x0000000000000000")
 
 assert_equal(DogTag:Evaluate("[HasMP]", "Unit", { unit = 'player' }), "True")
+
+assert_equal(DogTag:Evaluate("[Guild]", "Unit", { unit = 'target' }), nil)
+assert_equal(DogTag:Evaluate("[Guild(unit='player')]", "Unit", { unit = 'target' }), "Southsea Buccaneers")
+assert_equal(DogTag:Evaluate("[Guild = 'player':Guild]", "Unit", { unit = 'target' }), nil)
+assert_equal(DogTag:Evaluate("[Guild:Angle]", "Unit", { unit = 'target' }), nil)
+assert_equal(DogTag:Evaluate("[Guild = 'player':Guild] [Guild:Angle]", "Unit", { unit = 'target' }), nil)
+
+--[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
 
 print("LibDogTag-Unit-3.0: Tests succeeded")
