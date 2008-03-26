@@ -197,7 +197,7 @@ DogTag:AddTag("Unit", "Race", {
 	arg = {
 		'unit', 'string', '@req'
 	},
-	ret = "string",
+	ret = "string;nil",
 	doc = L["Return the race of unit"],
 	example = ('[Race] => %q'):format((UnitRace("player"))),
 	category = L["Characteristics"]
