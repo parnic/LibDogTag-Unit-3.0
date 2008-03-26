@@ -7,5 +7,6 @@
 ## Version: 1.0
 ## X-Category: Library
 ## Dependencies: LibDogTag-3.0
+## OptionalDeps: LibDruidMana-1.0, RangeCheck-1.0, LibTalentQuery-1.0
 
 lib.xml
