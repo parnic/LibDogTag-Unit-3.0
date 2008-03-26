@@ -177,11 +177,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 			local oldNumDebuffs = currentNumDebuffs[unit]
 			currentNumDebuffs[unit] = numDebuffs
 			if oldNumDebuffs ~= numDebuffs then
-				if hasEvent.NumDebuffs then
-					for text in pairs(eventData.NumDebuffs) do
-						toUpdate[text] = true
-					end
-				end
+				DogTag:FireEvent("Aura", unit)
 			end
 			old = del(old)
 			oldType = del(oldType)
