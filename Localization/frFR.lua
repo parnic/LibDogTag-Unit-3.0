@@ -60,7 +60,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Shaman_female"] = "Chamane"
 	L["Paladin_female"] = "Paladin" -- TODO: check it
 	L["Warlock_female"] = "Démoniste"
-	L["Druid_female"] = "Druidessse"
+	L["Druid_female"] = "Druidesse"
 	L["Rogue_female"] = "Voleuse"
 	L["Hunter_female"] = "Chasseresse"
 	
