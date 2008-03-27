@@ -27,7 +27,9 @@ local function MaxHP_func(unit, known)
 	end
 end
 
+local HP_lib
 DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
+	HP_lib = "LibMobHealth-4.0"
 	local LibMobHealth = v
 	function HP_func(unit, known)
 		local hp, found = LibMobHealth:GetUnitCurrentHP(unit)
@@ -48,6 +50,9 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
 end)
 
 DogTag:AddAddonFinder("Unit", "_G", "MobHealth3", function(v)
+	if HP_lib == "LibMobHealth-4.0" then
+		return
+	end
 	local MobHealth3 = v
 	function HP_func(unit, found)
 		local currValue = UnitHealth(unit)
@@ -81,6 +86,9 @@ DogTag:AddAddonFinder("Unit", "_G", "MobHealth3", function(v)
 end)
 
 DogTag:AddAddonFinder("Unit", "_G", "MobHealth_PPP", function(v)
+	if HP_lib then
+		return
+	end
 	local MobHealth_PPP = v
 	function HP_func(unit, found)
 		local currValue = UnitHealth(unit)
