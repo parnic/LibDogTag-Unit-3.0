@@ -90,7 +90,7 @@ DogTag:AddTag("Unit", "MissingXP", {
 })
 
 DogTag:AddTag("Unit", "RestXP", {
-	code = function()
+	code = function(unit)
 		if unit == "player" then
 		 	return GetXPExhaustion()
 		else
