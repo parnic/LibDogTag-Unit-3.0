@@ -13,7 +13,20 @@ local function MinRange_func(unit) return nil end
 local function MaxRange_func(unit) return nil end
 local function MinMaxRange_func(unit) return nil end
 
-DogTag:AddAddonFinder("Unit", "AceLibrary", "RangeCheck-1.0", function(RangeCheckLib)
+local function formatMinMax(min, max) 
+	if min then
+		if max then
+			return min .. " - " .. max
+		else
+			return min .. "+"
+		end
+	end
+	return nil
+end
+
+local found = false
+DogTag:AddAddonFinder("Unit", "LibStub", "LibRangeCheck-2.0", function(RangeCheckLib)
+	found = true
 	function MinRange_func(unit)
 		return (RangeCheckLib:getRange(unit))
 	end
@@ -22,15 +35,23 @@ DogTag:AddAddonFinder("Unit", "AceLibrary", "RangeCheck-1.0", function(RangeChec
 		return max
 	end
 	function MinMaxRange_func(unit)
-		local min, max = RangeCheckLib:getRange(unit)
-		if min then
-			if max then
-				return min .. " - " .. max
-			else
-				return min .. "+"
-			end
-		end
-		return nil
+		return formatMinMax(RangeCheckLib:getRange(unit))
+	end
+end)
+
+DogTag:AddAddonFinder("Unit", "AceLibrary", "RangeCheck-1.0", function(RangeCheckLib)
+	if found then
+		return
+	end
+	function MinRange_func(unit)
+		return (RangeCheckLib:getRange(unit))
+	end
+	function MaxRange_func(unit)
+		local _, max = RangeCheckLib:getRange(unit)
+		return max
+	end
+	function MinMaxRange_func(unit)
+		return formatMinMax(RangeCheckLib:getRange(unit))
 	end
 end)
 
