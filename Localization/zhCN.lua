@@ -1,4 +1,4 @@
-local MAJOR_VERSION = "LibDogTag-Unit-3.0"
+﻿local MAJOR_VERSION = "LibDogTag-Unit-3.0"
 local MINOR_VERSION = tonumber(("$Revision$"):match("%d+")) or 0
 
 _G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -54,10 +54,11 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 	L["Rogue_short"] = "贼"
 	L["Hunter_short"] = "猎"
 
---使用wow自身local
-	L["Player"] = PLAYER
-	L["Target"] = TARGET
-	L["Focus-target"] = FOCUS
+	-- Some strings below are set to GlobalStrings in enUS.lua and no need to be localized, commented out
+	-- 下面部分字串已经在enUS.lua里面使用了GlobalStrings，不需要翻译，注释掉
+	--L["Player"] = PLAYER
+	--L["Target"] = TARGET
+	--L["Focus-target"] = FOCUS
 	L["Mouse-over"] = "鼠标目标"
 	L["%s's pet"] = "%s的宠物"
 	L["%s's target"] = "%s的目标"
@@ -66,9 +67,9 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 
 	-- classifications
 	L["Rare"] = "稀有"
-	L["Rare-Elite"] = "稀有" .. "-" .. ELITE
-	L["Elite"] = "精英"
-	L["Boss"] = BOSS
+	L["Rare-Elite"] = "稀有" and ELITE and "稀有" .. "-" .. ELITE
+	--L["Elite"] = ELITE
+	--L["Boss"] = BOSS
 	-- short classifications
 	L["Rare_short"] = "稀"
 	L["Rare-Elite_short"] = "稀+"
@@ -79,9 +80,9 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 	L["Stealthed"] = "潜行"
 	L["Soulstoned"] = "灵魂已保存"
 
-	L["Dead"] = "死亡"
+	--L["Dead"] = DEAD
 	L["Ghost"] = "鬼魂"
-	L["Offline"] = "离线"
+	--L["Offline"] = PLAYER_OFFLINE
 	L["Online"] = "在线"
 	L["Combat"] = "战斗"
 	L["Resting"] = "休息"
@@ -89,17 +90,17 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 	L["AFK"] = "暂离"
 	L["DND"] = "勿扰"
 
-	L["Rage"] = "怒气值"
-	L["Focus"] = "集中值"
-	L["Energy"] = "能量值"
-	L["Mana"] = "魔法值"
+	--L["Rage"] = RAGE
+	--L["Focus"] = FOCUS
+	--L["Energy"] = ENERGY
+	--L["Mana"] = MANA
 
-	L["PvP"] = PVP
-	L["FFA"] = "FFA"
+	--L["PvP"] = PVP
+	L["FFA"] = "自由PK"
 
 	-- genders
-	L["Male"] = "男"
-	L["Female"] = "女"
+	--L["Male"] = MALE
+	--L["Female"] = FEMALE
 
 	-- forms
 	L["Bear"] = "熊"
@@ -123,6 +124,12 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
 	L["Female_short"] = "女"
 
 	L["Leader"] = "队长"
+	
+	-- dispel types
+	L["Magic"] = "魔法"
+	L["Curse"] = "诅咒"
+	L["Poison"] = "中毒"
+	L["Disease"] = "疾病"
 end
 
 end
