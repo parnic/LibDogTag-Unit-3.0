@@ -361,7 +361,7 @@ DogTag:AddTag("Unit", "IsTapped", {
 	},
 	ret = "boolean",
 	events = "Update",
-	doc = L["Return * if unit is tapped, but not by you"],
+	doc = L["Return True if unit is tapped, but not by you"],
 	example = ('[IsTapped] => %q; [IsTapped] => ""'):format(L["True"]),
 	category = L["Status"]
 })
