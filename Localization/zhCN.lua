@@ -1,11 +1,6 @@
-﻿local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = tonumber(("$Revision$"):match("%d+")) or 0
+﻿if GetLocale() == "zhCN" then
 
-_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
-
-if GetLocale() == "zhCN" then
-
-DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function()
+DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	local L = DogTag_Unit.L
 	
 	-- races
