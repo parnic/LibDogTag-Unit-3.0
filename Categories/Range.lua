@@ -65,17 +65,17 @@ DogTag:AddTag("Unit", "Range", {
 	},
 	doc = L["Return the approximate range of unit, if RangeCheck-1.0 is available"],
 	ret = function()
-		if not RangeCheckLib then
-			return "nil"
-		else
+		if found then
 			return "string"
+		else
+			return "nil"
 		end
 	end,
 	events = function()
-		if not RangeCheckLib then
-			return nil
-		else
+		if found then
 			return "Update"
+		else
+			return nil
 		end
 	end,
 	example = '[Range] => "5 - 15"; [Range] => "30+"; [Range] => ""',
@@ -91,17 +91,17 @@ DogTag:AddTag("Unit", "MinRange", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = function()
-		if not RangeCheckLib then
-			return "nil"
-		else
+		if found then
 			return "number"
+		else
+			return "nil"
 		end
 	end,
 	events = function()
-		if not RangeCheckLib then
-			return nil
-		else
+		if found then
 			return "Update"
+		else
+			return nil
 		end
 	end,
 	doc = L["Return the approximate minimum range of unit, if RangeCheck-1.0 is available"],
@@ -118,17 +118,17 @@ DogTag:AddTag("Unit", "MaxRange", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = function()
-		if not RangeCheckLib then
-			return "nil"
-		else
+		if found then
 			return "nil;number"
+		else
+			return "nil"
 		end
 	end,
 	events = function()
-		if not RangeCheckLib then
-			return nil
-		else
+		if found then
 			return "Update"
+		else
+			return nil
 		end
 	end,
 	doc = L["Return the approximate maximum range of unit, if RangeCheck-1.0 is available"],
