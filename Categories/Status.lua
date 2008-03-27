@@ -613,11 +613,11 @@ DogTag:AddTag("Unit", "HappyColor", {
 		local x = GetPetHappiness()
 		local r,g,b
 		if x == 3 then
-			r,g,b = unpack(colors.petHappy)
+			r,g,b = unpack(DogTag.__colors.petHappy)
 		elseif x == 2 then
-			r,g,b = unpack(colors.petNeutral)
+			r,g,b = unpack(DogTag.__colors.petNeutral)
 		elseif x == 1 then
-			r,g,b = unpack(colors.petAngry)
+			r,g,b = unpack(DogTag.__colors.petAngry)
 		end
 		if r then
 			if value then
