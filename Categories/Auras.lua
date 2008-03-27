@@ -454,7 +454,7 @@ DogTag:AddTag("Unit", "HasDebuffType", {
 	ret = "boolean",
 	events = "Aura#$unit#$type",
 	doc = L["Return True if friendly unit is has a debuff of type"],
-	example = ('[HasDebuffType(Poison)] => %q; [HasDebuffType(Poison)] => ""'):format(L["True"]),
+	example = ('[HasDebuffType("Poison")] => %q; [HasDebuffType("Poison")] => ""'):format(L["True"]),
 	category = L["Auras"],
 })
 
