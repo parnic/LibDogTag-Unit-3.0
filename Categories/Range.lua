@@ -11,6 +11,7 @@ local L = DogTag_Unit.L
 
 local function MinRange_func(unit) return nil end
 local function MaxRange_func(unit) return nil end
+local function MinMaxRange_func(unit) return nil end
 
 DogTag:AddAddonFinder("Unit", "AceLibrary", "RangeCheck-1.0", function(RangeCheckLib)
 	function MinRange_func(unit)
@@ -20,14 +21,42 @@ DogTag:AddAddonFinder("Unit", "AceLibrary", "RangeCheck-1.0", function(RangeChec
 		local _, max = RangeCheckLib:getRange(unit)
 		return max
 	end
+	function MinMaxRange_func(unit)
+		local min, max = RangeCheckLib:getRange(unit)
+		if min then
+			if max then
+				return min .. " - " .. max
+			else
+				return min .. "+"
+			end
+		end
+		return nil
+	end
 end)
 
 DogTag:AddTag("Unit", "Range", {
-	alias = [=[IsVisible(unit=unit) & ~DeadType(unit=unit) ? MinRange(unit=unit) (Concatenate(" - ", MaxRange(unit=unit)) || "+")]=],
+	code = function(data)
+		return MinMaxRange_func
+	end,
+	dynamicCode = true,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the approximate range of unit, if RangeCheck-1.0 is available"],
+	ret = function()
+		if not RangeCheckLib then
+			return "nil"
+		else
+			return "string"
+		end
+	end,
+	events = function()
+		if not RangeCheckLib then
+			return nil
+		else
+			return "Update"
+		end
+	end,
 	example = '[Range] => "5 - 15"; [Range] => "30+"; [Range] => ""',
 	category = L["Range"]
 })
