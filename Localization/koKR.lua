@@ -95,7 +95,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Energy"] = "기력"
 	L["Mana"] = "마나"
 	
-	L["PvP"] = "전쟁" -- PVP,
+	L["PvP"] = "전쟁" -- PVP
 	L["FFA"] = "전투 지역"
 
 	-- genders
@@ -126,10 +126,10 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Leader"] = "지휘관"
 	
 	-- dispel types
-	["Magic"] = "마법",
-	["Curse"] = "저주",
-	["Poison"] = "독",
-	["Disease"] = "질병",
+	L["Magic"] = "마법"
+	L["Curse"] = "저주"
+	L["Poison"] = "독"
+	L["Disease"] = "질병"
 end
 
 end
