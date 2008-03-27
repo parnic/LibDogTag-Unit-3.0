@@ -433,6 +433,7 @@ MyValue_data = "fakeunit"
 assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), 'Bad unit: "fakeunit"')
 MyValue_data = 50
 assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), 'Bad unit: "50"')
+assert_equal(DogTag:Evaluate("[HP(nil)]", "Unit"), nil)
 MyValue_data = nil
 assert_equal(DogTag:Evaluate("[HP(MyValue)]", "Unit"), nil)
 

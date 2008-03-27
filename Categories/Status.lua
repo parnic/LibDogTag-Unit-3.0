@@ -136,7 +136,7 @@ DogTag:AddTag("Unit", "OfflineDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
 	events = "OfflineDuration#$unit",
@@ -162,7 +162,7 @@ DogTag:AddTag("Unit", "DeadDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
 	events = "DeadDuration#$unit",
@@ -182,7 +182,7 @@ DogTag:AddTag("Unit", "DeadType", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "DeadDuration#$unit",
@@ -194,7 +194,7 @@ DogTag:AddTag("Unit", "DeadType", {
 DogTag:AddTag("Unit", "Dead", {
 	alias = "DeadType(unit=unit) Concatenate(' ', DeadDuration(unit=unit):FormatDuration:Paren)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return Dead or Ghost and the duration dead if unit is dead"],
 	example = ('[Dead] => "%s (1:34)"; [Dead] => "%s"; [Dead] => ""'):format(L["Dead"], L["Ghost"]),
@@ -211,7 +211,7 @@ DogTag:AddTag("Unit", "AFKDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
 	events = "AFKDuration#$unit",
@@ -236,7 +236,7 @@ DogTag:AddTag("Unit", "DND", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "PLAYER_FLAGS_CHANGED#$unit",
@@ -256,7 +256,7 @@ DogTag:AddTag("Unit", "PvP", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return PvP or FFA if the unit is PvP-enabled"],
@@ -276,7 +276,7 @@ DogTag:AddTag("Unit", "IsResting", {
 DogTag:AddTag("Unit", "IsLeader", {
 	code = UnitIsPartyLeader,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is a party leader"],
@@ -287,7 +287,7 @@ DogTag:AddTag("Unit", "IsLeader", {
 DogTag:AddTag("Unit", "IsFeignedDeath", {
 	code = UnitIsFeignDeath,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is feigning death"],
@@ -343,7 +343,7 @@ DogTag:AddTag("Unit", "HappyIcon", {
 DogTag:AddTag("Unit", "IsTappedByMe", {
 	code = UnitIsTappedByPlayer,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "Update",
@@ -357,7 +357,7 @@ DogTag:AddTag("Unit", "IsTapped", {
 		return UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "Update",
@@ -369,7 +369,7 @@ DogTag:AddTag("Unit", "IsTapped", {
 DogTag:AddTag("Unit", "InCombat", {
 	code = UnitAffectingCombat,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "Update",
@@ -393,7 +393,7 @@ DogTag:AddTag("Unit", "FKey", {
 		return nil
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return the function key to press to select unit"],
@@ -416,7 +416,7 @@ DogTag:AddTag("Unit", "RaidGroup", {
 		return nil
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
 	doc = L["Return the raid group that unit is in"],
@@ -439,7 +439,7 @@ DogTag:AddTag("Unit", "IsMasterLooter", {
 		return false
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is the master looter for your raid"],
@@ -456,7 +456,7 @@ DogTag:AddTag("Unit", "Target", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	doc = L["Return the unit id of unit's target"],
@@ -477,7 +477,7 @@ DogTag:AddTag("Unit", "Pet", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return the unit id of unit's pet"],
@@ -496,7 +496,7 @@ DogTag:AddTag("Unit", "NumTargeting", {
 		return num
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = "UNIT_TARGET;Update",
@@ -522,7 +522,7 @@ DogTag:AddTag("Unit", "TargetingList", {
 		return s
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "UNIT_TARGET;Update",
@@ -545,7 +545,7 @@ DogTag:AddTag("Unit", "IsUnit", {
 	code = UnitIsUnit,
 	arg = {
 		'other', 'string', '@req',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_FACTION#$unit",
@@ -557,7 +557,7 @@ DogTag:AddTag("Unit", "IsUnit", {
 DogTag:AddTag("Unit", "IsCharmed", {
 	code = UnitIsCharmed,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_FACTION#$unit",
@@ -569,7 +569,7 @@ DogTag:AddTag("Unit", "IsCharmed", {
 DogTag:AddTag("Unit", "IsVisible", {
 	code = UnitIsVisible,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_PORTRAIT_UPDATE",
@@ -599,7 +599,7 @@ DogTag:AddTag("Unit", "StatusColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "DeadDuration#$unit",
@@ -643,7 +643,7 @@ local DIVINE_INTERVENTION = GetSpellInfo(19752)
 DogTag:AddTag("Unit", "Status", {
 	alias = ("Offline(unit=unit) or (HasDivineIntervention(unit=unit) ? %q) or (IsFeignedDeath(unit=unit) ? %q) or [if Dead(unit=unit) then ((HasSoulstone(unit=unit) ? %q) or Dead(unit=unit))]"):format(DIVINE_INTERVENTION, L["Feigned Death"], L["Soulstoned"]),
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return whether unit is offline, has divine intervention, is dead, feigning death, or has a soulstone while dead"],
 	example = ('[Status] => "Offline"; [Status] => "Dead"; [Status] => ""'),

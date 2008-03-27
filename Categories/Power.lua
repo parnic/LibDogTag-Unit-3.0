@@ -12,7 +12,7 @@ local L = DogTag_Unit.L
 DogTag:AddTag("Unit", "MP", {
 	code = UnitMana,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
@@ -24,7 +24,7 @@ DogTag:AddTag("Unit", "MP", {
 DogTag:AddTag("Unit", "MaxMP", {
 	code = UnitManaMax,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
@@ -36,7 +36,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 DogTag:AddTag("Unit", "PercentMP", {
 	alias = "[MP(unit=unit) / MaxMP(unit=unit) * 100]:Round(1)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the percentage mana/rage/energy of unit"],
 	example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"',
@@ -46,7 +46,7 @@ DogTag:AddTag("Unit", "PercentMP", {
 DogTag:AddTag("Unit", "MissingMP", {
 	alias = "MaxMP(unit=unit) - MP(unit=unit)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the missing mana/rage/energy of unit"],
 	example = ('[MissingMP] => "%d"'):format(UnitManaMax("player")*.368),
@@ -56,7 +56,7 @@ DogTag:AddTag("Unit", "MissingMP", {
 DogTag:AddTag("Unit", "FractionalMP", {
 	alias = "Concatenate(MP(unit=unit), '/', MaxMP(unit=unit))",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the current and maximum mana/rage/energy of unit"],
 	example = ('[FractionalMP] => "%d/%d"'):format(UnitManaMax("player")*.632, UnitManaMax("player")),
@@ -77,7 +77,7 @@ DogTag:AddTag("Unit", "TypePower", {
 		end
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_DISPLAYPOWER#$unit",
@@ -90,7 +90,7 @@ DogTag:AddTag("Unit", "IsPowerType", {
 	alias = [=[Boolean(TypePower(unit=unit) = type)]=],
 	arg = {
 		'type', 'string', '@req',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_DISPLAYPOWER#$unit",
@@ -102,7 +102,7 @@ DogTag:AddTag("Unit", "IsPowerType", {
 DogTag:AddTag("Unit", "IsRage", {
 	alias = ("IsPowerType(type=%q, unit=unit)"):format(L["Rage"]),
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit currently uses rage"],
 	example = ('[IsRage] => %q; [IsRage] => ""'):format(L["True"]),
@@ -112,7 +112,7 @@ DogTag:AddTag("Unit", "IsRage", {
 DogTag:AddTag("Unit", "IsFocus", {
 	alias = ("IsPowerType(type=%q, unit=unit)"):format(L["Focus"]),
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit currently uses focus"],
 	example = ('[IsFocus] => %q; [IsFocus] => ""'):format(L["True"]),
@@ -122,7 +122,7 @@ DogTag:AddTag("Unit", "IsFocus", {
 DogTag:AddTag("Unit", "IsEnergy", {
 	alias = ("IsPowerType(type=%q, unit=unit)"):format(L["Energy"]),
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit currently uses energy"],
 	example = ('[IsEnergy] => %q; [IsEnergy] => ""'):format(L["True"]),
@@ -132,7 +132,7 @@ DogTag:AddTag("Unit", "IsEnergy", {
 DogTag:AddTag("Unit", "IsMana", {
 	alias = ("IsPowerType(type=%q, unit=unit)"):format(L["Mana"]),
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit currently uses mana"],
 	example = ('[IsMana] => %q; [IsMana] => ""'):format(L["True"]),
@@ -142,7 +142,7 @@ DogTag:AddTag("Unit", "IsMana", {
 DogTag:AddTag("Unit", "IsMaxMP", {
 	alias = "Boolean(MP(unit=unit) = MaxMP(unit=unit))",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit is at full rage/mana/energy"],
 	example = ('[IsMaxMP] => %q; [IsMaxMP] => ""'):format(L["True"]),
@@ -152,7 +152,7 @@ DogTag:AddTag("Unit", "IsMaxMP", {
 DogTag:AddTag("Unit", "HasMP", {
 	alias = "Boolean(MaxMP(unit=unit) > 0)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if unit has no power type at all"],
 	example = ('[HasNoMP] => %q; [HasNoMP] => ""'):format(L["True"]),
@@ -182,7 +182,7 @@ DogTag:AddTag("Unit", "PowerColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_DISPLAYPOWER#$unit",

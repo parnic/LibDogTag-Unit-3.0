@@ -67,7 +67,7 @@ DogTag:AddTag("Unit", "Threat", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = function()
 		if ThreatLib then
@@ -88,7 +88,7 @@ DogTag:AddTag("Unit", "MaxThreat", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = function()
 		if ThreatLib then
@@ -106,7 +106,7 @@ DogTag:AddTag("Unit", "MaxThreat", {
 DogTag:AddTag("Unit", "PercentThreat", {
 	alias = [=[(Threat(unit=unit) / MaxThreat(unit=unit) * 100):Round(1)]=],
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the percentage threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
 	example = '[PercentThreat] => "62.5"; [PercentThreat:Percent] => "62.5%"',
@@ -117,7 +117,7 @@ DogTag:AddTag("Unit", "PercentThreat", {
 DogTag:AddTag("Unit", "MissingThreat", {
 	alias = "MaxThreat(unit=unit) - Threat(unit=unit)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the missing threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
 	example = '[MissingThreat] => "30"',
@@ -127,7 +127,7 @@ DogTag:AddTag("Unit", "MissingThreat", {
 DogTag:AddTag("Unit", "FractionalThreat", {
 	alias = "Concatenate(Threat(unit=unit), '/', MaxThreat(unit=unit))",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the current and maximum threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
 	example = '[FractionalThreat] => "50/80"',
@@ -140,7 +140,7 @@ DogTag:AddTag("Unit", "HasThreat", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	events = "Threat#$unit",

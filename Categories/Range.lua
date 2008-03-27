@@ -25,7 +25,7 @@ end)
 DogTag:AddTag("Unit", "Range", {
 	alias = [=[IsVisible(unit=unit) & ~DeadType(unit=unit) ? MinRange(unit=unit) (Concatenate(" - ", MaxRange(unit=unit)) || "+")]=],
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the approximate range of unit, if RangeCheck-1.0 is available"],
 	example = '[Range] => "5 - 15"; [Range] => "30+"; [Range] => ""',
@@ -38,7 +38,7 @@ DogTag:AddTag("Unit", "MinRange", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = function()
 		if not RangeCheckLib then
@@ -65,7 +65,7 @@ DogTag:AddTag("Unit", "MaxRange", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = function()
 		if not RangeCheckLib then

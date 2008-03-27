@@ -79,7 +79,7 @@ DogTag:AddTag("Unit", "GuildNote", {
 		return nil
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "GUILD_ROSTER_UPDATE",
@@ -97,7 +97,7 @@ DogTag:AddTag("Unit", "OfficerNote", {
 		return nil
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "GUILD_ROSTER_UPDATE",

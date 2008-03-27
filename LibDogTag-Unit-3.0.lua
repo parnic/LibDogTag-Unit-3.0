@@ -216,7 +216,9 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 				t[#t+1] = "\n"
 			end
 		else
-			t[#t+1] = [=[if not DogTag.IsLegitimateUnit[]=]
+			t[#t+1] = [=[if ]=]
+			t[#t+1] = compiledKwargs["unit"][1]
+			t[#t+1] = [=[ and not DogTag.IsLegitimateUnit[]=]
 			t[#t+1] = compiledKwargs["unit"][1]
 			t[#t+1] = [=[] then]=]
 			t[#t+1] = "\n"
@@ -260,7 +262,9 @@ end)
 
 DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, u, tag, tagData, kwargs, extraKwargs, compiledKwargs, events, returns)
 	if compiledKwargs["unit"] and kwargs["unit"] ~= extraKwargs and kwargs["unit"] ~= "player" then
-		t[#t+1] = [=[if UnitExists(]=]
+		t[#t+1] = [=[if ]=]
+		t[#t+1] = compiledKwargs["unit"][1]
+		t[#t+1] = [=[ and UnitExists(]=]
 		t[#t+1] = compiledKwargs["unit"][1]
 		t[#t+1] = [=[) then]=]
 		t[#t+1] = "\n"

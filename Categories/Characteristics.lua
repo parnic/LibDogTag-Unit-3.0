@@ -417,7 +417,7 @@ DogTag:AddTag("Unit", "PvPRank", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	events = "UNIT_NAME_UPDATE#$unit;PLAYER_ENTERING_WORLD#$unit",
@@ -475,7 +475,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_FACTION#$unit",
@@ -497,7 +497,7 @@ DogTag:AddTag("Unit", "AggroColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_FACTION#$unit",
@@ -518,7 +518,7 @@ DogTag:AddTag("Unit", "ClassColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	doc = L["Return the color or wrap value with the class color of unit"],
@@ -541,7 +541,7 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_LEVEL#$unit;PLAYER_LEVEL_UP#$unit",
@@ -553,7 +553,7 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 DogTag:AddTag("Unit", "Guid", {
 	code = UnitGUID,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	doc = L["Return the GUID for the unit, an internal identifier."],

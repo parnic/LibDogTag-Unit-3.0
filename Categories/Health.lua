@@ -122,7 +122,7 @@ DogTag:AddTag("Unit", "HP", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = function(args)
@@ -144,7 +144,7 @@ DogTag:AddTag("Unit", "MaxHP", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = function(args)
@@ -166,7 +166,7 @@ DogTag:AddTag("Unit", "PercentHP", {
 	end,
 	fakeAlias = "[CurHP / MaxHP * 100]:Round(1)",
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
@@ -178,7 +178,7 @@ DogTag:AddTag("Unit", "PercentHP", {
 DogTag:AddTag("Unit", "MissingHP", {
 	alias = [=[MaxHP(unit=unit, known=known) - HP(unit=unit, known=known)]=],
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = "number",
@@ -190,7 +190,7 @@ DogTag:AddTag("Unit", "MissingHP", {
 DogTag:AddTag("Unit", "FractionalHP", {
 	alias = [=[Concatenate(HP(unit=unit, known=known), "/", MaxHP(unit=unit, known=known))]=],
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = "string",
@@ -204,7 +204,7 @@ DogTag:AddTag("Unit", "IsMaxHP", {
 		return UnitHealth(unit) == UnitHealthMax(unit)
 	end,
 	arg = {
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is at full health"],
@@ -250,7 +250,7 @@ DogTag:AddTag("Unit", "HPColor", {
 	end,
 	arg = {
 		'value', 'string;undef', "@undef",
-		'unit', 'string', 'player',
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string",
 	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
