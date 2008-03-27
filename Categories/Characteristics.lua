@@ -154,6 +154,14 @@ local ShortClass_abbrev = {
 	[L["Druid"]] = L["Druid_short"],
 	[L["Rogue"]] = L["Rogue_short"],
 	[L["Hunter"]] = L["Warrior_short"],
+	[L["Priest_female"]] = L["Priest_short"],
+	[L["Mage_female"]] = L["Mage_short"],
+	[L["Shaman_female"]] = L["Shaman_short"],
+	[L["Paladin_female"]] = L["Paladin_short"],
+	[L["Warlock_female"]] = L["Warlock_short"],
+	[L["Druid_female"]] = L["Druid_short"],
+	[L["Rogue_female"]] = L["Rogue_short"],
+	[L["Hunter_female"]] = L["Warrior_short"],
 }
 
 DogTag:AddTag("Unit", "ShortClass", {
@@ -261,6 +269,16 @@ local ShortRace_abbrev = {
 	[L["Tauren"]] = L["Tauren_short"],
 	[L["Troll"]] = L["Troll_short"],
 	[L["Undead"]] = L["Undead_short"],
+	[L["Blood Elf_female"]] = L["Blood Elf_short"],
+	[L["Draenei_female"]] = L["Draenei_short"],
+	[L["Dwarf_female"]] = L["Dwarf_short"],
+	[L["Gnome_female"]] = L["Gnome_short"],
+	[L["Human_female"]] = L["Human_short"],
+	[L["Night Elf_female"]] = L["Night Elf_short"],
+	[L["Orc_female"]] = L["Orc_short"],
+	[L["Tauren_female"]] = L["Tauren_short"],
+	[L["Troll_female"]] = L["Troll_short"],
+	[L["Undead_female"]] = L["Undead_short"],
 }
 
 DogTag:AddTag("Unit", "ShortRace", {

@@ -19,7 +19,17 @@ DogTag_Unit.L = {
 	["Tauren"] = "Tauren",
 	["Troll"] = "Troll",
 	["Undead"] = "Undead",
-
+	["Blood Elf_female"] = "Blood Elf",
+	["Draenei_female"] = "Draenei",
+	["Dwarf_female"] = "Dwarf",
+	["Gnome_female"] = "Gnome",
+	["Human_female"] = "Human",
+	["Night Elf_female"] = "Night Elf",
+	["Orc_female"] = "Orc",
+	["Tauren_female"] = "Tauren",
+	["Troll_female"] = "Troll",
+	["Undead_female"] = "Undead",
+	
 	-- short races
 	["Blood Elf_short"] = "BE",
 	["Draenei_short"] = "Dr",
@@ -42,7 +52,16 @@ DogTag_Unit.L = {
 	["Druid"] = "Druid",
 	["Rogue"] = "Rogue",
 	["Hunter"] = "Hunter",
-
+	["Warrior_female"] = "Warrior",
+	["Priest_female"] = "Priest",
+	["Mage_female"] = "Mage",
+	["Shaman_female"] = "Shaman",
+	["Paladin_female"] = "Paladin",
+	["Warlock_female"] = "Warlock",
+	["Druid_female"] = "Druid",
+	["Rogue_female"] = "Rogue",
+	["Hunter_female"] = "Hunter",
+	
 	-- short classes
 	["Warrior_short"] = "Wr",
 	["Priest_short"] = "Pr",
