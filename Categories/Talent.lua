@@ -53,9 +53,24 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 		
 		DogTag:FireEvent("Talent")
 	end)
+	local playerName = UnitName("player")
 	local lastUnit
 	local function func(self, name)
-		LibTalentQuery:Query(lastUnit)
+		if name == playerName then
+			local data = newList()
+			for i = 1, 3 do
+				local name, _, points = GetTalentTabInfo(i)
+				data[i] = newList(name, points)
+			end
+			update(UnitName("player"), data)
+			for i = 1, 3 do
+				data[i] = del(data[i])
+			end
+			data = del(data)
+			return rawget(self, name)
+		else
+			LibTalentQuery:Query(lastUnit)
+		end
 		
 		return nil
 	end
@@ -63,17 +78,6 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 	talentSpecs = setmetatable({}, x)
 	talentSpecNames = setmetatable({}, x)
 	x = nil
-	
-	local data = newList()
-	for i = 1, 3 do
-		local name, _, points = GetTalentTabInfo(i)
-		data[i] = newList(name, points)
-	end
-	update(UnitName("player"), data)
-	for i = 1, 3 do
-		data[i] = del(data[i])
-	end
-	data = del(data)
 	
 	local GetNameServer = DogTag_Unit.GetNameServer
 	function TalentSpec_func(unit)
