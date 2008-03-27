@@ -66,7 +66,7 @@ DogTag:AddTag("Unit", "Range", {
 	doc = L["Return the approximate range of unit, if RangeCheck-1.0 is available"],
 	ret = function()
 		if found then
-			return "string"
+			return "nil;string"
 		else
 			return "nil"
 		end
@@ -92,7 +92,7 @@ DogTag:AddTag("Unit", "MinRange", {
 	},
 	ret = function()
 		if found then
-			return "number"
+			return "nil;number"
 		else
 			return "nil"
 		end
