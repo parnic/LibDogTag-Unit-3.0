@@ -230,12 +230,12 @@ DogTag:AddTag("Unit", "NumAura", {
 	end,
 	arg = {
 		'aura', 'string', '@req',
-		'unit', 'string', 'player'
+		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = "Aura#$unit#$aura",
 	doc = L["Return the number of auras on the unit"],
-	example = ('[NumAura("Shadowform")] => %q; [NumAura("Shadowform")] => ""'):format(L["True"]),
+	example = '[NumAura("Renew")] => "2"; [NumAura("Renew")] => "0"',
 	category = L["Auras"]
 })
 
@@ -300,7 +300,7 @@ DogTag:AddTag("Unit", "ShortDruidForm", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', 'player'
+		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened druid form of unit, or shorten a druid form"],
