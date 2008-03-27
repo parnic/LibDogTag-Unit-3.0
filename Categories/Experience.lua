@@ -29,7 +29,7 @@ DogTag:AddTag("Unit", "XP", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
@@ -50,7 +50,7 @@ DogTag:AddTag("Unit", "MaxXP", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
@@ -62,7 +62,7 @@ DogTag:AddTag("Unit", "MaxXP", {
 DogTag:AddTag("Unit", "FractionalXP", {
 	alias = [[XP(unit=unit) "/" MaxXP(unit=unit)]],
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the current and maximum experience of unit"],
 	example = '[FractionalXP] => "8540/10000"',
@@ -72,7 +72,7 @@ DogTag:AddTag("Unit", "FractionalXP", {
 DogTag:AddTag("Unit", "PercentXP", {
 	alias = [[(XP(unit=unit) / MaxXP(unit=unit) * 100):Round(1)]],
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the percentage experience of unit"],
 	example = '[PercentXP] => "85.4"; [PercentXP:Percent] => "85.4%"',
@@ -82,7 +82,7 @@ DogTag:AddTag("Unit", "PercentXP", {
 DogTag:AddTag("Unit", "MissingXP", {
 	alias = [[MaxXP(unit=unit) - XP(unit=unit)]],
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the missing experience of unit"],
 	example = '[MissingXP] => "1460"',
@@ -98,7 +98,7 @@ DogTag:AddTag("Unit", "RestXP", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number",
 	events = "UpdateExperience#$unit",
@@ -110,7 +110,7 @@ DogTag:AddTag("Unit", "RestXP", {
 DogTag:AddTag("Unit", "PercentRestXP", {
 	alias = [[(RestXP(unit=unit) / MaxXP(unit=unit) * 100):Round(1)]],
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the percentage accumulated rest experience of unit"],
 	example = '[PercentRestXP] => "50"; [PercentRestXP:Percent] => "50%"',

@@ -233,7 +233,7 @@ DogTag:AddTag("Unit", "CastName", {
 		return castData[unit].spell
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "Cast",
@@ -247,7 +247,7 @@ DogTag:AddTag("Unit", "CastTarget", {
 		return castData[unit].target
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "Cast",
@@ -261,7 +261,7 @@ DogTag:AddTag("Unit", "CastRank", {
 		return castData[unit].rank
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "Cast",
@@ -280,7 +280,7 @@ DogTag:AddTag("Unit", "CastStartDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "FastUpdate;Cast#$unit",
@@ -299,7 +299,7 @@ DogTag:AddTag("Unit", "CastEndDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "FastUpdate;Cast#$unit",
@@ -314,7 +314,7 @@ DogTag:AddTag("Unit", "CastDelay", {
 		return castData[unit].delay
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "Cast#$unit",
@@ -328,7 +328,7 @@ DogTag:AddTag("Unit", "CastIsChanneling", {
 		return not castData[unit].casting
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "boolean",
 	events = "Cast#$unit",
@@ -347,7 +347,7 @@ DogTag:AddTag("Unit", "CastStopDuration", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "FastUpdate;Cast#$unit",
@@ -361,7 +361,7 @@ DogTag:AddTag("Unit", "CastStopMessage", {
 		return castData[unit].stopMessage
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "Cast#$unit",

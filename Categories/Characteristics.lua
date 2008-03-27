@@ -14,7 +14,7 @@ DogTag:AddTag("Unit", "IsFriend", {
 		return UnitIsFriend('player', unit)
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_FACTION#$unit",
@@ -26,7 +26,7 @@ DogTag:AddTag("Unit", "IsFriend", {
 DogTag:AddTag("Unit", "IsEnemy", {
 	alias = "Boolean(not IsFriend(unit=unit))",
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	doc = L["Return True if unit is an enemy"],
 	example = ('[IsEnemy] => %q; [IsEnemy] => ""'):format(L["True"]),
@@ -38,7 +38,7 @@ DogTag:AddTag("Unit", "CanAttack", {
 		return UnitCanAttack('player', unit)
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "boolean",
 	events = "UNIT_FACTION#$unit",
@@ -50,7 +50,7 @@ DogTag:AddTag("Unit", "CanAttack", {
 DogTag:AddTag("Unit", "Name", {
 	code = UnitName,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string",
 	events = "UNIT_NAME_UPDATE#$unit",
@@ -62,7 +62,7 @@ DogTag:AddTag("Unit", "Name", {
 DogTag:AddTag("Unit", "Exists", {
 	code = UnitExists,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit exists"],
@@ -79,7 +79,7 @@ DogTag:AddTag("Unit", "Realm", {
 		return realm
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	events = "UNIT_NAME_UPDATE#$unit",
@@ -91,7 +91,7 @@ DogTag:AddTag("Unit", "Realm", {
 DogTag:AddTag("Unit", "NameRealm", {
 	alias = [=[Name(unit=unit) Concatenate("-", Realm(unit=unit))]=],
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	doc = L["Return the name of unit, appending unit's realm if different from yours"],
 	example = ('[NameRealm] => %q'):format(UnitName("player") .. "-" .. GetRealmName()),
@@ -107,7 +107,7 @@ DogTag:AddTag("Unit", "Level", {
 		return level
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "number;string",
 	events = "UNIT_LEVEL#$unit",
@@ -119,7 +119,7 @@ DogTag:AddTag("Unit", "Level", {
 DogTag:AddTag("Unit", "IsMaxLevel", {
 	alias = ("Boolean(Level(unit=unit) >= %d)"):format(_G.MAX_PLAYER_LEVEL),
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	doc = L["Return True if the level of unit is %d"]:format(_G.MAX_PLAYER_LEVEL),
 	example = ('[IsMaxLevel] => %q'):format(UnitLevel("player") >= _G.MAX_PLAYER_LEVEL and L["True"] or ""),
@@ -137,7 +137,7 @@ end
 DogTag:AddTag("Unit", "Class", {
 	code = Class,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string",
 	doc = L["Return the class of unit"],
@@ -172,7 +172,7 @@ DogTag:AddTag("Unit", "ShortClass", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened class of unit, or shorten a class name"],
@@ -185,7 +185,7 @@ DogTag:AddTag("Unit", "Creature", {
 		return UnitCreatureFamily(unit) or UnitCreatureType(unit) or UNKNOWN
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string",
 	doc = L["Return the creature family or type of unit"],
@@ -198,7 +198,7 @@ DogTag:AddTag("Unit", "CreatureType", {
 		return UnitCreatureType(unit) or UNKNOWN
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string",
 	doc = L["Return the creature type of unit"],
@@ -220,7 +220,7 @@ end
 DogTag:AddTag("Unit", "Classification", {
 	code = Classification,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return the classification of unit"],
@@ -241,7 +241,7 @@ DogTag:AddTag("Unit", "ShortClassification", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened classification of unit, or shorten a classification"],
@@ -252,7 +252,7 @@ DogTag:AddTag("Unit", "ShortClassification", {
 DogTag:AddTag("Unit", "Race", {
 	code = UnitRace,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return the race of unit"],
@@ -289,7 +289,7 @@ DogTag:AddTag("Unit", "ShortRace", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened race of unit, or shorten a race"],
@@ -300,7 +300,7 @@ DogTag:AddTag("Unit", "ShortRace", {
 DogTag:AddTag("Unit", "SmartRace", {
 	alias = "IsPlayer(unit=unit) ? Race(unit=unit) ! Creature(unit=unit)",
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	doc = L["Return the race if unit is a player, otherwise the creature family"],
 	example = ('[SmartRace] => %q; [SmartRace] => %q'):format(UnitRace("player"), L["Humanoid"]),
@@ -321,7 +321,7 @@ end
 DogTag:AddTag("Unit", "Sex", {
 	code = Sex,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return Male, Female, or blank depending on unit"],
@@ -340,7 +340,7 @@ DogTag:AddTag("Unit", "ShortSex", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened sex of the unit, or shorten a sex"],
@@ -354,7 +354,7 @@ DogTag:AddTag("Unit", "GuildRank", {
 		return rank
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return the guild rank of unit"],
@@ -365,7 +365,7 @@ DogTag:AddTag("Unit", "GuildRank", {
 DogTag:AddTag("Unit", "IsPlayer", {
 	code = UnitIsPlayer,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is a player"],
@@ -378,7 +378,7 @@ DogTag:AddTag("Unit", "IsPet", {
 		return not UnitIsPlayer(unit) and (UnitPlayerControlled(unit) or UnitPlayerOrPetInRaid(unit))
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "boolean",
 	doc = L["Return True if unit is a player's pet"],
@@ -391,7 +391,7 @@ DogTag:AddTag("Unit", "IsPlayerOrPet", {
 		return UnitIsPlayer(unit) or UnitPlayerControlled(unit) or UnitPlayerOrPetInRaid(unit)
 	end,
 	arg = {
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	fakeAlias = "IsPlayer || IsPet",
 	ret = "boolean",
@@ -417,7 +417,7 @@ DogTag:AddTag("Unit", "PvPRank", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "UNIT_NAME_UPDATE#$unit;PLAYER_ENTERING_WORLD#$unit",
@@ -475,7 +475,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string",
 	events = "UNIT_FACTION#$unit",
@@ -497,7 +497,7 @@ DogTag:AddTag("Unit", "AggroColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string",
 	events = "UNIT_FACTION#$unit",
@@ -518,7 +518,7 @@ DogTag:AddTag("Unit", "ClassColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string",
 	doc = L["Return the color or wrap value with the class color of unit"],
@@ -541,7 +541,7 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string",
 	events = "UNIT_LEVEL#$unit;PLAYER_LEVEL_UP#$unit",
@@ -553,7 +553,7 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 DogTag:AddTag("Unit", "Guid", {
 	code = UnitGUID,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string",
 	doc = L["Return the GUID for the unit, an internal identifier."],

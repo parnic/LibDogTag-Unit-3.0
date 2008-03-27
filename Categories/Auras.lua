@@ -215,7 +215,7 @@ DogTag:AddTag("Unit", "HasAura", {
 	end,
 	arg = {
 		'aura', 'string', '@req',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "boolean",
 	events = "Aura#$unit#$aura",
@@ -230,7 +230,7 @@ DogTag:AddTag("Unit", "NumAura", {
 	end,
 	arg = {
 		'aura', 'string', '@req',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player'
 	},
 	ret = "number",
 	events = "Aura#$unit#$aura",
@@ -275,7 +275,7 @@ end
 DogTag:AddTag("Unit", "DruidForm", {
 	code = DruidForm,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "UNIT_DISPLAYPOWER#$unit;Aura#$unit#" .. MOONKIN_FORM .. ";Aura#$unit#" .. AQUATIC_FORM .. ";Aura#$unit#" .. FLIGHT_FORM .. ";Aura#$unit#" .. SWIFT_FLIGHT_FORM .. ";Aura#$unit#" .. TRAVEL_FORM .. ";Aura#$unit#" .. TREE_OF_LIFE,
@@ -300,7 +300,7 @@ DogTag:AddTag("Unit", "ShortDruidForm", {
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
-		'unit', 'string', '@req'
+		'unit', 'string', 'player'
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened druid form of unit, or shorten a druid form"],
@@ -313,7 +313,7 @@ DogTag:AddTag("Unit", "NumDebuffs", {
 		return currentNumDebuffs[unit]
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number",
 	events = "Aura#$unit",
@@ -333,7 +333,7 @@ DogTag:AddTag("Unit", "AuraDuration", {
 	end,
 	arg = {
 		'aura', 'string', '@req',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	events = "Update",
 	ret = "number;nil",
@@ -346,7 +346,7 @@ local SHADOWFORM = GetSpellInfo(15473)
 DogTag:AddTag("Unit", "IsShadowform", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SHADOWFORM),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the shadowform buff"],
 	example = ('[IsShadowform] => %q; [IsShadowform] => ""'):format(L["True"]),
@@ -359,7 +359,7 @@ local PROWL = GetSpellInfo(5215)
 DogTag:AddTag("Unit", "IsStealthed", {
 	alias = ("HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit)"):format(STEALTH, SHADOWFORM, PROWL),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit is stealthed in some way"],
 	example = ('[IsStealthed] => %q; [IsStealthed] => ""'):format(L["True"]),
@@ -370,7 +370,7 @@ local SHIELD_WALL = GetSpellInfo(871)
 DogTag:AddTag("Unit", "HasShieldWall", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SHIELD_WALL),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Shield Wall buff"],
 	example = ('[HasShieldWall] => %q; [HasShieldWall] => ""'):format(L["True"]),
@@ -381,7 +381,7 @@ local LAST_STAND = GetSpellInfo(12975)
 DogTag:AddTag("Unit", "HasLastStand", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(LAST_STAND),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Last Stand buff"],
 	example = ('[HasLastStand] => %q; [HasLastStand] => ""'):format(L["True"]),
@@ -392,7 +392,7 @@ local SOULSTONE_RESURRECTION = GetSpellInfo(20707)
 DogTag:AddTag("Unit", "HasSoulstone", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SOULSTONE_RESURRECTION),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Soulstone buff"],
 	example = ('[HasSoulstone] => %q; [HasSoulstone] => ""'):format(L["True"]),
@@ -403,7 +403,7 @@ local MISDIRECTION = GetSpellInfo(34477)
 DogTag:AddTag("Unit", "HasMisdirection", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(MISDIRECTION),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Misdirection buff"],
 	example = ('[HasMisdirection] => %q; [HasMisdirection] => ""'):format(L["True"]),
@@ -414,7 +414,7 @@ local ICE_BLOCK = GetSpellInfo(27619)
 DogTag:AddTag("Unit", "HasIceBlock", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(ICE_BLOCK),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Ice Block buff"],
 	example = ('[HasIceBlock] => %q; [HasIceBlock] => ""'):format(L["True"]),
@@ -425,7 +425,7 @@ local INVISIBILITY = GetSpellInfo(66)
 DogTag:AddTag("Unit", "HasInvisibility", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(INVISIBILITY),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Invisibility buff"],
 	example = ('[HasInvisibility] => %q; [HasInvisibility] => ""'):format(L["True"]),
@@ -436,7 +436,7 @@ local DIVINE_INTERVENTION = GetSpellInfo(19752)
 DogTag:AddTag("Unit", "HasDivineIntervention", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(DIVINE_INTERVENTION),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has the Divine Intervention buff"],
 	example = ('[HasDivineIntervention] => %q; [HasDivineIntervention] => ""'):format(L["True"]),
@@ -449,7 +449,7 @@ DogTag:AddTag("Unit", "HasDebuffType", {
 	end,
 	arg = {
 		'type', 'string', '@req',
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "boolean",
 	events = "Aura#$unit#$type",
@@ -461,7 +461,7 @@ DogTag:AddTag("Unit", "HasDebuffType", {
 DogTag:AddTag("Unit", "HasMagicDebuff", {
 	alias = ("HasDebuffType(type=%q, unit=unit)"):format(L["Magic"]),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has a Magic debuff"],
 	example = ('[HasMagicDebuff] => %q; [HasMagicDebuff] => ""'):format(L["True"]),
@@ -471,7 +471,7 @@ DogTag:AddTag("Unit", "HasMagicDebuff", {
 DogTag:AddTag("Unit", "HasCurseDebuff", {
 	alias = ("HasDebuffType(type=%q, unit=unit)"):format(L["Curse"]),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has a Curse debuff"],
 	example = ('[HasCurseDebuff] => %q; [HasCurseDebuff] => ""'):format(L["True"]),
@@ -481,7 +481,7 @@ DogTag:AddTag("Unit", "HasCurseDebuff", {
 DogTag:AddTag("Unit", "HasPoisonDebuff", {
 	alias = ("HasDebuffType(type=%q, unit=unit)"):format(L["Poison"]),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has a Poison debuff"],
 	example = ('[HasPoisonDebuff] => %q; [HasPoisonDebuff] => ""'):format(L["True"]),
@@ -491,7 +491,7 @@ DogTag:AddTag("Unit", "HasPoisonDebuff", {
 DogTag:AddTag("Unit", "HasDiseaseDebuff", {
 	alias = ("HasDebuffType(type=%q, unit=unit)"):format(L["Disease"]),
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if the unit has a Disease debuff"],
 	example = ('[HasDiseaseDebuff] => %q; [HasDiseaseDebuff] => ""'):format(L["True"]),

@@ -102,7 +102,7 @@ DogTag:AddTag("Unit", "TalentSpec", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "Talent",
@@ -117,7 +117,7 @@ DogTag:AddTag("Unit", "TalentTree", {
 	end,
 	dynamicCode = true,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "Talent",

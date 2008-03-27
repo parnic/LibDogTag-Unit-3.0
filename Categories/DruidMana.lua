@@ -42,7 +42,7 @@ DogTag:AddTag("Unit", "DruidMP", {
 	end,
 	dynamicCode = true,
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "DruidMana",
@@ -57,7 +57,7 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 	end,
 	dynamicCode = true,
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "number;nil",
 	events = "DruidMana",
@@ -69,7 +69,7 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 DogTag:AddTag("Unit", "PercentDruidMP", {
 	alias = "[DruidMP(unit=unit) / MaxDruidMP(unit=unit) * 100]:Round(1)",
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the percentage mana of unit if unit is you and you are a druid"],
 	example = '[PercentDruidMP] => "63.2"; [PercentDruidMP:Percent] => "63.2%"',
@@ -79,7 +79,7 @@ DogTag:AddTag("Unit", "PercentDruidMP", {
 DogTag:AddTag("Unit", "MissingDruidMP", {
 	alias = "MaxDruidMP(unit=unit) - DruidMP(unit=unit)",
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the missing mana of unit if unit is you and you are a druid"],
 	example = ('[MissingDruidMP] => "%d"'):format(UnitManaMax("player")*.368),
@@ -89,7 +89,7 @@ DogTag:AddTag("Unit", "MissingDruidMP", {
 DogTag:AddTag("Unit", "FractionalDruidMP", {
 	alias = "Concatenate(DruidMP(unit=unit), '/', MaxDruidMP(unit=unit))",
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return the current and maximum mana of unit if unit is you and you are a druid"],
 	example = ('[FractionalDruidMP] => "%d/%d"'):format(UnitManaMax("player")*.632, UnitManaMax("player")),
@@ -99,7 +99,7 @@ DogTag:AddTag("Unit", "FractionalDruidMP", {
 DogTag:AddTag("Unit", "IsMaxDruidMP", {
 	alias = "Boolean(DruidMP(unit=unit) = MaxDruidMP(unit=unit))",
 	args = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	doc = L["Return True if at max mana, unit is you, and you are a druid"],
 	example = ('[IsMaxDruidMP] => %q; [IsMaxDruidMP] => ""'):format(L["True"]),

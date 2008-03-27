@@ -120,7 +120,7 @@ DogTag:AddTag("Unit", "Guild", {
 		end
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	doc = L["Return the guild name or title of unit"],
@@ -153,7 +153,7 @@ DogTag:AddTag("Unit", "Owner", {
 		return nil
 	end,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	doc = L["Return the name of the owner of unit, if a pet"],
@@ -164,7 +164,7 @@ DogTag:AddTag("Unit", "Owner", {
 DogTag:AddTag("Unit", "Faction", {
 	code = FigureFaction,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "UNIT_FACTION",
@@ -176,7 +176,7 @@ DogTag:AddTag("Unit", "Faction", {
 DogTag:AddTag("Unit", "Zone", {
 	code = FigureZone,
 	arg = {
-		'unit', 'string', '@req',
+		'unit', 'string', 'player',
 	},
 	ret = "string;nil",
 	events = "SlowUpdate",
