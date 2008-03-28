@@ -145,6 +145,16 @@ DogTag:AddTag("Unit", "Class", {
 	category = L["Characteristics"]
 })
 
+DogTag:AddTag("Unit", "SmartClass", {
+	alias = "(IsPlayer(unit=unit) or (IsEnemy(unit=unit) and not IsPet(unit=unit))) and Class(unit=unit)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the class of unit if it is a player or an enemy that is not a pet"],
+	example = ('[SmartClass] => %q'):format((UnitClass("player"))),
+	category = L["Characteristics"]
+})
+
 local ShortClass_abbrev = {
 	[L["Priest"]] = L["Priest_short"],
 	[L["Mage"]] = L["Mage_short"],
