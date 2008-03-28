@@ -176,7 +176,11 @@ DogTag:AddTag("Unit", "MaxHP", {
 
 DogTag:AddTag("Unit", "PercentHP", {
 	code = function(unit)
-		return math.floor(UnitHealth(unit)/UnitHealthMax(unit)*1000 + 0.5) / 10
+		local hp = UnitHealth(unit)
+		if hp == 0 then
+			return 0
+		end
+		return math.floor(hp/UnitHealthMax(unit)*1000 + 0.5) / 10
 	end,
 	fakeAlias = "[CurHP / MaxHP * 100]:Round(1)",
 	arg = {
