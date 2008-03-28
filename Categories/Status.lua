@@ -92,6 +92,20 @@ local function PARTY_MEMBERS_CHANGED(event)
 end
 DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 
+DogTag:AddAddonFinder("Unit", "_G", "oRA", function(v)
+	if AceLibrary and AceLibrary:HasLibrary("AceEvent-2.0") then
+		AceLibrary("AceEvent-2.0"):RegisterEvent("oRA_MainTankUpdate", function()
+			DogTag:FireEvent("PARTY_MEMBERS_CHANGED")
+		end)
+	end
+end)
+
+DogTag:AddAddonFinder("Unit", "_G", "CT_RAOptions_UpdateMTs", function(v)
+	hooksecurefunc("CT_RAOptions_UpdateMTs", function()
+		DogTag:FireEvent("PARTY_MEMBERS_CHANGED")
+	end)
+end)
+
 local first = true
 DogTag:AddTimerHandler(function(currentTime, num)
 	if first then
@@ -454,6 +468,74 @@ DogTag:AddTag("Unit", "IsMasterLooter", {
 	ret = "boolean",
 	doc = L["Return True if unit is the master looter for your raid"],
 	example = ('[IsMasterLooter] => %q; [IsMasterLooter] => ""'):format(L["True"]),
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "IsMainTank", {
+	code = function(unit)
+		if not UnitInRaid(unit) then
+			return false
+		end
+		local n, s = UnitName(unit)
+		if s and s ~= "" then
+			n = n .. "-" .. s
+		end
+		
+		local maintanktable
+		if oRA then
+			maintanktable = oRA.maintanktable
+		else
+			maintanktable = CT_RA_MainTanks
+		end	
+		if maintanktable then
+			for i = 1, 10 do
+				if maintanktable[i] == name then
+					return true
+				end
+				i = i + 1
+			end
+		else
+			for i = 1, GetNumRaidMembers() do
+				local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i)
+				if name == n then
+				 	return role == 'MAINTANK'
+				end
+			end
+		end
+		return false
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "boolean",
+	doc = L["Return True if unit is a main tank for your raid"],
+	example = ('[IsMainTank] => %q; [IsMainTank] => ""'):format(L["True"]),
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "IsMainAssist", {
+	code = function(unit)
+		if not UnitInRaid(unit) then
+			return false
+		end
+		local n, s = UnitName(unit)
+		if s and s ~= "" then
+			n = n .. "-" .. s
+		end
+		for i = 1, GetNumRaidMembers() do
+			local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i)
+			if name == n then
+			 	return role == 'MAINASSIST'
+			end
+		end
+		return false
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "boolean",
+	doc = L["Return True if unit is a main assist for your raid"],
+	example = ('[IsMainAssist] => %q; [IsMainAssist] => ""'):format(L["True"]),
 	category = L["Status"]
 })
 
