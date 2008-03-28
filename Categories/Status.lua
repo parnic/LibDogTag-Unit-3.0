@@ -610,7 +610,7 @@ DogTag:AddTag("Unit", "StatusColor", {
 	ret = "string;nil",
 	events = "DeadDuration#$unit",
 	doc = L["Return the color or wrap value with the color associated with unit's current status"],
-	example = '[Text(Hello):StatusColor] => "|cff7f7f7fHello|r"; [Text([StatusColor]Hello)] => "|cff7f7f7fHello"',
+	example = '["Hello":StatusColor] => "|cff7f7f7fHello|r"; [StatusColor "Hello")] => "|cff7f7f7fHello"',
 	category = L["Status"]
 })
 
@@ -641,7 +641,7 @@ DogTag:AddTag("Unit", "HappyColor", {
 	ret = "nil;string",
 	events = "UNIT_HAPPINESS",
 	doc = L["Return the color or wrap value with the color associated with your pet's happiness"],
-	example = '[Text(Hello):HappyColor] => "|cff00ff00Hello|r"; [Text([HappyColor]Hello)] => "|cff00ff00Hello"',
+	example = '["Hello":HappyColor] => "|cff00ff00Hello|r"; [HappyColor "Hello"] => "|cff00ff00Hello"',
 	category = L["Status"]
 })
 

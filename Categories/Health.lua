@@ -263,7 +263,7 @@ DogTag:AddTag("Unit", "HPColor", {
 	ret = "string",
 	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
 	doc = L["Return the color or wrap value with the health color of unit"],
-	example = '[Text(Hello):HPColor] => "|cffff7f00Hello|r"; [Text([HPColor]Hello)] => "|cffff7f00Hello"',
+	example = '["Hello":HPColor] => "|cffff7f00Hello|r"; [HPColor "Hello"] => "|cffff7f00Hello"',
 	category = L["Health"]
 })
 
