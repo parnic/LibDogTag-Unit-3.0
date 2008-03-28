@@ -127,12 +127,16 @@ local function refreshGUID(unit)
 	unitToGUID[unit] = UnitGUID(unit)
 end
 
-DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", function()
+local function PARTY_MEMBERS_CHANGED()
 	for unit in pairs(IsNormalUnit) do
 		refreshGUID(unit)
 		DogTag:FireEvent("UnitChanged", unit)
 	end
-end)
+end
+DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+
+PARTY_MEMBERS_CHANGED()
+DogTag:AddEventHandler("PLAYER_LOGIN", PARTY_MEMBERS_CHANGED)
 
 local t = {}
 local function IterateUnitsWithGUID(guid)

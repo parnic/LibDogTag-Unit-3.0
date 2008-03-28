@@ -128,7 +128,12 @@ DogTag:AddTimerHandler(function(currentTime, num)
 				deadTimes[guid] = GetTime()
 			end
 		else
-			deadTimes[guid] = nil
+			if deadTimes[guid] then
+				deadTimes[guid] = nil
+				for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
+					DogTag:FireEvent("DeadDuration", unit)
+				end
+			end
 		end
 		
 		if UnitIsAFK(unit) then
@@ -136,7 +141,12 @@ DogTag:AddTimerHandler(function(currentTime, num)
 				afkTimes[guid] = GetTime()
 			end
 		else
-			afkTimes[guid] = nil
+			if afkTimes[guid] then
+				afkTimes[guid] = nil
+				for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
+					DogTag:FireEvent("AFKDuration", unit)
+				end
+			end
 		end
 	end
 	for guid in pairs(deadTimes) do
