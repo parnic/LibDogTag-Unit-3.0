@@ -25,7 +25,14 @@ DogTag:AddAddonFinder("Unit", "LibStub", "Threat-2.0", function(v)
 			DogTag:FireEvent("Threat", unit)
 		end
 	end)
-	local playerGuid = UnitGUID("player")
+	local playerGuid
+	if IsLoggedIn() then
+		playerGuid = UnitGUID("player")
+	else
+		DogTag:AddEventHandler("PLAYER_LOGIN", function()
+			playerGuid = UnitGUID("player")
+		end)
+	end
 	function Threat_func(unit)
 		if UnitIsFriend("player", unit) then
 			if UnitExists("target") then
