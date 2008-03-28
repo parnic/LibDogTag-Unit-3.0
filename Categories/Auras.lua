@@ -304,7 +304,7 @@ DogTag:AddTag("Unit", "ShortDruidForm", {
 	},
 	ret = "string;nil",
 	doc = L["Return a shortened druid form of unit, or shorten a druid form"],
-	example = ('[ShortDruidForm] => %q, [%q:ShortDruidForm] => %q; ["Hello":ShortDruidForm] => ""'):format(L["Bear_short"], L["Bear"], L["Bear_short"]),
+	example = ('[ShortDruidForm] => %q; [%q:ShortDruidForm] => %q; ["Hello":ShortDruidForm] => ""'):format(L["Bear_short"], L["Bear"], L["Bear_short"]),
 	category = L["Abbreviations"]
 })
 

@@ -23,7 +23,7 @@ do
 end
 
 local tmp = {}
-DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", function(event)
+local function PARTY_MEMBERS_CHANGED(event)
 	local prefix, min, max = "raid", 1, GetNumRaidMembers()
 	if max == 0 then
 		prefix, min, max = "party", 0, GetNumPartyMembers()
@@ -89,9 +89,15 @@ DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", function(event)
 	for guid in pairs(tmp) do
 		tmp[guid] = nil
 	end
-end)
+end
+DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 
+local first = true
 DogTag:AddTimerHandler(function(currentTime, num)
+	if first then
+		first = false
+		PARTY_MEMBERS_CHANGED()
+	end
 	for guid in pairs(offlineTimes) do
 		for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
 			DogTag:FireEvent("OfflineDuration", unit)
