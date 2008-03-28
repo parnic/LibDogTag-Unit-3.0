@@ -1,4 +1,11 @@
-﻿if GetLocale() == "zhCN" then
+﻿local MAJOR_VERSION = "LibDogTag-Unit-3.0"
+local MINOR_VERSION = tonumber(("$Revision$"):match("%d+")) or 0
+
+if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
+	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
+end
+
+if GetLocale() == "zhCN" then
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	local L = DogTag_Unit.L
@@ -125,6 +132,33 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Curse"] = "诅咒"
 	L["Poison"] = "中毒"
 	L["Disease"] = "疾病"
+	
+	-- docs
+	L["True"] = "True"
+	-- categories
+	L["Auras"] = "法术效果"
+	L["Abbreviations"] = "缩写"
+	-- Auras
+	L["Return True if unit has the aura argument"] = "如果单位身上有参数指定的法术效果，则返回True"
+	L["Return the number of auras on the unit"] = "返回参数指定的法术效果在单位身上所存在的数量"
+	L["Return the shapeshift form the unit is in if unit is a druid"] = "假如单位是德鲁伊，则返回其变形形态的名称"
+	L["Return a shortened druid form of unit, or shorten a druid form"] = "返回单位的德鲁伊形态缩写，或者缩写一个德鲁伊形态"
+	L["Return the total number of debuffs that unit has"] = "返回单位身上的Debuff数量"
+	L["Return the duration until the aura for unit is finished"] = "返回参数指定的法术效果在失效前还有多少时间"
+	L["Return True if the unit has the shadowform buff"] = "如果目标拥有暗影形态Buff则返回True"
+	L["Return True if the unit is stealthed in some way"] = "如果目标以某种形式潜行则返回True"
+	L["Return True if the unit has the Shield Wall buff"] = "如果目标拥有盾墙Buff则返回True"
+	L["Return True if the unit has the Last Stand buff"] = "如果目标拥有破釜沉舟Buff则返回True"
+	L["Return True if the unit has the Soulstone buff"] = "如果目标拥有灵魂石复活Buff则返回True"
+	L["Return True if the unit has the Misdirection buff"] = "如果目标拥有误导Buff则返回True"
+	L["Return True if the unit has the Ice Block buff"] = "如果目标拥有寒冰屏障Buff则返回True"
+	L["Return True if the unit has the Invisibility buff"] = "如果目标拥有隐形术Buff则返回True"
+	L["Return True if the unit has the Divine Intervention buff"] = "如果目标拥有神圣干涉Buff则返回True"
+	L["Return True if friendly unit is has a debuff of type"] = "如果友好目标身上有指定系别的Debuff则返回True"
+	L["Return True if the unit has a Magic debuff"] = "如果友好目标身上有魔法系的Debuff则返回True"
+	L["Return True if the unit has a Curse debuff"] = "如果友好目标身上有诅咒系的Debuff则返回True"
+	L["Return True if the unit has a Poison debuff"] = "如果友好目标身上有毒系的Debuff则返回True"
+	L["Return True if the unit has a Disease debuff"] = "如果友好目标身上有病系的Debuff则返回True"
 end
 
 end
