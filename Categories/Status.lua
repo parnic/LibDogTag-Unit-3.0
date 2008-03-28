@@ -388,11 +388,15 @@ DogTag:AddTag("Unit", "FKey", {
 	code = function(unit)
 		local fkey
 		if UnitIsUnit(unit, "player") then
-			return "F1"
+			return GetBindingText(GetBindingKey("TARGETSELF"), "KEY_", true)
+		elseif UnitIsUnit(unit, "pet") then
+			return GetBindingText(GetBindingKey("TARGETPET"), "KEY_", true)
 		else
 			for i = 1, 4 do
 				if UnitIsUnit(unit, "party" .. i) then
-					return "F" .. (i+1)
+					return GetBindingText(GetBindingKey("TARGETPARTYMEMBER" .. i), "KEY_", true)
+				elseif UnitIsUnit(unit, "partypet" .. i) then
+					return GetBindingText(GetBindingKey("TARGETPARTYPET" .. i), "KEY_", true)
 				end
 			end
 		end
