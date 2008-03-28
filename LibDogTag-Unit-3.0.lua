@@ -133,10 +133,10 @@ local function PARTY_MEMBERS_CHANGED()
 		DogTag:FireEvent("UnitChanged", unit)
 	end
 end
-DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 
 PARTY_MEMBERS_CHANGED()
-DogTag:AddEventHandler("PLAYER_LOGIN", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", PARTY_MEMBERS_CHANGED)
 
 local t = {}
 local function IterateUnitsWithGUID(guid)
@@ -280,34 +280,34 @@ DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, u, tag, tagData,
 	end
 end)
 
-DogTag:AddEventHandler("PLAYER_TARGET_CHANGED", function(event, ...)
+DogTag:AddEventHandler("Unit", "PLAYER_TARGET_CHANGED", function(event, ...)
 	refreshGUID("target")
 	DogTag:FireEvent("UnitChanged", "target")
 	DogTag:FireEvent("UnitChanged", "playertarget")
 end)
 
-DogTag:AddEventHandler("PLAYER_FOCUS_CHANGED", function(event, ...)
+DogTag:AddEventHandler("Unit", "PLAYER_FOCUS_CHANGED", function(event, ...)
 	refreshGUID("focus")
 	DogTag:FireEvent("UnitChanged", "focus")
 end)
 
-DogTag:AddEventHandler("PLAYER_PET_CHANGED", function(event, ...)
+DogTag:AddEventHandler("Unit", "PLAYER_PET_CHANGED", function(event, ...)
 	refreshGUID("pet")
 	DogTag:FireEvent("UnitChanged", "pet")
 end)
 
-DogTag:AddEventHandler("UNIT_TARGET", function(event, unit)
+DogTag:AddEventHandler("Unit", "UNIT_TARGET", function(event, unit)
 	DogTag:FireEvent("UnitChanged", unit .. "target")
 end)
 
-DogTag:AddEventHandler("UNIT_PET", function(event, unit)
+DogTag:AddEventHandler("Unit", "UNIT_PET", function(event, unit)
 	local unit_pet = unit .. "pet"
 	refreshGUID(unit_pet)
 	DogTag:FireEvent("UnitChanged", unit_pet)
 end)
 
 local inMouseover = false
-DogTag:AddEventHandler("UPDATE_MOUSEOVER_UNIT", function(event, ...)
+DogTag:AddEventHandler("Unit", "UPDATE_MOUSEOVER_UNIT", function(event, ...)
 	inMouseover = true
 	refreshGUID("mouseover")
 	DogTag:FireEvent("UnitChanged", "mouseover")
@@ -331,7 +331,7 @@ local nsListHasUnit = setmetatable({}, { __index = function(self, key)
 end })
 
 local nextUpdateWackyUnitsTime = 0
-DogTag:AddTimerHandler(function(num, currentTime)
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local exists = not not UnitExists("mouseover")
 	if inMouseover ~= exists then
 		inMouseover = exists
@@ -351,7 +351,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 	end
 end)
 
-DogTag:AddTimerHandler(function(num, currentTime)
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local exists = not not UnitExists("mouseover")
 	if not exists then
 		for fs, nsList in pairs(fsToNSList) do

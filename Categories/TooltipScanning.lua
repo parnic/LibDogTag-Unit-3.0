@@ -108,8 +108,8 @@ local function UPDATE_FACTION()
 		factionList[name] = true
 	end
 end
-DogTag:AddEventHandler("UPDATE_FACTION", UPDATE_FACTION)
-DogTag:AddEventHandler("PLAYER_LOGIN", UPDATE_FACTION)
+DogTag:AddEventHandler("Unit", "UPDATE_FACTION", UPDATE_FACTION)
+DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", UPDATE_FACTION)
 
 DogTag:AddTag("Unit", "Guild", {
 	code = function(unit)

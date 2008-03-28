@@ -680,6 +680,7 @@ assert_equal(DogTag:Evaluate("[IsMana]", "Unit", { unit = 'target' }), nil)
 assert_equal(DogTag:Evaluate("[~IsMana]", "Unit", { unit = 'target' }), "True")
 
 assert_equal(DogTag:Evaluate("[[~IsMaxMP:~IsMana] ? PercentMP:Percent] [IsMana ? MaxMP:VeryShort:Prepend(\"| \")]", "Unit", { unit = 'target' }), nil)
+assert_equal(DogTag:Evaluate("[One + NameRealm]", "Unit", { unit = 'target' }), 1)
 
 --[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
 

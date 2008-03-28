@@ -76,7 +76,7 @@ local auraQueue = {}
 
 local nextAuraUpdate = 0
 local nextWackyAuraUpdate = 0
-DogTag:AddTimerHandler(function(num, currentTime)
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	if currentTime >= nextAuraUpdate and hasEvent('Aura') then
 		nextAuraUpdate = currentTime + 0.25
 		if currentTime >= nextWackyAuraUpdate then
@@ -195,7 +195,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 end)
 
 
-DogTag:AddEventHandler("UnitChanged", function(event, unit)
+DogTag:AddEventHandler("Unit", "UnitChanged", function(event, unit)
 	if rawget(currentAuras, unit) then
 		currentAuras[unit] = del(currentAuras[unit])
 		currentDebuffTypes[unit] = del(currentDebuffTypes[unit])
@@ -205,7 +205,7 @@ DogTag:AddEventHandler("UnitChanged", function(event, unit)
 	end
 end)
 
-DogTag:AddEventHandler("UNIT_AURA", function(event, unit)
+DogTag:AddEventHandler("Unit", "UNIT_AURA", function(event, unit)
 	auraQueue[unit] = true
 end)
 

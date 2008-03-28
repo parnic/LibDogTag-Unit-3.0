@@ -95,7 +95,7 @@ local function PARTY_MEMBERS_CHANGED(event)
 		tmp[guid] = nil
 	end
 end
-DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 
 DogTag:AddAddonFinder("Unit", "_G", "oRA", function(v)
 	if AceLibrary and AceLibrary:HasInstance("AceEvent-2.0") then
@@ -112,7 +112,7 @@ DogTag:AddAddonFinder("Unit", "_G", "CT_RAOptions_UpdateMTs", function(v)
 end)
 
 local first = true
-DogTag:AddTimerHandler(function(currentTime, num)
+DogTag:AddTimerHandler("Unit", function(currentTime, num)
 	if first then
 		first = false
 		PARTY_MEMBERS_CHANGED()

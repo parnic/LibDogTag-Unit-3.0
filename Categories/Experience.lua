@@ -9,12 +9,12 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-DogTag:AddEventHandler("UNIT_PET_EXPERIENCE", function(event, ...)
+DogTag:AddEventHandler("Unit", "UNIT_PET_EXPERIENCE", function(event, ...)
 	DogTag:FireEvent("UpdateExperience", "pet")
 	DogTag:FireEvent("UpdateExperience", "playerpet")
 end)
 
-DogTag:AddEventHandler("PLAYER_XP_UPDATE", function(event, ...)
+DogTag:AddEventHandler("Unit", "PLAYER_XP_UPDATE", function(event, ...)
 	DogTag:FireEvent("UpdateExperience", "player")
 end)
 

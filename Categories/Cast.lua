@@ -44,7 +44,7 @@ local castData = setmetatable({}, {__index=function(self, unit)
 	return data
 end})
 
-DogTag:AddTimerHandler(function(num, currentTime)
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	for unit, data in pairs(castData) do
 		if not IsNormalUnit[unit] then
 			castData[unit] = del(data)
@@ -60,7 +60,7 @@ DogTag:AddTimerHandler(function(num, currentTime)
 	end
 end)
 
-DogTag:AddEventHandler("UnitChange", function(event, unit)
+DogTag:AddEventHandler("Unit", "UnitChange", function(event, unit)
 	if rawget(castData, unit) then
 		castData[unit] = del(castData[unit])
 	end
@@ -82,7 +82,7 @@ local function UNIT_SPELLCAST_SENT(event, unit, spell, rank, target)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_SENT", UNIT_SPELLCAST_SENT)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", UNIT_SPELLCAST_SENT)
 
 local function UNIT_SPELLCAST_START(event, unit)
 	if not hasEvent('Cast') then
@@ -100,8 +100,8 @@ local function UNIT_SPELLCAST_START(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_START", UNIT_SPELLCAST_START)
-DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_START", UNIT_SPELLCAST_START)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_START", UNIT_SPELLCAST_START)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_START", UNIT_SPELLCAST_START)
 
 local function UNIT_SPELLCAST_STOP(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].fading then
@@ -114,7 +114,7 @@ local function UNIT_SPELLCAST_STOP(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_STOP", UNIT_SPELLCAST_STOP)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_STOP", UNIT_SPELLCAST_STOP)
 
 local function UNIT_SPELLCAST_SUCCEEDED(event, unit, name, rank)
 	if not hasEvent('Cast') or unit ~= "player" or lastPlayerEvent ~= "UNIT_SPELLCAST_SENT" then
@@ -146,7 +146,7 @@ local function UNIT_SPELLCAST_SUCCEEDED(event, unit, name, rank)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_SUCCEEDED", UNIT_SPELLCAST_SUCCEEDED)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SUCCEEDED", UNIT_SPELLCAST_SUCCEEDED)
 
 local function UNIT_SPELLCAST_FAILED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].fading then
@@ -157,7 +157,7 @@ local function UNIT_SPELLCAST_FAILED(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_FAILED", UNIT_SPELLCAST_FAILED)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_FAILED", UNIT_SPELLCAST_FAILED)
 
 local function UNIT_SPELLCAST_INTERRUPTED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) then
@@ -168,8 +168,8 @@ local function UNIT_SPELLCAST_INTERRUPTED(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
-DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
 
 local function UNIT_SPELLCAST_DELAYED(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].stopTime then
@@ -192,7 +192,7 @@ local function UNIT_SPELLCAST_DELAYED(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_DELAYED", UNIT_SPELLCAST_DELAYED)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_DELAYED", UNIT_SPELLCAST_DELAYED)
 
 local function UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
@@ -215,7 +215,7 @@ local function UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 	castData[unit].endTime = endTime / 1000
 	castData[unit].delay = castData[unit].delay + (oldStart - startTime)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_SPELLCAST_CHANNEL_UPDATE)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_SPELLCAST_CHANNEL_UPDATE)
 
 local function UNIT_SPELLCAST_CHANNEL_STOP(event, unit)
 	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
@@ -226,7 +226,7 @@ local function UNIT_SPELLCAST_CHANNEL_STOP(event, unit)
 	
 	DogTag:FireEvent("Cast", unit)
 end
-DogTag:AddEventHandler("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_SPELLCAST_CHANNEL_STOP)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", UNIT_SPELLCAST_CHANNEL_STOP)
 
 DogTag:AddTag("Unit", "CastName", {
 	code = function(unit)

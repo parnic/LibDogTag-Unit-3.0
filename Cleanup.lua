@@ -12,12 +12,18 @@ local DogTag_Unit, oldMinor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 local DogTag_Unit_funcs = _G.DogTag_Unit_funcs
 _G.DogTag_Unit_funcs = nil
 if not DogTag_Unit then
+	DogTag_Unit_funcs = nil
+	collectgarbage('collect')
 	return
 end
 
 local DogTag = LibStub:GetLibrary(DOGTAG_MAJOR_VERSION)
 if not DogTag then
 	error(("Cannot load %s without first loading %s"):format(MAJOR_VERSION, DOGTAG_MAJOR_VERSION))
+end
+
+if oldMinor then
+	DogTag:ClearNamespace("Unit")
 end
 
 local oldLib
@@ -33,7 +39,7 @@ DogTag_Unit.oldLib = oldLib
 for _,v in ipairs(DogTag_Unit_funcs) do
 	v(DogTag_Unit, DogTag)
 end
-
+--[[
 local function DogTag_Unit_RefreshLibrary(self)
 	local oldLib = {}
 	for k, v in pairs(DogTag_Unit) do
@@ -51,3 +57,4 @@ end
 DogTag_Unit.RefreshLibrary = DogTag_Unit_RefreshLibrary
 
 DogTag:AddSubLibrary(MAJOR_VERSION)
+]]

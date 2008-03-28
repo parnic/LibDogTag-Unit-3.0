@@ -51,17 +51,17 @@ guildNotes = setmetatable({},x)
 officerNotes = setmetatable({},x)
 
 local nextGuildRosterUpdate = 0
-DogTag:AddEventHandler("GUILD_ROSTER_UPDATE", function()
+DogTag:AddEventHandler("Unit", "GUILD_ROSTER_UPDATE", function()
 	refreshGuildNotes()
 
 	nextGuildRosterUpdate = GetTime() + 20
 end)
 
-DogTag:AddEventHandler("PLAYER_GUILD_UPDATE", function()
+DogTag:AddEventHandler("Unit", "PLAYER_GUILD_UPDATE", function()
 	refreshGuildNotes()
 end)
 
-DogTag:AddTimerHandler(function(num, currentTime)
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	if currentTime > nextGuildRosterUpdate then
 		if IsInGuild() then
 			GuildRoster()
