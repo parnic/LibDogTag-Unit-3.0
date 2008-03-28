@@ -14,6 +14,9 @@ local function HP_func(unit, known)
 	if known and UnitHealthMax(unit) == 100 then
 		return nil
 	else
+		if hp == 1 and UnitIsGhost(unit) then
+			return 0
+		end
 		return hp
 	end
 end
@@ -36,6 +39,9 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
 		if known and not found then
 			return nil
 		else
+			if hp == 1 and UnitIsGhost(unit) then
+				return 0
+			end
 			return hp
 		end
 	end
