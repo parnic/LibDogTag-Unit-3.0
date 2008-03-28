@@ -294,8 +294,34 @@ DogTag:AddTag("Unit", "PvP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
+	events = "UNIT_FACTION#$unit",
 	doc = L["Return PvP or FFA if the unit is PvP-enabled"],
 	example = ('[PvP] => %q; [PvP] => %q; [PvP] => ""'):format(L["PvP"], L["FFA"]),
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "PvPIcon", {
+	code = function(size, unit)
+		local has
+		if UnitIsPVPFreeForAll(unit) then
+			has = 'FFA'
+		elseif UnitIsPVP(unit) then
+			has = UnitFactionGroup(unit)
+		end
+		if has then --because the textures for these icons are much larger than the actual icon, and we have no texcoords in font strings, this bit of math helps make it look "right" next to other icons
+			return "|TInterface\\TargetingFrame\\UI-PVP-" .. has .. ":" .. size * 2 .. ":" .. size * 2 .. ":" .. size * 3 / 4 .. ":" .. size / 12 .. "|t"
+		else
+			return nil
+		end
+	end,
+	arg = {
+		'size', 'number', 12,
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	events = "UNIT_FACTION#$unit",
+	doc = L["Display the appropriate PvP icon if the unit is PvP flagged"],
+	example = '[PvPIcon] => "|TInterface\\TargetingFrame\\UI-PVP-Horde:24:24:18:2|t"; [PvPIcon] => ""',
 	category = L["Status"]
 })
 
@@ -675,7 +701,6 @@ DogTag:AddTag("Unit", "IsUnit", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
-	events = "UNIT_FACTION#$unit",
 	doc = L["Return True if unit is the same as argument"],
 	example = ('[IsUnit("target")] => %q; [IsUnit("party1")] => ""'):format(L["True"]),
 	category = L["Status"]
