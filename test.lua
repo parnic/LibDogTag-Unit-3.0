@@ -4,13 +4,15 @@ TODO:
 AddonVersion? - probably not gonna do this
 ]]
 
-local old_dofile = dofile
+if not DogTag_Unit_SecondTime then
+	local old_dofile = dofile
 
-function dofile(file)
-	return old_dofile("../LibDogTag-3.0/" .. file)
+	function dofile(file)
+		return old_dofile("../LibDogTag-3.0/" .. file)
+	end
+	old_dofile('../LibDogTag-3.0/test.lua')
+	dofile = old_dofile
 end
-old_dofile('../LibDogTag-3.0/test.lua')
-dofile = old_dofile
 
 local DogTag = LibStub("LibDogTag-3.0")
 
@@ -371,22 +373,6 @@ function UnitIsFeignDeath(unit)
 	return nil
 end
 
-local MyUnit_data = "player"
-DogTag:AddTag("Unit", "MyUnit", {
-	code = function()
-		return MyUnit_data
-	end,
-	ret = "string",
-})
-
-local MyValue_data = nil
-DogTag:AddTag("Unit", "MyValue", {
-	code = function()
-		return MyValue_data
-	end,
-	ret = "nil;number;string",
-})
-
 dofile("Localization/enUS.lua")
 dofile("LibDogTag-Unit-3.0.lua")
 dofile("Categories/Auras.lua")
@@ -405,6 +391,22 @@ dofile("Categories/Talent.lua")
 dofile("Categories/Threat.lua")
 dofile("Categories/TooltipScanning.lua")
 dofile("Cleanup.lua")
+
+local MyUnit_data = "player"
+DogTag:AddTag("Unit", "MyUnit", {
+	code = function()
+		return MyUnit_data
+	end,
+	ret = "string",
+})
+
+local MyValue_data = nil
+DogTag:AddTag("Unit", "MyValue", {
+	code = function()
+		return MyValue_data
+	end,
+	ret = "nil;number;string",
+})
 
 assert_equal(DogTag:Evaluate("[HP('player')]"), "Unknown tag HP")
 
@@ -685,3 +687,10 @@ assert_equal(DogTag:Evaluate("[One + NameRealm]", "Unit", { unit = 'target' }), 
 --[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
 
 print("LibDogTag-Unit-3.0: Tests succeeded")
+
+if DogTag_Unit_SecondTime then
+	return
+end
+DogTag_Unit_SecondTime = true
+LibStub.minors["LibDogTag-Unit-3.0"] = 1
+dofile('test.lua')
