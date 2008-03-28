@@ -154,8 +154,8 @@ DogTag:AddTag("Unit", "HasMP", {
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	doc = L["Return True if unit has no power type at all"],
-	example = ('[HasNoMP] => %q; [HasNoMP] => ""'):format(L["True"]),
+	doc = L["Return True if unit has any power type at all"],
+	example = ('[HasMP] => %q; [HasMP] => ""'):format(L["True"]),
 	category = L["Power"]
 })
 
