@@ -98,7 +98,7 @@ end
 DogTag:AddEventHandler("PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 
 DogTag:AddAddonFinder("Unit", "_G", "oRA", function(v)
-	if AceLibrary and AceLibrary:HasLibrary("AceEvent-2.0") then
+	if AceLibrary and AceLibrary:HasInstance("AceEvent-2.0") then
 		AceLibrary("AceEvent-2.0"):RegisterEvent("oRA_MainTankUpdate", function()
 			DogTag:FireEvent("PARTY_MEMBERS_CHANGED")
 		end)
