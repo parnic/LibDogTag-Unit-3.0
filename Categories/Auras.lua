@@ -327,7 +327,7 @@ DogTag:AddTag("Unit", "AuraDuration", {
 	code = function(aura, unit)
 		local t = currentAuraTimes[unit][aura]
 		if t then
-			return GetTime() - t
+			return t - GetTime()
 		end
 		return nil
 	end,
