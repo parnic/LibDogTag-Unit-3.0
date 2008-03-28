@@ -29,7 +29,7 @@ DogTag:AddAddonFinder("Unit", "LibStub", "Threat-2.0", function(v)
 	if IsLoggedIn() then
 		playerGuid = UnitGUID("player")
 	else
-		DogTag:AddEventHandler("PLAYER_LOGIN", function()
+		DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", function()
 			playerGuid = UnitGUID("player")
 		end)
 	end
