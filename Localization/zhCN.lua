@@ -133,11 +133,15 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Poison"] = "中毒"
 	L["Disease"] = "疾病"
 	
-	-- docs
 	L["True"] = "True"
-	-- categories
-	L["Auras"] = "法术效果"
+	
+	-- Categories
 	L["Abbreviations"] = "缩写"
+	L["Auras"] = "法术效果"
+	L["Casting"] = "施法"
+	-- Spell names
+	L["Holy Light"] = "圣光术"
+	-- Docs
 	-- Auras
 	L["Return True if unit has the aura argument"] = "如果单位身上有参数指定的法术效果，则返回True"
 	L["Return the number of auras on the unit"] = "返回参数指定的法术效果在单位身上所存在的数量"
@@ -159,6 +163,9 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Return True if the unit has a Curse debuff"] = "如果友好目标身上有诅咒系的Debuff则返回True"
 	L["Return True if the unit has a Poison debuff"] = "如果友好目标身上有毒系的Debuff则返回True"
 	L["Return True if the unit has a Disease debuff"] = "如果友好目标身上有病系的Debuff则返回True"
+	-- Cast
+	L["Return the current or last spell to be cast"] = "返回当前或者最后一次施放的法术名"
+	L["Return the current cast target name"] = "返回当前施法所作用于的目标名字"
 end
 
 end
