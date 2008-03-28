@@ -21,12 +21,17 @@ do
 		return pairs(iterateGroupMembers__t)
 	end
 end
+_G.iterateGroupMembers = iterateGroupMembers
 
 local tmp = {}
 local function PARTY_MEMBERS_CHANGED(event)
 	local prefix, min, max = "raid", 1, GetNumRaidMembers()
 	if max == 0 then
 		prefix, min, max = "party", 0, GetNumPartyMembers()
+	end
+	
+	for k in pairs(iterateGroupMembers__t) do
+		iterateGroupMembers__t[k] = nil
 	end
 	
 	for i = min, max do
@@ -49,10 +54,12 @@ local function PARTY_MEMBERS_CHANGED(event)
 		
 		if not UnitIsConnected(unit) then
 			if not offlineTimes[guid] then
+				Rock("LibRockConsole-1.0"):Print("Setting offlineTimes", unit, guid, GetTime())
 				offlineTimes[guid] = GetTime()
 			end
 			afkTimes[guid] = nil
-		else
+		else	
+			Rock("LibRockConsole-1.0"):Print("Clearing offlineTimes", unit, guid)
 			offlineTimes[guid] = nil
 			if UnitIsAFK(unit) then
 				if not afkTimes[guid] then
