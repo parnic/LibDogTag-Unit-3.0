@@ -375,6 +375,26 @@ DogTag:AddTag("Unit", "HappyIcon", {
 	category = L["Status"]
 })
 
+DogTag:AddTag("Unit", "RaidIcon", {
+	code = function(size, unit)
+		local index =  GetRaidTargetIndex(unit)
+		if index then
+			return "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. index .. ":" .. size .. "|t"
+		else
+			return nil
+		end
+	end,
+	arg = {
+		'size', 'number', 0,
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	events = "RAID_TARGET_UPDATE",
+	doc = L["Display the raid icon associated with the unit"],
+	example = '[RaidIcon] => "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:0|t"; [RaidIcon] => ""',
+	category = L["Status"]
+})
+
 DogTag:AddTag("Unit", "IsTappedByMe", {
 	code = UnitIsTappedByPlayer,
 	arg = {
