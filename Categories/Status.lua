@@ -54,12 +54,10 @@ local function PARTY_MEMBERS_CHANGED(event)
 		
 		if not UnitIsConnected(unit) then
 			if not offlineTimes[guid] then
-				Rock("LibRockConsole-1.0"):Print("Setting offlineTimes", unit, guid, GetTime())
 				offlineTimes[guid] = GetTime()
 			end
 			afkTimes[guid] = nil
 		else	
-			Rock("LibRockConsole-1.0"):Print("Clearing offlineTimes", unit, guid)
 			offlineTimes[guid] = nil
 			if UnitIsAFK(unit) then
 				if not afkTimes[guid] then
