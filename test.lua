@@ -266,6 +266,25 @@ function UnitReaction(alpha, bravo)
 	return units[bravo] and (units[bravo].reaction or 4)
 end
 
+function GetNumPartyMembers()
+	return 0
+end
+
+function GetNumRaidMembers()
+	return 0
+end
+
+function UnitIsConnected(unit)
+	return UnitExists(unit)
+end
+
+function UnitIsAFK(unit)
+	return nil
+end
+function UnitIsDeadOrGhost(unit)
+	return nil
+end
+
 UnitReactionColor = {
 	{ r = 1, g = 0, b = 0 },
 	{ r = 1, g = 0, b = 0 },
@@ -642,6 +661,12 @@ assert_equal(DogTag:Evaluate("[DifficultyColor(unit='target')]", "Unit"), "|cfff
 assert_equal(DogTag:Evaluate("[Guid(unit='player')]", "Unit"), "0x0000000000000000")
 
 assert_equal(DogTag:Evaluate("[HasMP]", "Unit", { unit = 'player' }), "True")
+assert_equal(DogTag:Evaluate("[MP]", "Unit", { unit = 'player' }), 100)
+assert_equal(DogTag:Evaluate("[MaxMP]", "Unit", { unit = 'player' }), 100)
+assert_equal(DogTag:Evaluate("[IsMaxMP]", "Unit", { unit = 'player' }), "True")
+assert_equal(DogTag:Evaluate("[~IsMaxMP]", "Unit", { unit = 'player' }), nil)
+assert_equal(DogTag:Evaluate("[~MaxMP]", "Unit", { unit = 'player' }), nil)
+assert_equal(DogTag:Evaluate("[IsMaxMP:IsMana]", "Unit", { unit = 'player' }), "Bad unit: \"True\"")
 
 assert_equal(DogTag:Evaluate("[Guild]", "Unit", { unit = 'target' }), nil)
 assert_equal(DogTag:Evaluate("[Guild(unit='player')]", "Unit", { unit = 'target' }), "Southsea Buccaneers")
@@ -653,6 +678,8 @@ assert_equal(DogTag:Evaluate("[IsMana]", "Unit", { unit = 'player' }), "True")
 assert_equal(DogTag:Evaluate("[~IsMana]", "Unit", { unit = 'player' }), nil)
 assert_equal(DogTag:Evaluate("[IsMana]", "Unit", { unit = 'target' }), nil)
 assert_equal(DogTag:Evaluate("[~IsMana]", "Unit", { unit = 'target' }), "True")
+
+assert_equal(DogTag:Evaluate("[[~IsMaxMP:~IsMana] ? PercentMP:Percent] [IsMana ? MaxMP:VeryShort:Prepend(\"| \")]", "Unit", { unit = 'target' }), nil)
 
 --[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
 
