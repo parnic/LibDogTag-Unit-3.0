@@ -539,8 +539,10 @@ DogTag:AddTag("Unit", "ClassColor", {
 DogTag:AddTag("Unit", "DifficultyColor", {
 	code = function(value, unit)
 		local level = UnitLevel(unit)
-		if level <= 0 or UnitClassification(unit) ~= "normal" then
+		if level <= 0 then
 			level = 99
+		elseif UnitClassification(unit) ~= "normal" then
+			level = level + 3
 		end
 		local info = GetDifficultyColor(level)
 		if value then
