@@ -180,7 +180,7 @@ DogTag:AddTag("Unit", "Zone", {
 	},
 	ret = "string;nil",
 	events = "SlowUpdate",
-	doc = L["Return the zone of unit"],
+	doc = L["Return the zone of unit. Note: only works when unit is out of your sight."],
 	example = ('[Zone] => %q'):format(L["Shattrath"]),
 	category = L["Status"]
 })
