@@ -233,6 +233,7 @@ DogTag:AddTag("Unit", "Classification", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
+	events = "UNIT_CLASSIFICATION_CHANGED#$unit",
 	doc = L["Return the classification of unit"],
 	example = ('[Classification] => %q; [Classification] => %q; [Classification] => ""'):format(L["Elite"], L["Boss"]),
 	category = L["Characteristics"]
@@ -254,6 +255,7 @@ DogTag:AddTag("Unit", "ShortClassification", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
+	events = "UNIT_CLASSIFICATION_CHANGED#$unit",
 	doc = L["Return a shortened classification of unit, or shorten a classification"],
 	example = ('[ShortClassification] => %q; [%q:ShortClassification] => %q; ["Hello":ShortClassification] => ""'):format(L["Elite_short"], L["Boss"], L["Boss_short"]),
 	category = L["Abbreviations"]
