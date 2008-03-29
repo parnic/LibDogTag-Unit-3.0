@@ -10,6 +10,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 
 local isDruid = select(2, UnitClass("player")) == "DRUID"
+assert(isDruid)
 
 local function DruidMP_func(unit)
 	return nil
@@ -30,7 +31,7 @@ if isDruid then
 		end
 		function MaxDruidMP_func(unit)
 			if unit == "player" then
-				return LibDruidMana:GetCurrentMana()
+				return LibDruidMana:GetMaximumMana()
 			end
 		end
 	end)
@@ -41,7 +42,7 @@ DogTag:AddTag("Unit", "DruidMP", {
 		return DruidMP_func
 	end,
 	dynamicCode = true,
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
@@ -56,7 +57,7 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 		return MaxDruidMP_func
 	end,
 	dynamicCode = true,
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
@@ -68,7 +69,7 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 
 DogTag:AddTag("Unit", "PercentDruidMP", {
 	alias = "[DruidMP(unit=unit) / MaxDruidMP(unit=unit) * 100]:Round(1)",
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the percentage mana of unit if unit is you and you are a druid"],
@@ -78,7 +79,7 @@ DogTag:AddTag("Unit", "PercentDruidMP", {
 
 DogTag:AddTag("Unit", "MissingDruidMP", {
 	alias = "MaxDruidMP(unit=unit) - DruidMP(unit=unit)",
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the missing mana of unit if unit is you and you are a druid"],
@@ -88,7 +89,7 @@ DogTag:AddTag("Unit", "MissingDruidMP", {
 
 DogTag:AddTag("Unit", "FractionalDruidMP", {
 	alias = "Concatenate(DruidMP(unit=unit), '/', MaxDruidMP(unit=unit))",
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the current and maximum mana of unit if unit is you and you are a druid"],
@@ -98,7 +99,7 @@ DogTag:AddTag("Unit", "FractionalDruidMP", {
 
 DogTag:AddTag("Unit", "IsMaxDruidMP", {
 	alias = "Boolean(DruidMP(unit=unit) = MaxDruidMP(unit=unit))",
-	args = {
+	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return True if at max mana, unit is you, and you are a druid"],
