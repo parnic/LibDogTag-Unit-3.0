@@ -10,7 +10,6 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 
 local isDruid = select(2, UnitClass("player")) == "DRUID"
-assert(isDruid)
 
 local function DruidMP_func(unit)
 	return nil
