@@ -76,13 +76,7 @@ DogTag:AddTag("Unit", "Threat", {
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	ret = function()
-		if ThreatLib then
-			return "number"
-		else
-			return "nil"
-		end
-	end,
+	ret = "nil;number",
 	events = "Threat#$unit",
 	doc = L["Return the current threat that you have against enemy unit or that friendly unit has against your target, if Threat-2.0 is available"],
 	example = '[Threat] => "50"',
@@ -97,13 +91,7 @@ DogTag:AddTag("Unit", "MaxThreat", {
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	ret = function()
-		if ThreatLib then
-			return "number"
-		else
-			return "nil"
-		end
-	end,
+	ret = "nil;number",
 	events = "Threat#$unit",
 	doc = L["Return the maximum threat that group members have against enemy unit or that group members have against your target, if ThreatLib is available"],
 	example = '[MaxThreat] => "80"',
