@@ -517,8 +517,8 @@ DogTag:AddTag("Unit", "IsMasterLooter", {
 		end
 		for i = 1, GetNumRaidMembers() do
 			local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i)
-			if name == n and isML then
-				return true
+			if name == n then
+				return isML and true or false
 			end
 		end
 		return false
