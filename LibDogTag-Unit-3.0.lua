@@ -186,7 +186,9 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		t[#t+1] = "\n"
 		t[#t+1] = [=[end;]=]
 		t[#t+1] = "\n"
-		t[#t+1] = [=[if not UnitExists(]=]
+		t[#t+1] = [=[if ]=]
+		t[#t+1] = extraKwargs["unit"][1]
+		t[#t+1] = [=[ ~= "player" and not UnitExists(]=]
 		t[#t+1] = extraKwargs["unit"][1]
 		t[#t+1] = [=[) then]=]
 		t[#t+1] = "\n"
