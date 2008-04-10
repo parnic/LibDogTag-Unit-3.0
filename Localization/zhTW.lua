@@ -1,9 +1,7 @@
 ﻿local MAJOR_VERSION = "LibDogTag-Unit-3.0"
 local MINOR_VERSION = tonumber(("$Revision$"):match("%d+")) or 0
 
-if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
-	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
-end
+_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 
 if GetLocale() == "zhTW" then
 
@@ -21,6 +19,16 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Tauren"] = "牛頭人"
 	L["Troll"] = "食人妖"
 	L["Undead"] = "不死族"
+	L["Blood Elf_female"] = "血精靈",
+	L["Draenei_female"] = "德萊尼",
+	L["Dwarf_female"] = "矮人",
+	L["Gnome_female"] = "地精",
+	L["Human_female"] = "人類",
+	L["Night Elf_female"] = "夜精靈",
+	L["Orc_female"] = "獸人",
+	L["Tauren_female"] = "牛頭人",
+	L["Troll_female"] = "食人妖",
+	L["Undead_female"] = "不死族",
 
 	-- short races
 	L["Blood Elf_short"] = "血"
@@ -31,8 +39,8 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Night Elf_short"] = "夜"
 	L["Orc_short"] = "獸"
 	L["Tauren_short"] = "牛"
-	L["Troll_short"] = "食"
-	L["Undead_short"] = "不"
+	L["Troll_short"] = "妖"
+	L["Undead_short"] = "死"
 
 	-- classes
 	L["Warrior"] = "戰士"
@@ -44,6 +52,15 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Druid"] = "德魯伊"
 	L["Rogue"] = "盜賊"
 	L["Hunter"] = "獵人"
+	L["Warrior_female"] = "戰士"
+	L["Priest_female"] = "牧師"
+	L["Mage_female"] = "法師"
+	L["Shaman_female"] = "薩滿"
+	L["Paladin_female"] = "聖騎士"
+	L["Warlock_female"] = "術士"
+	L["Druid_female"] = "德魯伊"
+	L["Rogue_female"] = "盜賊"
+	L["Hunter_female"] = "獵人"
 
 	-- short classes
 	L["Warrior_short"] = "戰"
@@ -56,22 +73,20 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Rogue_short"] = "賊"
 	L["Hunter_short"] = "獵"
 
-	-- Some strings below are set to GlobalStrings in enUS.lua and no need to be localized, commented out
-	-- 下面部分字串已經在enUS.lua裏面使用了GlobalStrings，不需要翻譯，注釋掉
-	--L["Player"] = PLAYER
-	--L["Target"] = TARGET
-	--L["Focus-target"] = FOCUS
+	L["Player"] = PLAYER
+	L["Target"] = TARGET
+	L["Focus-target"] = FOCUS
 	L["Mouse-over"] = "滑鼠目標"
 	L["%s's pet"] = "%s的寵物"
 	L["%s's target"] = "%s的目標"
-	L["Party member #%d"] = "隊伍成員#%d"
-	L["Raid member #%d"] = "團隊成員#%d"
+	L["Party member #%d"] = "隊員#%d"
+	L["Raid member #%d"] = "團員#%d"
 
 	-- classifications
 	L["Rare"] = "稀有"
-	L["Rare-Elite"] = "稀有" and ELITE and "稀有" .. "-" .. ELITE
-	--L["Elite"] = ELITE
-	--L["Boss"] = BOSS
+	L["Rare-Elite"] = "稀有精英"
+	L["Elite"] = "精英"
+	L["Boss"] = BOSS
 	-- short classifications
 	L["Rare_short"] = "稀"
 	L["Rare-Elite_short"] = "稀+"
@@ -80,29 +95,29 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 	L["Feigned Death"] = "假死"
 	L["Stealthed"] = "潛行"
-	L["Soulstoned"] = "靈魂已保存"
+	L["Soulstoned"] = "靈魂石"
 
-	--L["Dead"] = DEAD
+	L["Dead"] = "死亡"
 	L["Ghost"] = "鬼魂"
-	--L["Offline"] = PLAYER_OFFLINE
+	L["Offline"] = "離線"
 	L["Online"] = "線上"
 	L["Combat"] = "戰鬥"
 	L["Resting"] = "休息"
-	L["Tapped"] = "已被攻擊"
+	L["Tapped"] = "戰鬥"
 	L["AFK"] = "暫離"
-	L["DND"] = "請勿打擾"
+	L["DND"] = "勿擾"
 
-	--L["Rage"] = RAGE
-	--L["Focus"] = FOCUS
-	--L["Energy"] = ENERGY
-	--L["Mana"] = MANA
+	L["Rage"] = "怒氣"
+	L["Focus"] = "集中"
+	L["Energy"] = "能量"
+	L["Mana"] = "魔法"
 
-	--L["PvP"] = PVP
-	L["FFA"] = "自由PK"
+	L["PvP"] = PVP
+	L["FFA"] = "自由"..PVP
 
 	-- genders
-	--L["Male"] = MALE
-	--L["Female"] = FEMALE
+	L["Male"] = "男"
+	L["Female"] = "女"
 
 	-- forms
 	L["Bear"] = "熊"
@@ -132,40 +147,6 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Curse"] = "詛咒"
 	L["Poison"] = "中毒"
 	L["Disease"] = "疾病"
-	
-	L["True"] = "True"
-	
-	-- Categories
-	L["Abbreviations"] = "縮寫"
-	L["Auras"] = "法術效果"
-	L["Casting"] = "施法"
-	-- Spell names
-	L["Holy Light"] = "聖光術"
-	-- Docs
-	-- Auras
-	L["Return True if unit has the aura argument"] = "如果單位身上有參數指定的法術效果，則返回True"
-	L["Return the number of auras on the unit"] = "返回參數指定的法術效果在單位身上所存在的數量"
-	L["Return the shapeshift form the unit is in if unit is a druid"] = "假如單位是德魯伊，則返回其變形形態的名稱"
-	L["Return a shortened druid form of unit, or shorten a druid form"] = "返回單位的德魯伊形態縮寫，或者縮寫一個德魯伊形態"
-	L["Return the total number of debuffs that unit has"] = "返回單位身上的Debuff數量"
-	L["Return the duration until the aura for unit is finished"] = "返回參數指定的法術效果在失效前還有多少時間"
-	L["Return True if the unit has the shadowform buff"] = "如果目標擁有暗影形態Buff則返回True"
-	L["Return True if the unit is stealthed in some way"] = "如果目標以某種形式潛行則返回True"
-	L["Return True if the unit has the Shield Wall buff"] = "如果目標擁有盾牆Buff則返回True"
-	L["Return True if the unit has the Last Stand buff"] = "如果目標擁有破釜沉舟Buff則返回True"
-	L["Return True if the unit has the Soulstone buff"] = "如果目標擁有靈魂石復活Buff則返回True"
-	L["Return True if the unit has the Misdirection buff"] = "如果目標擁有誤導Buff則返回True"
-	L["Return True if the unit has the Ice Block buff"] = "如果目標擁有寒冰屏障Buff則返回True"
-	L["Return True if the unit has the Invisibility buff"] = "如果目標擁有隱形術Buff則返回True"
-	L["Return True if the unit has the Divine Intervention buff"] = "如果目標擁有神聖干涉Buff則返回True"
-	L["Return True if friendly unit is has a debuff of type"] = "如果友好目標身上有指定系別的Debuff則返回True"
-	L["Return True if the unit has a Magic debuff"] = "如果友好目標身上有魔法系的Debuff則返回True"
-	L["Return True if the unit has a Curse debuff"] = "如果友好目標身上有詛咒系的Debuff則返回True"
-	L["Return True if the unit has a Poison debuff"] = "如果友好目標身上有毒系的Debuff則返回True"
-	L["Return True if the unit has a Disease debuff"] = "如果友好目標身上有病系的Debuff則返回True"
-	-- Cast
-	L["Return the current or last spell to be cast"] = "返回當前或者最後一次施放的法術名"
-	L["Return the current cast target name"] = "返回當前施法所作用於的目標名字"
 end
 
 end
