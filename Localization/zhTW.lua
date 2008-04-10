@@ -21,16 +21,16 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Tauren"] = "牛頭人"
 	L["Troll"] = "食人妖"
 	L["Undead"] = "不死族"
-	L["Blood Elf_female"] = "血精靈",
-	L["Draenei_female"] = "德萊尼",
-	L["Dwarf_female"] = "矮人",
-	L["Gnome_female"] = "地精",
-	L["Human_female"] = "人類",
-	L["Night Elf_female"] = "夜精靈",
-	L["Orc_female"] = "獸人",
-	L["Tauren_female"] = "牛頭人",
-	L["Troll_female"] = "食人妖",
-	L["Undead_female"] = "不死族",
+	L["Blood Elf_female"] = "血精靈"
+	L["Draenei_female"] = "德萊尼"
+	L["Dwarf_female"] = "矮人"
+	L["Gnome_female"] = "地精"
+	L["Human_female"] = "人類"
+	L["Night Elf_female"] = "夜精靈"
+	L["Orc_female"] = "獸人"
+	L["Tauren_female"] = "牛頭人"
+	L["Troll_female"] = "食人妖"
+	L["Undead_female"] = "不死族"
 
 	-- short races
 	L["Blood Elf_short"] = "血"
