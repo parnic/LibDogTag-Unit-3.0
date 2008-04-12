@@ -600,6 +600,40 @@ DogTag:AddTag("Unit", "IsMainAssist", {
 	category = L["Status"]
 })
 
+DogTag:AddTag("Unit", "MasterLooterIcon", {
+	alias = [=[IsMasterLooter(unit=unit)?Icon("Interface\GROUPFRAME\UI-Group-MasterLooter", size=size)]=],
+	arg = {
+		'size', 'number', 0,
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Display a master looter icon if the unit is the master looter."],
+	example = '[MasterLooterIcon] => "|TInterface\\GROUPFRAME\\UI-Group-MasterLooter:0|t"; [MasterLooterIcon] => ""',
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "MainTankIcon", {
+	alias = [=[IsMainTank(unit=unit)?Icon("Interface\GROUPFRAME\UI-GROUP-MAINTANKICON", size=size)]=],
+	arg = {
+		'size', 'number', 0,
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Display a main tank icon if the unit is a main tank."],
+	example = '[MainTankIcon] => "|TInterface\\GROUPFRAME\\UI-GROUP-MAINTANKICON:0|t"; [MainTankIcon] => ""',
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "MainAssistIcon", {
+	alias = [=[IsMainAssist(unit=unit)?Icon("Interface\GROUPFRAME\UI-GROUP-MAINASSISTICON", size=size)]=],
+	arg = {
+		'size', 'number', 0,
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Display a main assist icon if the unit is a main assist."],
+	example = '[MainAssistIcon] => "|TInterface\\GROUPFRAME\\UI-GROUP-MAINASSISTICON:0|t"; [MainAssistIcon] => ""',
+	category = L["Status"]
+})
+
+
 DogTag:AddTag("Unit", "Target", {
 	code = function(unit)
 		if unit == "player" then
