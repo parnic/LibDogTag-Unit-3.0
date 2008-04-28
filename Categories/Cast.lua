@@ -9,7 +9,6 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-local L = DogTag.L
 local newList = DogTag.newList
 local del = DogTag.del
 local IsNormalUnit = DogTag.IsNormalUnit
