@@ -47,13 +47,20 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	for unit, data in pairs(castData) do
 		if not IsNormalUnit[unit] then
 			castData[unit] = del(data)
-		elseif not data.stopTime and data.endTime and currentTime > data.endTime then
-			if data.casting then
-			 	if not UnitIsUnit("player", unit) then
+		else
+			if not data.stopTime and data.endTime and currentTime > data.endTime then
+				if data.casting then
+				 	if not UnitIsUnit("player", unit) then
+						data.stopTime = currentTime
+					end
+				else
 					data.stopTime = currentTime
 				end
-			else
-				data.stopTime = currentTime
+				DogTag:FireEvent("Cast", unit)
+			elseif data.stopTime and data.stopTime + 1 < currentTime then
+				castData[unit] = del(data)
+			elseif data.spell then
+				DogTag:FireEvent("Cast", unit)
 			end
 		end
 	end
@@ -235,7 +242,7 @@ DogTag:AddTag("Unit", "CastName", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
-	events = "Cast",
+	events = "Cast#$unit",
 	doc = L["Return the current or last spell to be cast"],
 	example = ('[CastName] => %q'):format(L["Holy Light"]),
 	category = L["Casting"]
@@ -249,7 +256,7 @@ DogTag:AddTag("Unit", "CastTarget", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
-	events = "Cast",
+	events = "Cast#$unit",
 	doc = L["Return the current cast target name"],
 	example = ('[CastTarget] => %q'):format((UnitName("player"))),
 	category = L["Casting"]
@@ -263,7 +270,7 @@ DogTag:AddTag("Unit", "CastRank", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "Cast",
+	events = "Cast#$unit",
 	doc = L["Return the current cast rank"],
 	example = '[CastRank] => "4"; [CastRank:Romanize] => "IV"',
 	category = L["Casting"]
@@ -282,7 +289,7 @@ DogTag:AddTag("Unit", "CastStartDuration", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "FastUpdate;Cast#$unit",
+	events = "Cast#$unit",
 	doc = L["Return the duration since the current cast started"],
 	example = '[CastStartDuration] => "3.012367"; [CastStartDuration:FormatDuration] => "0:03"',
 	category = L["Casting"]
@@ -301,7 +308,7 @@ DogTag:AddTag("Unit", "CastEndDuration", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "FastUpdate;Cast#$unit",
+	events = "Cast#$unit",
 	globals = "DogTag.__castData",
 	doc = L["Return the duration until the current cast is meant to finish"],
 	example = '[CastEndDuration] => "2.07151"; [CastEndDuration:FormatDuration] => "0:02"',
@@ -349,7 +356,7 @@ DogTag:AddTag("Unit", "CastStopDuration", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "FastUpdate;Cast#$unit",
+	events = "Cast#$unit",
 	doc = L["Return the duration which the current cast has been stopped, blank if not stopped yet"],
 	example = '[CastStopDuration] => "2.06467"; [CastStopDuration:FormatDuration] => "0:02"; [CastStopDuration] => ""',
 	category = L["Casting"]
