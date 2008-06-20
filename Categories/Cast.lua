@@ -191,6 +191,9 @@ local function UNIT_SPELLCAST_DELAYED(event, unit)
 	local oldStart = castData[unit].startTime
 	
 	startTime = startTime / 1000
+	if not oldStart then
+		oldStart = startTime
+	end
 	castData[unit].startTime = startTime
 	castData[unit].endTime = endTime / 1000
 
@@ -217,6 +220,9 @@ local function UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 	
 	local oldStart = castData[unit].startTime
 	startTime = startTime / 1000
+	if not oldStart then
+		oldStart = startTime
+	end
 	castData[unit].startTime = startTime
 	castData[unit].endTime = endTime / 1000
 	castData[unit].delay = castData[unit].delay + (oldStart - startTime)
