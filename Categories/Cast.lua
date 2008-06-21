@@ -45,7 +45,7 @@ end})
 
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	for unit, data in pairs(castData) do
-		if not IsNormalUnit[unit] then
+		if not IsNormalUnit[unit] or not next(data) then
 			castData[unit] = del(data)
 		else
 			if not data.stopTime and data.endTime and currentTime > data.endTime then
@@ -56,12 +56,10 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 				else
 					data.stopTime = currentTime
 				end
-				DogTag:FireEvent("Cast", unit)
 			elseif data.stopTime and data.stopTime + 1 < currentTime then
 				castData[unit] = del(data)
-			elseif data.spell then
-				DogTag:FireEvent("Cast", unit)
 			end
+			DogTag:FireEvent("Cast", unit)
 		end
 	end
 end)
