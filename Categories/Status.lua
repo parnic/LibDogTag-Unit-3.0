@@ -486,19 +486,28 @@ DogTag:AddTag("Unit", "FKey", {
 	category = L["Status"]
 })
 
+local raidGroups = {}
+DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", function()
+	for k in pairs(raidGroups) do
+		raidGroups[k] = nil
+	end
+end)
+
 DogTag:AddTag("Unit", "RaidGroup", {
 	code = function(unit)
+		if not next(raidGroups) then
+			for i = 1, GetNumRaidMembers() do
+				local name, rank, subgroup = GetRaidRosterInfo(i)
+				if name then
+					raidGroups[name] = subgroup
+				end
+			end
+		end
 		local n, s = UnitName(unit)
 		if s and s ~= "" then
 			n = n .. "-" .. s
 		end
-		for i = 1, GetNumRaidMembers() do
-			local name, rank, subgroup = GetRaidRosterInfo(i)
-			if name == n then
-				return subgroup
-			end
-		end
-		return nil
+		return raidGroups[n]
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
