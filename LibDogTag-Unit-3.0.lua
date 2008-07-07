@@ -308,9 +308,7 @@ DogTag:AddEventHandler("Unit", "UNIT_PET", function(event, unit)
 	DogTag:FireEvent("UnitChanged", unit_pet)
 end)
 
-local inMouseover = false
 DogTag:AddEventHandler("Unit", "UPDATE_MOUSEOVER_UNIT", function(event, ...)
-	inMouseover = true
 	refreshGUID("mouseover")
 	DogTag:FireEvent("UnitChanged", "mouseover")
 end)
@@ -334,9 +332,9 @@ end })
 
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
-	local exists = not not UnitExists("mouseover")
-	if inMouseover ~= exists then
-		inMouseover = exists
+	local mouseoverGUID = UnitGUID("mouseover")
+	if mouseoverGUID ~= unitToGUID["mouseover"] then
+		unitToGUID["mouseover"] = mouseoverGUID
 		DogTag:FireEvent("UnitChanged", "mouseover")
 	end
 	if currentTime >= nextUpdateWackyUnitsTime then
