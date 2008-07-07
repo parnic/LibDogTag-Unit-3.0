@@ -102,11 +102,29 @@ local function FigureZone(unit)
 	end
 end
 
+local in_UNIT_FACTION = false
 local function UPDATE_FACTION()
+	if in_UNIT_FACTION then return end
+	in_UNIT_FACTION = true
 	for i = 1, GetNumFactions() do
-		local name = GetFactionInfo(i)
-		factionList[name] = true
+		local name,_,_,_,_,_,_,_,isHeader,isCollapsed = GetFactionInfo(i)
+		if isHeader == 1 then
+			if isCollapsed == 1 then
+				local NumFactions = GetNumFactions()
+				ExpandFactionHeader(i)
+				NumFactions = GetNumFactions() - NumFactions
+				for j = i+1, i+NumFactions do
+					local name = GetFactionInfo(j)
+					factionList[name] = true
+				end
+				CollapseFactionHeader(i)
+			end
+		else
+			factionList[name] = true
+		end
+		i = i + 1
 	end
+	in_UNIT_FACTION = false
 end
 DogTag:AddEventHandler("Unit", "UPDATE_FACTION", UPDATE_FACTION)
 DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", UPDATE_FACTION)
