@@ -122,7 +122,6 @@ local function UPDATE_FACTION()
 		else
 			factionList[name] = true
 		end
-		i = i + 1
 	end
 	in_UNIT_FACTION = false
 end
