@@ -432,7 +432,7 @@ DogTag:AddTag("Unit", "PvPRank", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
-	events = "UNIT_NAME_UPDATE#$unit;PLAYER_ENTERING_WORLD#$unit",
+	events = "UNIT_NAME_UPDATE#$unit",
 	doc = L["Return the PvP rank or wrap the PvP rank of unit around value"],
 	example = ('[PvPRank] => %q; [NameRealm:PvPRank] => %q'):format(_G.PVP_RANK_10_1, _G.PVP_RANK_10_1 .. " " .. UnitName("player") .. "-" .. GetRealmName()),
 	category = L["Characteristics"]
