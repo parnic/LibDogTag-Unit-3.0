@@ -94,7 +94,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Focus"] = "주시"
 	L["Energy"] = "기력"
 	L["Mana"] = "마나"
-	L["Runic Power"] = "룬 마력",
+	L["Runic Power"] = "룬 마력"
 	
 	L["PvP"] = "전쟁" -- PVP
 	L["FFA"] = "전투 지역"
