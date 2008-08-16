@@ -15,7 +15,7 @@ DogTag:AddTag("Unit", "MP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
+	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
 	example = ('[MP] => "%d"'):format(UnitManaMax("player")*.632),
 	category = L["Power"]
@@ -27,7 +27,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_DISPLAYPOWER#$unit",
+	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit",
 	doc = L["Return the maximum mana/rage/energy of unit"],
 	example = ('[MaxMP] => "%d"'):format(UnitManaMax("player")),
 	category = L["Power"]
@@ -72,6 +72,8 @@ DogTag:AddTag("Unit", "TypePower", {
 		 	return L["Focus"]
 		elseif p == 3 then
 			return L["Energy"]
+		elseif p == 6 then
+			return L["Runic Power"]
 		else
 			return L["Mana"]
 		end
@@ -139,6 +141,18 @@ DogTag:AddTag("Unit", "IsMana", {
 	category = L["Power"]
 })
 
+if RUNIC_POWER then
+	DogTag:AddTag("Unit", "IsRunicPower", {
+		alias = ("IsPowerType(type=%q, unit=unit)"):format(L["Runic Power"]),
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		doc = L["Return True if unit currently uses runic power"],
+		example = ('[IsRunicPower] => %q; [IsRunicPower] => ""'):format(L["True"]),
+		category = L["Power"]
+	})
+end
+
 DogTag:AddTag("Unit", "IsMaxMP", {
 	alias = "Boolean(MP(unit=unit) = MaxMP(unit=unit))",
 	arg = {
@@ -171,6 +185,8 @@ DogTag:AddTag("Unit", "PowerColor", {
 			r,g,b = unpack(DogTag.__colors.focus)
 		elseif powerType == 3 then
 			r,g,b = unpack(DogTag.__colors.energy)
+		elseif powerType == 6 then
+			r,g,b = unpack(DogTag.__colors.runicPower)
 		else
 			r,g,b = unpack(DogTag.__colors.unknown)
 		end

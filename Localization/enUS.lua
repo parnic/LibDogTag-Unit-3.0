@@ -111,6 +111,7 @@ DogTag_Unit.L = {
 	["Focus"] = FOCUS,
 	["Energy"] = ENERGY,
 	["Mana"] = MANA,
+	["Runic Power"] = RUNIC_POWER,
 
 	["PvP"] = PVP,
 	["FFA"] = "FFA",
