@@ -78,9 +78,9 @@ local nextAuraUpdate = 0
 local nextWackyAuraUpdate = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	if currentTime >= nextAuraUpdate and hasEvent('Aura') then
-		nextAuraUpdate = currentTime + 0.25
+		nextAuraUpdate = currentTime + 0.5
 		if currentTime >= nextWackyAuraUpdate then
-			nextWackyAuraUpdate = currentTime + 1
+			nextWackyAuraUpdate = currentTime + 2
 			for unit, v in pairs(currentAuras) do
 				if not IsNormalUnit[unit] then
 					currentAuras[unit] = del(v)
