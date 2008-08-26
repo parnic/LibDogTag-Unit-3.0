@@ -133,63 +133,35 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			local old = rawget(currentAuras, unit) or newList()
 			local oldType = rawget(currentDebuffTypes, unit) or newList()
 			local oldTimes = rawget(currentAuraTimes, unit) or newList()
-			local changed = newList()
-			local changedDebuffTypes = newList()
+			local changed = false
 			for k, num in pairs(t) do
 				if not old[k] then
-					changed[k] = true
-				else
-					if num ~= old[k] then
-						changed[k] = true
-					end
-					old[k] = nil
+					changed = true
+					break
 				end
-			end
-			for k in pairs(old) do
-				changed[k] = true
-			end
-			for k in pairs(u) do
-				if not oldType[k] then
-					changedDebuffTypes[k] = true
-				else
-					oldType[k] = nil
+				if num ~= old[k] then
+					changed = true
+					break
 				end
+				old[k] = nil
 			end
-			for k in pairs(oldType) do
-				changedDebuffTypes[k] = true
-			end
-			for k, time in pairs(v) do
-				if not oldTimes[k] then
-					changed[k] = true
-				else
-					if math.abs(time - oldTimes[k]) > 0.2 then
-						changed[k] = true
-					end
-					oldTimes[k] = nil
+			if not changed then
+				for k in pairs(old) do
+					changed = true
+					break
 				end
-			end
-			for k, time in pairs(oldTimes) do
-				changed[k] = true
 			end
 			currentAuras[unit] = t
 			currentDebuffTypes[unit] = u
 			currentAuraTimes[unit] = v
 			local oldNumDebuffs = currentNumDebuffs[unit]
 			currentNumDebuffs[unit] = numDebuffs
-			if oldNumDebuffs ~= numDebuffs then
-				DogTag:FireEvent("Aura", unit)
-			end
 			old = del(old)
 			oldType = del(oldType)
 			oldTimes = del(oldTimes)
-			for name in pairs(changed) do
-				DogTag:FireEvent("Aura", unit, name)
+			if changed or oldNumDebuffs ~= numDebuffs then
+				DogTag:FireEvent("Aura", unit)
 			end
-			changed = del(changed)
-			for dispelType in pairs(changedDebuffTypes) do
-				DogTag:FireEvent("Aura", unit, dispelType)
-			end
-			changedDebuffTypes = del(changedDebuffTypes)
 		end
 	end
 end)
@@ -218,7 +190,7 @@ DogTag:AddTag("Unit", "HasAura", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
-	events = "Aura#$unit#$aura",
+	events = "Aura#$unit",
 	doc = L["Return True if unit has the aura argument"],
 	example = ('[HasAura("Shadowform")] => %q; [HasAura("Shadowform")] => ""'):format(L["True"]),
 	category = L["Auras"]
@@ -233,7 +205,7 @@ DogTag:AddTag("Unit", "NumAura", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = "Aura#$unit#$aura",
+	events = "Aura#$unit",
 	doc = L["Return the number of auras on the unit"],
 	example = '[NumAura("Renew")] => "2"; [NumAura("Renew")] => "0"',
 	category = L["Auras"]
@@ -278,7 +250,7 @@ DogTag:AddTag("Unit", "DruidForm", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "string;nil",
-	events = "UNIT_DISPLAYPOWER#$unit;Aura#$unit#" .. MOONKIN_FORM .. ";Aura#$unit#" .. AQUATIC_FORM .. ";Aura#$unit#" .. FLIGHT_FORM .. ";Aura#$unit#" .. SWIFT_FLIGHT_FORM .. ";Aura#$unit#" .. TRAVEL_FORM .. ";Aura#$unit#" .. TREE_OF_LIFE,
+	events = "UNIT_DISPLAYPOWER#$unit;Aura#$unit",
 	doc = L["Return the shapeshift form the unit is in if unit is a druid"],
 	example = ('[DruidForm] => %q; [DruidForm] => %q; [DruidForm] => ""'):format(L["Bear"], L["Cat"]),
 	category = L["Auras"]
@@ -452,7 +424,7 @@ DogTag:AddTag("Unit", "HasDebuffType", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "boolean",
-	events = "Aura#$unit#$type",
+	events = "Aura#$unit",
 	doc = L["Return True if friendly unit is has a debuff of type"],
 	example = ('[HasDebuffType("Poison")] => %q; [HasDebuffType("Poison")] => ""'):format(L["True"]),
 	category = L["Auras"],
