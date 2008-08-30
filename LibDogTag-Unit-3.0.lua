@@ -293,16 +293,12 @@ DogTag:AddEventHandler("Unit", "PLAYER_FOCUS_CHANGED", function(event, ...)
 	DogTag:FireEvent("UnitChanged", "focus")
 end)
 
-DogTag:AddEventHandler("Unit", "PLAYER_PET_CHANGED", function(event, ...)
-	refreshGUID("pet")
-	DogTag:FireEvent("UnitChanged", "pet")
-end)
-
 DogTag:AddEventHandler("Unit", "UNIT_TARGET", function(event, unit)
 	DogTag:FireEvent("UnitChanged", unit .. "target")
 end)
 
 DogTag:AddEventHandler("Unit", "UNIT_PET", function(event, unit)
+	if unit == "player" then unit = "" end
 	local unit_pet = unit .. "pet"
 	refreshGUID(unit_pet)
 	DogTag:FireEvent("UnitChanged", unit_pet)
