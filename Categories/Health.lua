@@ -8,6 +8,7 @@ end
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+local WoTLK = select(4,GetBuildInfo())
 
 local function HP_func(unit, known)
 	local hp = UnitHealth(unit)
@@ -30,105 +31,107 @@ local function MaxHP_func(unit, known)
 	end
 end
 
-local HP_lib
-DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
-	HP_lib = "LibMobHealth-4.0"
-	local LibMobHealth = v
-	function HP_func(unit, known)
-		local hp, found = LibMobHealth:GetUnitCurrentHP(unit)
-		if known and not found then
-			return nil
-		else
-			if hp == 1 and UnitIsGhost(unit) then
-				return 0
+if not WoTLK then
+	local HP_lib
+	DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
+		HP_lib = "LibMobHealth-4.0"
+		local LibMobHealth = v
+		function HP_func(unit, known)
+			local hp, found = LibMobHealth:GetUnitCurrentHP(unit)
+			if known and not found then
+				return nil
+			else
+				if hp == 1 and UnitIsGhost(unit) then
+					return 0
+				end
+				return hp
 			end
-			return hp
 		end
-	end
-	function MaxHP_func(unit, known)
-		local maxhp, found = LibMobHealth:GetUnitMaxHP(unit)
-		if known and not found then
-			return nil
-		else
-			return maxhp
+		function MaxHP_func(unit, known)
+			local maxhp, found = LibMobHealth:GetUnitMaxHP(unit)
+			if known and not found then
+				return nil
+			else
+				return maxhp
+			end
 		end
-	end
-end)
+	end)
 
-DogTag:AddAddonFinder("Unit", "_G", "MobHealth3", function(v)
-	if HP_lib == "LibMobHealth-4.0" then
-		return
-	end
-	local MobHealth3 = v
-	function HP_func(unit, found)
-		local currValue = UnitHealth(unit)
-		if not UnitIsFriend("player", unit) then
+	DogTag:AddAddonFinder("Unit", "_G", "MobHealth3", function(v)
+		if HP_lib == "LibMobHealth-4.0" then
+			return
+		end
+		local MobHealth3 = v
+		function HP_func(unit, found)
+			local currValue = UnitHealth(unit)
+			if not UnitIsFriend("player", unit) then
+				local maxValue = UnitHealthMax(unit)
+				local curr, max, found = MobHealth3:GetUnitHealth(unit, currValue, maxValue)
+				if found then
+					return curr
+				elseif known then
+					return nil
+				end
+			elseif known and UnitHealthMax(unit) == 100 then
+				return nil
+			end
+			return currValue
+		end
+		function MaxHP_func(unit, found)
 			local maxValue = UnitHealthMax(unit)
-			local curr, max, found = MobHealth3:GetUnitHealth(unit, currValue, maxValue)
-			if found then
-				return curr
-			elseif known then
+			if not UnitIsFriend("player", unit) then
+				local curr, max, MHfound = MobHealth3:GetUnitHealth(unit, 1, maxValue)
+				if MHfound then
+					return max
+				elseif known then
+					return nil
+				end
+			elseif known and maxValue == 100 then
 				return nil
 			end
-		elseif known and UnitHealthMax(unit) == 100 then
-			return nil
+			return maxValue
 		end
-		return currValue
-	end
-	function MaxHP_func(unit, found)
-		local maxValue = UnitHealthMax(unit)
-		if not UnitIsFriend("player", unit) then
-			local curr, max, MHfound = MobHealth3:GetUnitHealth(unit, 1, maxValue)
-			if MHfound then
-				return max
-			elseif known then
-				return nil
-			end
-		elseif known and maxValue == 100 then
-			return nil
-		end
-		return maxValue
-	end
-end)
+	end)
 
-DogTag:AddAddonFinder("Unit", "_G", "MobHealth_PPP", function(v)
-	if HP_lib then
-		return
-	end
-	local MobHealth_PPP = v
-	function HP_func(unit, found)
-		local currValue = UnitHealth(unit)
-		if not UnitIsFriend("player", unit) then
-			local name = UnitName(unit)
-			local level = UnitLevel(unit)
-			local ppp = MobHealth_PPP(name..":"..level)
-			if ppp > 0 then
-				return math.floor(currValue * ppp + 0.5)
-			elseif known then
+	DogTag:AddAddonFinder("Unit", "_G", "MobHealth_PPP", function(v)
+		if HP_lib then
+			return
+		end
+		local MobHealth_PPP = v
+		function HP_func(unit, found)
+			local currValue = UnitHealth(unit)
+			if not UnitIsFriend("player", unit) then
+				local name = UnitName(unit)
+				local level = UnitLevel(unit)
+				local ppp = MobHealth_PPP(name..":"..level)
+				if ppp > 0 then
+					return math.floor(currValue * ppp + 0.5)
+				elseif known then
+					return nil
+				end
+			elseif known and UnitHealthMax(unit) == 100 then
 				return nil
 			end
-		elseif known and UnitHealthMax(unit) == 100 then
-			return nil
+			return currValue
 		end
-		return currValue
-	end
-	function MaxHP_func(unit, found)
-		local maxValue = UnitHealthMax(unit)
-		if not UnitIsFriend("player", unit) then
-			local name = UnitName(unit)
-			local level = UnitLevel(unit)
-			local ppp = MobHealth_PPP(name..":"..level)
-			if ppp > 0 then
-				return math.floor(100 * ppp + 0.5)
-			elseif known then
+		function MaxHP_func(unit, found)
+			local maxValue = UnitHealthMax(unit)
+			if not UnitIsFriend("player", unit) then
+				local name = UnitName(unit)
+				local level = UnitLevel(unit)
+				local ppp = MobHealth_PPP(name..":"..level)
+				if ppp > 0 then
+					return math.floor(100 * ppp + 0.5)
+				elseif known then
+					return nil
+				end
+			elseif known and maxValue == 100 then
 				return nil
 			end
-		elseif known and maxValue == 100 then
-			return nil
+			return maxValue
 		end
-		return maxValue
-	end
-end)
+	end)
+end
 
 DogTag:AddTag("Unit", "HP", {
 	code = function(args)
