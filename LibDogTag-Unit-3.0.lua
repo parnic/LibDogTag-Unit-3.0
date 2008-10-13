@@ -345,6 +345,10 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			end
 		end
 	end
+	DogTag:FireEvent("FastStats", "player")
+	if unitToGUID.pet then
+		DogTag:FireEvent("FastStats", "pet")
+	end
 end)
 
 DogTag:AddTimerHandler("Unit", function(num, currentTime)

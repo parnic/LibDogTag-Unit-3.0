@@ -149,7 +149,7 @@ DogTag:AddTag("Unit", "HP", {
 			return 'nil;number'
 		end
 	end,
-	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit;FastStats#$unit",
 	doc = L["Return the current health of unit, will use MobHealth if found"],
 	example = ('[HP] => "%d"'):format(UnitHealthMax("player")*.758),
 	category = L["Health"],
