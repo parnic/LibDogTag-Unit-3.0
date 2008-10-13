@@ -8,6 +8,7 @@ end
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+local WoTLK = select(4,GetBuildInfo()) >= 30000
 
 local isDruid = select(2, UnitClass("player")) == "DRUID"
 
@@ -18,22 +19,36 @@ local MaxDruidMP_func = DruidMP_func
 
 local LibDruidMana
 if isDruid then
-	DogTag:AddAddonFinder("Unit", "LibStub", "LibDruidMana-1.0", function(v)
-		LibDruidMana = v
-		LibDruidMana:AddListener(function(currMana, maxMana)
+	if not WoTLK then
+		DogTag:AddAddonFinder("Unit", "LibStub", "LibDruidMana-1.0", function(v)
+			LibDruidMana = v
+			LibDruidMana:AddListener(function(currMana, maxMana)
 			DogTag:FireEvent("DruidMana")
+			end)
+			function DruidMP_func(unit)
+				if unit == "player" then
+					return LibDruidMana:GetCurrentMana()
+				end
+			end
+			function MaxDruidMP_func(unit)
+				if unit == "player" then
+					return LibDruidMana:GetMaximumMana()
+				end
+			end
 		end)
+	else
 		function DruidMP_func(unit)
 			if unit == "player" then
-				return LibDruidMana:GetCurrentMana()
+				return UnitPower(unit,0)
 			end
 		end
 		function MaxDruidMP_func(unit)
 			if unit == "player" then
-				return LibDruidMana:GetMaximumMana()
+				return UnitPowerMax(unit,0)
 			end
 		end
-	end)
+
+	end
 end
 
 DogTag:AddTag("Unit", "DruidMP", {
@@ -45,7 +60,7 @@ DogTag:AddTag("Unit", "DruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "DruidMana",
+	events = "DruidMana;UNIT_MANA#$unit;UNIT_MAXMANA#$unit",
 	doc = L["Return the current mana of unit if unit is you and you are a druid"],
 	example = ('[DruidMP] => "%d"'):format(UnitManaMax("player")*.632),
 	category = L["Druid"],
@@ -60,7 +75,7 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "DruidMana",
+	events = "DruidMana;UNIT_MANA#$unit;UNIT_MAXMANA#$unit",
 	doc = L["Return the maximum mana of unit if unit is you and you are a druid"],
 	example = ('[MaxDruidMP] => "%d"'):format(UnitManaMax("player")),
 	category = L["Druid"],
