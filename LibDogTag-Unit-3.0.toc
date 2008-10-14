@@ -1,4 +1,4 @@
-## Interface: 20400
+## Interface: 30000
 ## Title: Lib: DogTag-Unit-3.0
 ## Notes: A library to provide unit-oriented tags to LibDogTag-3.0
 ## Author: ckknight
