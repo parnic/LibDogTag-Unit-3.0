@@ -498,13 +498,11 @@ DogTag:AddTag("Unit", "HostileColor", {
 
 DogTag:AddTag("Unit", "AggroColor", {
 	code = function(value, unit)
-		local val = UnitReaction("player", unit) or 5
-
-		local info = UnitReactionColor[val]
+		local r,g,b = UnitSelectionColor(unit)
 		if value then
-			return ("|cff%02x%02x%02x%s|r"):format(info.r * 255, info.g * 255, info.b * 255, value)
+			return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
 		else
-			return ("|cff%02x%02x%02x"):format(info.r * 255, info.g * 255, info.b * 255)
+			return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 		end
 	end,
 	arg = {
