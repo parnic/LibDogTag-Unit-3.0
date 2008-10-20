@@ -28,4 +28,18 @@ DogTag:AddTag("Unit", "ComboSymbols", {
 	category = L["Miscellaneous"]
 })
 
+DogTag:AddTag("Unit", "PetRemainingTime", {
+	code = function()
+		local t = GetPetTimeRemaining()
+		if t then
+			return t/1000
+		end
+		return nil
+	end,
+	events = "Update",
+	ret = "number;nil",
+	doc = L["Return the time until the pet disappears"],
+	example = '[PetRemainingTime] => "10.135123"',
+	category = L["Miscellaneous"],
+})
 end
