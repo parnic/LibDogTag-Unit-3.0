@@ -24,7 +24,7 @@ local function func(self, unit)
 	local u = newList()
 	local v = newList()
 	for i = 1, 40 do
-		local name, _, _, count, _, timeLeft = UnitBuff(unit, i)
+		local name, _, _, count, _, duration, expirationTime = UnitAura(unit, i, "HELPFUL")
 		if not name then
 			break
 		end
@@ -32,14 +32,15 @@ local function func(self, unit)
 			count = 1
 		end
 		t[name] = (t[name] or 0) + count
-		if timeLeft and timeLeft > 0 and (not v[name] or v[name] > timeLeft) then
-			v[name] = timeLeft
+		
+		if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
+			v[name] = expirationTime
 		end
 	end
 	local numDebuffs = 0
 	local isFriend = UnitIsFriend("player", unit)
 	for i = 1, 40 do
-		local name, _, _, count, dispelType, _, timeLeft = UnitDebuff(unit, i)
+		local name, _, _, count, dispelType, _, expirationTime = UnitAura(unit, i, "HARMFUL")
 		if not name then
 			break
 		end
@@ -51,16 +52,13 @@ local function func(self, unit)
 		if isFriend and dispelType then
 			u[dispelType] = true
 		end
-		if timeLeft and timeLeft > 0 and (not v[name] or v[name] > timeLeft) then
-			v[name] = timeLeft
+
+		if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
+			v[name] = expirationTime
 		end
 	end
 	currentAuras[unit] = t
 	currentDebuffTypes[unit] = u
-	local currentTime = GetTime()
-	for name, timeLeft in pairs(v) do
-		v[name] = timeLeft + currentTime
-	end
 	currentAuraTimes[unit] = v
 	currentNumDebuffs[unit] = numDebuffs
 	return self[unit]
@@ -97,7 +95,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			local u = newList()
 			local v = newList()
 			for i = 1, 40 do
-				local name, _, _, count, _, timeLeft = UnitBuff(unit, i)
+				local name, _, _, count, _, _, expirationTime = UnitAura(unit, i, "HELPFUL")
 				if not name then
 					break
 				end
@@ -105,14 +103,14 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 					count = 1
 				end
 				t[name] = (t[name] or 0) + count
-				if timeLeft and timeLeft > 0 and (not v[name] or v[name] > timeLeft) then
-					v[name] = timeLeft
+				if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
+					v[name] = expirationTime
 				end
 			end
 			local numDebuffs = 0
 			local isFriend = UnitIsFriend("player", unit)
 			for i = 1, 40 do
-				local name, _, _, count, dispelType, _, timeLeft = UnitDebuff(unit, i)
+				local name, _, _, count, dispelType, _, expirationTime = UnitAura(unit, i, "HARMFUL")
 				if not name then
 					break
 				end
@@ -124,12 +122,9 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 				if isFriend and dispelType then
 					u[dispelType] = true
 				end
-				if timeLeft and timeLeft > 0 and (not v[name] or v[name] > timeLeft) then
-					v[name] = timeLeft
+				if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
+					v[name] = expirationTime
 				end
-			end
-			for k, time in pairs(v) do
-				v[k] = time + currentTime
 			end
 			local old = rawget(currentAuras, unit) or newList()
 			local oldType = rawget(currentDebuffTypes, unit) or newList()
