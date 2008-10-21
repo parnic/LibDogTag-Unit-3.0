@@ -9,139 +9,164 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-local function Threat_func(unit) return nil end
-local function MaxThreat_func(unit) return nil end
-local function HasThreat_func(unit) return nil end
+-- Unfortunatelly there is no way to determine the pair mob/unit who's threat changed,
+-- so we just fire Threat event for now to update all tags.
 
-local ThreatLib
-DogTag:AddAddonFinder("Unit", "LibStub", "Threat-2.0", function(v)
-	ThreatLib = v
-	local IterateUnitsWithGUID = DogTag_Unit.IterateUnitsWithGUID
-	ThreatLib.RegisterCallback(DogTag_Unit, "ThreatUpdated", function(event, srcGuid, dstGuid)
-		for unit in IterateUnitsWithGUID(srcGuid) do
-			DogTag:FireEvent("Threat", unit)
-		end
-		for unit in IterateUnitsWithGUID(dstGuid) do
-			DogTag:FireEvent("Threat", unit)
-		end
-	end)
-	local playerGuid
-	if IsLoggedIn() then
-		playerGuid = UnitGUID("player")
-	else
-		DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", function()
-			playerGuid = UnitGUID("player")
-		end)
-	end
-	function Threat_func(unit)
-		if UnitIsFriend("player", unit) then
-			if UnitExists("target") then
-				return math.floor(ThreatLib:GetThreat(UnitGUID(unit), UnitGUID("target")) + 0.5)
-			else
-				return 0
-			end
-		else
-			return math.floor(ThreatLib:GetThreat(playerGuid, UnitGUID(unit)) + 0.5)
-		end
-	end
-	function MaxThreat_func(unit)
-		if UnitIsFriend("player", unit) then
-			if UnitExists("target") then
-				return math.floor(ThreatLib:GetMaxThreatOnTarget(UnitGUID("target")) + 0.5)
-			else
-				return 0
-			end
-		else
-			return math.floor(ThreatLib:GetMaxThreatOnTarget(UnitGUID(unit)) + 0.5)
-		end
-	end
-	function HasThreat_func(unit)
-		if UnitIsFriend("player", unit) then
-			if UnitExists("target") then
-				return ThreatLib:GetThreat(UnitGUID(unit), UnitGUID("target")) > 0
+-- Fired when mob's threat list changed
+DogTag:AddEventHandler( "Unit", "UNIT_THREAT_LIST_UPDATE", function( event, mobId )
+	DogTag:FireEvent( "Threat" )
+end )
+
+-- Fired when unit's threat situation changed, not on raw threat value changes
+DogTag:AddEventHandler( "Unit", "UNIT_THREAT_SITUATION_UPDATE", function( event, unitId )
+	DogTag:FireEvent( "Threat" )
+end )
+
+DogTag:AddTag( "Unit", "IsTanking", {
+	code = function( unit )
+		if UnitIsFriend( "player", unit ) then
+			if UnitExists( "target" ) then
+				return select( 1, UnitDetailedThreatSituation( "player", unit ) ) and true or false
 			else
 				return false
 			end
 		else
-			return ThreatLib:GetThreat(playerGuid, UnitGUID(unit)) > 0
+			return select( 1, UnitDetailedThreatSituation( "player", unit ) ) and true or false
 		end
-	end
-end)
-
-DogTag:AddTag("Unit", "Threat", {
-	code = function(args)
-		return Threat_func
 	end,
-	dynamicCode = true,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "nil;number",
-	events = "Threat#$unit",
-	doc = L["Return the current threat that you have against enemy unit or that friendly unit has against your target, if Threat-2.0 is available"],
-	example = '[Threat] => "50"',
+	events = "Threat",
+	doc = L["Return True if you are the primary tank of the enemy unit or if friendly unit is the primary tank of your target."],
+	example = ('[IsTanking] => %q; [IsTanking] => ""'):format(L["True"]),
 	category = L["Threat"]
 })
 
-DogTag:AddTag("Unit", "MaxThreat", {
-	code = function(args)
-		return MaxThreat_func
+DogTag:AddTag( "Unit", "ThreatStatus", {
+	code = function( unit )
+		if UnitIsFriend( "player", unit ) then
+			if UnitExists( "target" ) then
+				return select( 2, UnitDetailedThreatSituation( unit, "target" ) )
+			else
+				return 0
+			end
+		else
+			return select( 2, UnitDetailedThreatSituation( "player", unit ) )
+		end
 	end,
-	dynamicCode = true,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "nil;number",
-	events = "Threat#$unit",
-	doc = L["Return the maximum threat that group members have against enemy unit or that group members have against your target, if ThreatLib is available"],
-	example = '[MaxThreat] => "80"',
+	events = "Threat",
+	doc = L["Return your threat status for enemy unit or threat status of friendly unit for your target as integer number (3 = securely tanking, 2 = insecurely tanking, 1 = not tanking but higher threat than tank, 0 = not tanking and lower threat than tank)."],
+	example = '[ThreatStatus] => "2"; [ThreatStatus] => ""',
 	category = L["Threat"]
 })
 
-DogTag:AddTag("Unit", "PercentThreat", {
-	alias = [=[(Threat(unit=unit) / MaxThreat(unit=unit) * 100):Round(1)]=],
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	doc = L["Return the percentage threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
-	example = '[PercentThreat] => "62.5"; [PercentThreat:Percent] => "62.5%"',
-	category = L["Threat"]
-})
-
-
-DogTag:AddTag("Unit", "MissingThreat", {
-	alias = "MaxThreat(unit=unit) - Threat(unit=unit)",
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	doc = L["Return the missing threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
-	example = '[MissingThreat] => "30"',
-	category = L["Threat"]
-})
-
-DogTag:AddTag("Unit", "FractionalThreat", {
-	alias = "Concatenate(Threat(unit=unit), '/', MaxThreat(unit=unit))",
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	doc = L["Return the current and maximum threat that you have against enemy unit or that friendly unit has against your target, if ThreatLib is available"],
-	example = '[FractionalThreat] => "50/80"',
-	category = L["Threat"]
-})
-
-DogTag:AddTag("Unit", "HasThreat", {
-	code = function(args)
-		return HasThreat_func
+DogTag:AddTag( "Unit", "ThreatStatusColor", {
+	code = function( value, status )
+		local r, g, b = GetThreatStatusColor( status )
+		
+		if r then
+			if value then
+				return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
+			else
+				return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+			end
+		else
+			return value
+		end
 	end,
-	dynamicCode = true,
 	arg = {
-		'unit', 'string;undef', 'player'
+		'value', 'string;undef', '@undef',
+		'status', 'number;undef', '@req'
 	},
-	ret = "boolean",
-	events = "Threat#$unit",
-	doc = L["Return True if you have threat against enemy unit or friendly unit has threat against your target and if ThreatLib is available"],
-	example = ('[HasThreat] => %q; [HasThreat] => ""'):format(L["True"]),
+	ret = "string;nil",
+	doc = L["Return the color or wrap value with the color associated with provided threat status."],
+	example = '["100%":ThreatStatus( 1 )] => "|cffff0000100%|r"; [ThreatStatus( "50%", 0 )] => "|cffffffff50%"',
 	category = L["Threat"]
 })
 
+DogTag:AddTag( "Unit", "UnitThreatStatusColor", {
+	code = function( value, unit )
+		local status
+		
+		if UnitIsFriend( "player", unit ) then
+			if UnitExists( "target" ) then
+				status = select( 2, UnitDetailedThreatSituation( unit, "target" ) )
+			end
+		else
+			status = select( 2, UnitDetailedThreatSituation( "player", unit ) )
+		end
+		
+		if status then
+			local r, g, b = GetThreatStatusColor( status )
+			
+			if r then
+				if value then
+					return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
+				else
+					return ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+				end
+			end
+		else
+			return value
+		end
+	end,
+	arg = {
+		'value', 'string;undef', '@undef',
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	doc = L["Return the color or wrap value with the color associated with unit's threat status."],
+	example = '["100%":ThreatStatus] => "|cffff0000100%|r"; [ThreatStatus( "50%" )] => "|cffffffff50%"',
+	category = L["Threat"]
+})
+
+DogTag:AddTag( "Unit", "PercentThreat", {
+	code = function( unit )
+		if UnitIsFriend( "player", unit ) then
+			if UnitExists( "target" ) then
+				return select( 3, UnitDetailedThreatSituation( unit, "target" ) )
+			else
+				return 0
+			end
+		else
+			return select( 3, UnitDetailedThreatSituation( "player", unit ) )
+		end
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "nil;number",
+	events = "Threat",
+	doc = L["Return the current threat that you have against enemy unit or that friendly unit has against your target as a percentage of the amount required to pull aggro, scaled according to the range from the mob."],
+	example = '[PercentThreat] => "50"',
+	category = L["Threat"]
+})
+
+DogTag:AddTag( "Unit", "RawPercentThreat", {
+	code = function( unit )
+		if UnitIsFriend( "player", unit ) then
+			if UnitExists( "target" ) then
+				return select( 4, UnitDetailedThreatSituation( unit, "target" ) )
+			else
+				return 0
+			end
+		else
+			return select( 4, UnitDetailedThreatSituation( "player", unit ) )
+		end
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "nil;number",
+	events = "Threat",
+	doc = L["Return the current threat that you have against enemy unit or that friendly unit has against your target as a percentage of tank's current threat."],
+	example = '[RawPercentThreat] => "115"',
+	category = L["Threat"]
+})
 end
