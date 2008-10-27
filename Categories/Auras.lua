@@ -1,6 +1,5 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
 local MINOR_VERSION = 90000 + tonumber(("$Revision$"):match("%d+")) or 0
-local WoTLK = select(4,GetBuildInfo()) >= 30000
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -322,13 +321,7 @@ DogTag:AddTag("Unit", "IsShadowform", {
 })
 
 local STEALTH = GetSpellInfo(1784)
-local SHADOWFORM
-if WoTLK then
-	SHADOWFORM = GetSpellInfo(58984)
-else
-
-	SHADOWFORM = GetSpellInfo(20580)
-end
+local SHADOWFORM = GetSpellInfo(58984)
 local PROWL = GetSpellInfo(5215)
 DogTag:AddTag("Unit", "IsStealthed", {
 	alias = ("HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit)"):format(STEALTH, SHADOWFORM, PROWL),

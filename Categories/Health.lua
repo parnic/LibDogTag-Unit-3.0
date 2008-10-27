@@ -8,226 +8,80 @@ end
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
-local WoTLK = select(4,GetBuildInfo())
 
-local function HP_func(unit, known)
-	local hp = UnitHealth(unit)
-	if known and UnitHealthMax(unit) == 100 then
-		return nil
-	else
+DogTag:AddTag("Unit", "HP", {
+	code = function(unit)
+		local hp = UnitHealth(unit)
 		if hp == 1 and UnitIsGhost(unit) then
 			return 0
 		end
 		return hp
-	end
-end
-
-local function MaxHP_func(unit, known)
-	local maxhp = UnitHealthMax(unit)
-	if known and maxhp == 100 then
-		return nil
-	else
-		return maxhp
-	end
-end
-
-if not WoTLK then
-	local HP_lib
-	DogTag:AddAddonFinder("Unit", "LibStub", "LibMobHealth-4.0", function(v)
-		HP_lib = "LibMobHealth-4.0"
-		local LibMobHealth = v
-		function HP_func(unit, known)
-			local hp, found = LibMobHealth:GetUnitCurrentHP(unit)
-			if known and not found then
-				return nil
-			else
-				if hp == 1 and UnitIsGhost(unit) then
-					return 0
-				end
-				return hp
-			end
-		end
-		function MaxHP_func(unit, known)
-			local maxhp, found = LibMobHealth:GetUnitMaxHP(unit)
-			if known and not found then
-				return nil
-			else
-				return maxhp
-			end
-		end
-	end)
-
-	DogTag:AddAddonFinder("Unit", "_G", "MobHealth3", function(v)
-		if HP_lib == "LibMobHealth-4.0" then
-			return
-		end
-		local MobHealth3 = v
-		function HP_func(unit, found)
-			local currValue = UnitHealth(unit)
-			if not UnitIsFriend("player", unit) then
-				local maxValue = UnitHealthMax(unit)
-				local curr, max, found = MobHealth3:GetUnitHealth(unit, currValue, maxValue)
-				if found then
-					return curr
-				elseif known then
-					return nil
-				end
-			elseif known and UnitHealthMax(unit) == 100 then
-				return nil
-			end
-			return currValue
-		end
-		function MaxHP_func(unit, found)
-			local maxValue = UnitHealthMax(unit)
-			if not UnitIsFriend("player", unit) then
-				local curr, max, MHfound = MobHealth3:GetUnitHealth(unit, 1, maxValue)
-				if MHfound then
-					return max
-				elseif known then
-					return nil
-				end
-			elseif known and maxValue == 100 then
-				return nil
-			end
-			return maxValue
-		end
-	end)
-
-	DogTag:AddAddonFinder("Unit", "_G", "MobHealth_PPP", function(v)
-		if HP_lib then
-			return
-		end
-		local MobHealth_PPP = v
-		function HP_func(unit, found)
-			local currValue = UnitHealth(unit)
-			if not UnitIsFriend("player", unit) then
-				local name = UnitName(unit)
-				local level = UnitLevel(unit)
-				local ppp = MobHealth_PPP(name..":"..level)
-				if ppp > 0 then
-					return math.floor(currValue * ppp + 0.5)
-				elseif known then
-					return nil
-				end
-			elseif known and UnitHealthMax(unit) == 100 then
-				return nil
-			end
-			return currValue
-		end
-		function MaxHP_func(unit, found)
-			local maxValue = UnitHealthMax(unit)
-			if not UnitIsFriend("player", unit) then
-				local name = UnitName(unit)
-				local level = UnitLevel(unit)
-				local ppp = MobHealth_PPP(name..":"..level)
-				if ppp > 0 then
-					return math.floor(100 * ppp + 0.5)
-				elseif known then
-					return nil
-				end
-			elseif known and maxValue == 100 then
-				return nil
-			end
-			return maxValue
-		end
-	end)
-end
-
-DogTag:AddTag("Unit", "HP", {
-	code = function(args)
-		return HP_func
 	end,
-	dynamicCode = true,
 	arg = {
 		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
-	ret = function(args)
-		if args.known.types == "nil" then
-			return 'number'
-		else
-			return 'nil;number'
-		end
-	end,
+	ret = 'number',
 	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit;FastStats#$unit",
-	doc = L["Return the current health of unit, will use MobHealth if found"],
+	doc = L["Return the current health of unit"],
 	example = ('[HP] => "%d"'):format(UnitHealthMax("player")*.758),
 	category = L["Health"],
 })
 
 DogTag:AddTag("Unit", "MaxHP", {
-	code = function(args)
-		return MaxHP_func
+	code = function(unit)
+		return UnitHealthMax(unit)
 	end,
-	dynamicCode = true,
 	arg = {
 		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
-	ret = function(args)
-		if args.known.types == "nil" then
-			return 'number'
-		else
-			return 'nil;number'
-		end
-	end,
+	ret = 'number',
 	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
-	doc = L["Return the maximum health of unit, will use MobHealth if found"],
+	doc = L["Return the maximum health of unit"],
 	example = ('[MaxHP] => "%d"'):format(UnitHealthMax("player")),
 	category = L["Health"],
 })
 
 DogTag:AddTag("Unit", "PercentHP", {
-	code = function(unit)
-		local hp = UnitHealth(unit)
-		if hp == 0 then
-			return 0
-		end
-		return math.floor(hp/UnitHealthMax(unit)*1000 + 0.5) / 10
-	end,
-	fakeAlias = "[CurHP / MaxHP * 100]:Round(1)",
+	alias = [=[[HP(unit=unit) / MaxHP(unit=unit) * 100]:Round(1)]=],
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	ret = "number",
-	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
 	doc = L["Return the percentage health of unit"],
 	example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
 	category = L["Health"],
 })
 
 DogTag:AddTag("Unit", "MissingHP", {
-	alias = [=[MaxHP(unit=unit, known=known) - HP(unit=unit, known=known)]=],
+	alias = [=[MaxHP(unit=unit) - HP(unit=unit)]=],
 	arg = {
 		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = "number",
-	doc = L["Return the missing health of unit, will use MobHealth if found"],
+	doc = L["Return the missing health of unit"],
 	example = ('[MissingHP] => "%d"'):format(UnitHealthMax("player")*.242),
 	category = L["Health"]
 })
 
 DogTag:AddTag("Unit", "FractionalHP", {
-	alias = [=[Concatenate(HP(unit=unit, known=known), "/", MaxHP(unit=unit, known=known))]=],
+	alias = [=[Concatenate(HP(unit=unit), "/", MaxHP(unit=unit))]=],
 	arg = {
 		'unit', 'string;undef', 'player',
 		'known', 'boolean', false,
 	},
 	ret = "string",
-	doc = L["Return the current health and maximum health of unit, will use MobHealth if found"],
+	doc = L["Return the current health and maximum health of unit"],
 	example = ('[FractionalHP] => "%d/%d"'):format(UnitHealthMax("player")*.758, UnitHealthMax("player")),
 	category = L["Health"]
 })
 
 DogTag:AddTag("Unit", "IsMaxHP", {
-	code = function(unit)
-		return UnitHealth(unit) == UnitHealthMax(unit)
-	end,
+	alias = [=[HP(unit=unit) == MaxHP(unit=unit)]=],
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	ret = "boolean",
 	doc = L["Return True if unit is at full health"],
 	example = ('[IsMaxHP] => %q; [IsMaxHP] => ""'):format(L["True"]),
 	category = L["Health"]

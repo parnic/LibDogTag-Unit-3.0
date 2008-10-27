@@ -8,7 +8,6 @@ end
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
-local WoTLK = select(4,GetBuildInfo()) >= 30000
 
 local isDruid = select(2, UnitClass("player")) == "DRUID"
 
@@ -17,37 +16,16 @@ local function DruidMP_func(unit)
 end
 local MaxDruidMP_func = DruidMP_func
 
-local LibDruidMana
 if isDruid then
-	if not WoTLK then
-		DogTag:AddAddonFinder("Unit", "LibStub", "LibDruidMana-1.0", function(v)
-			LibDruidMana = v
-			LibDruidMana:AddListener(function(currMana, maxMana)
-			DogTag:FireEvent("DruidMana")
-			end)
-			function DruidMP_func(unit)
-				if unit == "player" then
-					return LibDruidMana:GetCurrentMana()
-				end
-			end
-			function MaxDruidMP_func(unit)
-				if unit == "player" then
-					return LibDruidMana:GetMaximumMana()
-				end
-			end
-		end)
-	else
-		function DruidMP_func(unit)
-			if unit == "player" then
-				return UnitPower(unit,0)
-			end
+	function DruidMP_func(unit)
+		if unit == "player" then
+			return UnitPower(unit,0)
 		end
-		function MaxDruidMP_func(unit)
-			if unit == "player" then
-				return UnitPowerMax(unit,0)
-			end
+	end
+	function MaxDruidMP_func(unit)
+		if unit == "player" then
+			return UnitPowerMax(unit,0)
 		end
-
 	end
 end
 
