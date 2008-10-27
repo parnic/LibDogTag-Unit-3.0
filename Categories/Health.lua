@@ -78,7 +78,7 @@ DogTag:AddTag("Unit", "FractionalHP", {
 })
 
 DogTag:AddTag("Unit", "IsMaxHP", {
-	alias = [=[HP(unit=unit) == MaxHP(unit=unit)]=],
+	alias = [=[Boolean(HP(unit=unit) = MaxHP(unit=unit))]=],
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
