@@ -86,7 +86,7 @@ DogTag:AddTag( "Unit", "ThreatStatusColor", {
 	},
 	ret = "string;nil",
 	doc = L["Return the color or wrap value with the color associated with provided threat status."],
-	example = '["100%":ThreatStatus( 1 )] => "|cffff0000100%|r"; [ThreatStatus( "50%", 0 )] => "|cffffffff50%"',
+	example = '["100%":ThreatStatusColor( 1 )] => "|cffff0000100%|r"; [ThreatStatusColor( "50%", 0 )] => "|cffffffff50%"',
 	category = L["Threat"]
 })
 
@@ -122,7 +122,7 @@ DogTag:AddTag( "Unit", "UnitThreatStatusColor", {
 	},
 	ret = "string;nil",
 	doc = L["Return the color or wrap value with the color associated with unit's threat status."],
-	example = '["100%":ThreatStatus] => "|cffff0000100%|r"; [ThreatStatus( "50%" )] => "|cffffffff50%"',
+	example = '["100%":UnitThreatStatusColor] => "|cffff0000100%|r"; [UnitThreatStatusColor( "50%" )] => "|cffffffff50%"',
 	category = L["Threat"]
 })
 
