@@ -27,7 +27,7 @@ DogTag:AddTag("Unit", "Reputation", {
 		'faction', 'string;undef', "@undef"
 	},
 	ret = "number;nil",
-	events = "UNIT_FACTION#player;UPDATE_FACTION#player",
+	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return the current reputation of the watched faction or specified"],
 	example = ('[Reputation] => "1234"; [Reputation(%s)] => "2345"'):format(L["Exodar"]),
 	category = L["Reputation"]
@@ -51,7 +51,7 @@ DogTag:AddTag("Unit", "MaxReputation", {
 		'faction', 'string;undef', "@undef"
 	},
 	ret = "number;nil",
-	events = "UNIT_FACTION#player;UPDATE_FACTION#player",
+	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return the maximum reputation of the watched faction or specified"],
 	example = ('[MaxReputation] => "12000"; [MaxReputation(%s)] => "21000"'):format(L["Exodar"]),
 	category = L["Reputation"]
@@ -92,7 +92,7 @@ DogTag:AddTag("Unit", "ReputationName", {
 		return GetWatchedFactionInfo()
 	end,
 	ret = "string;nil",
-	events = "UNIT_FACTION#player;UPDATE_FACTION#player",
+	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return the name of the currently watched faction"],
 	example = ('[ReputationName] => %q'):format(L["Exodar"]),
 	category = L["Reputation"]
@@ -116,7 +116,7 @@ DogTag:AddTag("Unit", "ReputationReaction", {
 		'faction', 'string;undef', "@undef",
 	},
 	ret = "string;nil",
-	events = "UNIT_FACTION#player;UPDATE_FACTION#player",
+	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return your current reputation rank with the watched faction or argument"],
 	example = ('[ReputationReaction] => %q; [ReputationReaction(%s)] => %q'):format(_G.FACTION_STANDING_LABEL5, "Exodar", _G.FACTION_STANDING_LABEL6),
 	category = L["Reputation"]
@@ -153,7 +153,7 @@ DogTag:AddTag("Unit", "ReputationColor", {
 		'faction', 'string;undef', "@undef",
 	},
 	ret = "string;nil",
-	events = "UNIT_FACTION#player;UPDATE_FACTION#player",
+	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return the color or wrap value with the color associated with either the currently watched faction or the given argument"],
 	example = ('["Hello":ReputationColor] => "|cff7f0000Hello|r"; ["Hello":ReputationColor(%s)] => "|cff007f00Hello|r"; [ReputationColor(faction=%s) "Hello")] => "|cff007f00Hello"'):format(L["Exodar"], L["Exodar"]),
 	category = L["Reputation"]
