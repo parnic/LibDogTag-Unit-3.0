@@ -12,7 +12,7 @@ local L = DogTag_Unit.L
 DogTag:AddTag("Unit", "Combos", {
 	code = function () return GetComboPoints("player") end,
 	ret = "number",
-	events = "PLAYER_COMBO_POINTS",
+	events = "UNIT_COMBO_POINTS",
 	doc = L["Return the number of combo points you have"],
 	example = '[Combos] => "5"',
 	category = L["Miscellaneous"]
