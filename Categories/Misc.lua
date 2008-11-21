@@ -10,7 +10,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 
 DogTag:AddTag("Unit", "Combos", {
-	code = function () return GetComboPoints("player") end,
+	code = function () return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target") end,
 	ret = "number",
 	events = "UNIT_COMBO_POINTS",
 	doc = L["Return the number of combo points you have"],

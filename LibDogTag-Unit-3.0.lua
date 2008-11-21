@@ -90,7 +90,7 @@ setmetatable(UnitToLocale, {__index=function(self, unit)
 end})
 DogTag.UnitToLocale = UnitToLocale
 
-local IsLegitimateUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true }
+local IsLegitimateUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true, vehicle = true }
 DogTag.IsLegitimateUnit = IsLegitimateUnit
 local IsNormalUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true }
 DogTag.IsNormalUnit = IsNormalUnit
