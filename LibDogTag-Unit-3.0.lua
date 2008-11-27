@@ -345,9 +345,12 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			end
 		end
 	end
-	DogTag:FireEvent("FastStats", "player")
-	if unitToGUID.pet then
-		DogTag:FireEvent("FastStats", "pet")
+
+	-- Fire FastStats event for units representing player or pet.
+	for unit in pairs(unitToGUID) do
+		if UnitIsUnit(unit, "player") or UnitIsUnit(unit, "pet") then
+			DogTag:FireEvent("FastStats", unit)
+		end
 	end
 end)
 
