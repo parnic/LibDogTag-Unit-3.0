@@ -22,7 +22,7 @@ DogTag:AddTag("Unit", "Combos", {
 		'target', 'string;undef', '@undef'
 	},
 	ret = "number",
-	events = "UNIT_COMBO_POINTS#$unit;UNIT_COMBO_POINTS#$target",
+	events = "UNIT_COMBO_POINTS",
 	doc = L["Return the number of combo points you have"],
 	example = '[Combos] => "5"; [Combos("pet"))] => "5"; [Combos("vehicle", "target"))] => "5"',
 	category = L["Miscellaneous"]
