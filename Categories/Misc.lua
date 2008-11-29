@@ -11,12 +11,12 @@ local L = DogTag_Unit.L
 
 DogTag:AddTag("Unit", "Combos", {
 	code = function (unit, target)
-      if unit and target then
-        return GetComboPoints(unit, target)
-      else
-        return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target")
-      end
-    end,
+		if unit and target then
+			return GetComboPoints(unit, target)
+		else
+			return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target")
+		end
+	end,
 	arg = {
 		'unit', 'string;undef', '@undef',
 		'target', 'string;undef', '@undef'
