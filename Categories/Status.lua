@@ -773,6 +773,18 @@ DogTag:AddTag("Unit", "IsVisible", {
 	category = L["Status"]
 })
 
+DogTag:AddTag("Unit", "HasVehicleUI", {
+	code = UnitHasVehicleUI,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "boolean",
+	events = "UNIT_ENTERED_VEHICLE#$unit;UNIT_EXITED_VEHICLE#$unit",
+	doc = L["Return True if unit has a vehicle UI"],
+	example = ('[HasVehicleUI] => %q; [HasVehicleUI] => ""'):format(L["True"]),
+	category = L["Status"]
+})
+
 
 DogTag:AddTag("Unit", "StatusColor", {
 	code = function(value, unit)
