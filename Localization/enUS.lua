@@ -43,6 +43,7 @@ DogTag_Unit.L = {
 	["Undead_short"] = "Ud",
 
 	-- classes
+	["Death Knight"] = "Death Knight",
 	["Warrior"] = "Warrior",
 	["Priest"] = "Priest",
 	["Mage"] = "Mage",
@@ -52,6 +53,7 @@ DogTag_Unit.L = {
 	["Druid"] = "Druid",
 	["Rogue"] = "Rogue",
 	["Hunter"] = "Hunter",
+	["Death Knight_female"] = "Death Knight",
 	["Warrior_female"] = "Warrior",
 	["Priest_female"] = "Priest",
 	["Mage_female"] = "Mage",
@@ -63,6 +65,7 @@ DogTag_Unit.L = {
 	["Hunter_female"] = "Hunter",
 	
 	-- short classes
+	["Death Knight_short"] = "DK",
 	["Warrior_short"] = "Wr",
 	["Priest_short"] = "Pr",
 	["Mage_short"] = "Ma",

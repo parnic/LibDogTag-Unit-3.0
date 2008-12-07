@@ -165,6 +165,7 @@ local ShortClass_abbrev = {
 	[L["Rogue"]] = L["Rogue_short"],
 	[L["Hunter"]] = L["Hunter_short"],
 	[L["Warrior"]] = L["Warrior_short"],
+	[L["Death Knight"]] = L["Death Knight_short"],
 	[L["Priest_female"]] = L["Priest_short"],
 	[L["Mage_female"]] = L["Mage_short"],
 	[L["Shaman_female"]] = L["Shaman_short"],
@@ -174,6 +175,7 @@ local ShortClass_abbrev = {
 	[L["Rogue_female"]] = L["Rogue_short"],
 	[L["Hunter_female"]] = L["Hunter_short"],
 	[L["Warrior_female"]] = L["Warrior_short"],
+	[L["Death Knight_female"]] = L["Death Knight_female"],
 }
 
 DogTag:AddTag("Unit", "ShortClass", {

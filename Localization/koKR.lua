@@ -35,6 +35,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Undead_short"] = "언데"
 
 	-- classes
+	L["Death Knight"] = "죽음의 기사"
 	L["Warrior"] = "전사"
 	L["Priest"] = "사제"
 	L["Mage"] = "마법사"
@@ -44,8 +45,19 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Druid"] = "드루이드"
 	L["Rogue"] = "도적"
 	L["Hunter"] = "사냥꾼"
+	L["Death Knight_female"] = "죽음의 기사"
+	L["Warrior_female"] = "전사"
+	L["Priest_female"] = "사제"
+	L["Mage_female"] = "마법사"
+	L["Shaman_female"] = "주술사"
+	L["Paladin_female"] = "성기사"
+	L["Warlock_female"] = "흑마법사"
+	L["Druid_female"] = "드루이드"
+	L["Rogue_female"] = "도적"
+	L["Hunter_female"] = "사냥꾼"
 
 	-- short classes
+	L["Death Knight_short"] = "죽"
 	L["Warrior_short"] = "전"
 	L["Priest_short"] = "사"
 	L["Mage_short"] = "마"
