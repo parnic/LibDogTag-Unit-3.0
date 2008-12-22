@@ -280,6 +280,21 @@ DogTag:AddTag("Unit", "DND", {
 	category = L["Status"]
 })
 
+DogTag:AddTag("Unit", "PvPDuration", {
+	code = function()
+		if IsPVPTimerRunning() then
+			return GetPVPTimer() / 1000
+		else
+			return nil
+		end
+	end,
+	ret = 'number;nil',
+	events = 'PLAYER_FLAGS_CHANGED;Update',
+	doc = L["Return the duration until the players PVP flag wears off"],
+	example = ('[PvPDuration] => "110"; [PvPDuration:FormatDuration] => "1:50"'),
+	category = L["Status"]
+})
+
 DogTag:AddTag("Unit", "PvP", {
 	code = function(unit)
 		if UnitIsPVPFreeForAll(unit) then
