@@ -326,7 +326,6 @@ local nsListHasUnit = setmetatable({}, { __index = function(self, key)
 	return false
 end })
 
-local playerGUID = UnitGUID("player")
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local mouseoverGUID = UnitGUID("mouseover")
@@ -347,6 +346,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 		end
 	end
 	
+	local playerGUID = unitToGUID.player
 	local petGUID = unitToGUID.pet
 	-- Fire FastStats event for units representing player or pet.
 	for unit, guid in pairs(unitToGUID) do
