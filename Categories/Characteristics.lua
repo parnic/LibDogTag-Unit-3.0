@@ -175,7 +175,7 @@ local ShortClass_abbrev = {
 	[L["Rogue_female"]] = L["Rogue_short"],
 	[L["Hunter_female"]] = L["Hunter_short"],
 	[L["Warrior_female"]] = L["Warrior_short"],
-	[L["Death Knight_female"]] = L["Death Knight_female"],
+	[L["Death Knight_female"]] = L["Death Knight_short"],
 }
 
 DogTag:AddTag("Unit", "ShortClass", {
