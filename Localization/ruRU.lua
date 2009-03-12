@@ -19,17 +19,17 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Night Elf"] = "Ночной эльф"
 	L["Orc"] = "Орк"
 	L["Tauren"] = "Таурен"
-	L["Troll"] = "Троль"
+	L["Troll"] = "Тролль"
 	L["Undead"] = "Нежить"
 	L["Blood Elf_female"] = "Эльфийка крови"
 	L["Draenei_female"] = "Дреней"
 	L["Dwarf_female"] = "Дворф"
-	L["Gnome_female"] = "гном"
-	L["Human_female"] = "человек"
+	L["Gnome_female"] = "Гном"
+	L["Human_female"] = "Человек"
 	L["Night Elf_female"] = "Ночная эльфийка"
 	L["Orc_female"] = "Орк"
 	L["Tauren_female"] = "Таурен"
-	L["Troll_female"] = "Троль" -- TODO: check it
+	L["Troll_female"] = "Тролль" -- TODO: check it
 	L["Undead_female"] = "Нежить" -- TODO: check it
 	
 	-- short races
@@ -78,7 +78,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	-- No need to change: L["Player"] = PLAYER
 	-- No need to change: L["Target"] = TARGET
 	-- No need to change: L["Focus-target"] = FOCUS
-	L["Mouse-over"] = "Mouse-over"
+	L["Mouse-over"] = "Наведение указателя мыши"
 	L["%s's pet"] = "Питомец %s"
 	L["%s's target"] = "Цель %s"
 	L["Party member #%d"] = "Член группы #%d"
@@ -95,19 +95,19 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	-- No need to change: L["Elite_short"] = "+"
 	-- No need to change: L["Boss_short"] = "b"
 
-	L["Feigned Death"] = "В ложной смерти"
+	L["Feigned Death"] = "Притворяется мертвым"
 	L["Stealthed"] = "Незаметен"
 	L["Soulstoned"] = "С камнем душ"
 	
 	-- No need to change: L["Dead"] = DEAD
 	L["Ghost"] = "Призрак"
 	-- No need to change: L["Offline"] = PLAYER_OFFLINE
-	L["Online"] = "В игре"
+	L["Online"] = "В сети"
 	L["Combat"] = "В бою"
 	L["Resting"] = "Отдых"
-	L["Tapped"] = "Присвоен"
-	L["AFK"] = "AFK"
-	L["DND"] = "DND"
+	L["Tapped"] = "Отмечена"
+	L["AFK"] = "Отсутствует"
+	L["DND"] = "Не беспокоить"
 	
 	-- No need to change: L["Rage"] = RAGE
 	-- No need to change: L["Focus"] = FOCUS
