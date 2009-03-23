@@ -145,6 +145,7 @@ DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_INTERRUPTED", updateInfo)
 DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_DELAYED", updateInfo)
 DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_UPDATE", updateInfo)
 DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", updateInfo)
+DogTag:AddEventHandler("Unit", "UnitChanged", updateInfo)
 
 DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", function(event, unit, spell, rank, target)
 	if unit == "player" then
