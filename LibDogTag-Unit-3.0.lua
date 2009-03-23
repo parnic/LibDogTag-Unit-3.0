@@ -16,6 +16,8 @@ end
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+local newList = DogTag.newList
+local del = DogTag.del
 
 local frame
 if DogTag_Unit.oldLib and DogTag_Unit.oldLib.frame then
@@ -123,8 +125,30 @@ end, __call = function(self, key)
 end})
 
 local unitToGUID = {}
+local guidToUnits = {}
 local function refreshGUID(unit)
-	unitToGUID[unit] = UnitGUID(unit)
+	local guid = UnitGUID(unit)
+	local oldGuid = unitToGUID[unit]
+	if guid == oldGuid then
+		return
+	end
+	unitToGUID[unit] = guid
+	if old_guid then
+		local guidToUnits_oldGuid = guidToUnits[oldGuid]
+		guidToUnits_oldGuid[unit] = nil
+		if not next(guidToUnits_oldGuid) then
+			guidToUnits[oldGuid] = del(guidToUnits_oldGuid)
+		end
+	end
+	
+	if guid then
+		local guidToUnits_guid = guidToUnits[guid]
+		if not guidToUnits_guid then
+			guidToUnits_guid = newList()
+			guidToUnits[guid] = guidToUnits_guid
+		end
+		guidToUnits_guid[unit] = true
+	end
 end
 
 local function PARTY_MEMBERS_CHANGED()
@@ -138,17 +162,15 @@ DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
 PARTY_MEMBERS_CHANGED()
 DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", PARTY_MEMBERS_CHANGED)
 
-local t = {}
+local function doNothing() end
+
 local function IterateUnitsWithGUID(guid)
-	for k in pairs(t) do
-		t[k] = nil
+	local t = guidToUnits[guid]
+	if not t then
+		return doNothing
+	else
+		return pairs(t)
 	end
-	for unit, g in pairs(unitToGUID) do
-		if g == guid then
-			t[unit] = true
-		end
-	end
-	return pairs(t)
 end
 DogTag_Unit.IterateUnitsWithGUID = IterateUnitsWithGUID
 

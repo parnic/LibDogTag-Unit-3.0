@@ -11,236 +11,157 @@ local L = DogTag_Unit.L
 
 local newList = DogTag.newList
 local del = DogTag.del
+local castData = {}
+local UnitGUID = UnitGUID
 local IsNormalUnit = DogTag.IsNormalUnit
-local hasEvent = DogTag.hasEvent
 
-local castData = setmetatable({}, {__index=function(self, unit)
-	local data = newList()
-	self[unit] = data
-	
-	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
-	local casting = true
-	
-	if not spell then
-		spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
-		casting = false
-		
-		if not spell then
-			return data
-		end
-	end
-	data.spell = spell
-	data.rank = rank and tonumber(rank:match("%d+"))
-	data.displayName = displayName
---	data.icon = icon
-	data.startTime = startTime / 1000
-	data.endTime = endTime / 1000
-	data.delay = 0
-	data.casting = casting
-	data.stopTime = nil
-	data.stopMessage = nil
-	
-	return data
-end})
-
-DogTag:AddTimerHandler("Unit", function(num, currentTime)
-	for unit, data in pairs(castData) do
-		if not IsNormalUnit[unit] or not next(data) then
-			castData[unit] = del(data)
-		else
-			if not data.stopTime and data.endTime and currentTime > data.endTime then
-				if data.casting then
-				 	if not UnitIsUnit("player", unit) then
-						data.stopTime = currentTime
-					end
-				else
-					data.stopTime = currentTime
-				end
-			elseif data.stopTime and data.stopTime + 1 < currentTime then
-				castData[unit] = del(data)
-			end
-			DogTag:FireEvent("Cast", unit)
-		end
-	end
-end)
-
-DogTag:AddEventHandler("Unit", "UnitChanged", function(event, unit)
-	if rawget(castData, unit) then
-		castData[unit] = del(castData[unit])
-	end
+local playerGuid = nil
+DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", function()
+	playerGuid = UnitGUID("player")
 end)
 
 local nextSpell, nextRank, nextTarget
-local lastPlayerEvent
-
-local function UNIT_SPELLCAST_SENT(event, unit, spell, rank, target)
-	if not hasEvent('Cast') then
+local function updateInfo(event, unit)
+	local guid = UnitGUID(unit)
+	if not guid then
 		return
 	end
+	local data = castData[guid]
+	if not data then
+		data = newList()
+		castData[guid] = data
+	end
+	
+	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+	local channeling = false
+	if not spell then
+		spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+		channeling = true
+	end
+	if spell then
+		data.spell = spell
+		rank = rank and tonumber(rank:match("%d+"))
+		data.rank = rank
+		local oldStart = data.startTime
+		startTime = startTime * 0.001
+		data.startTime = startTime
+		data.endTime = endTime * 0.001
+		if event == "UNIT_SPELLCAST_DELAYED" or event == "UNIT_SPELLCAST_CHANNEL_UPDATE" then
+			data.delay = (data.delay or 0) + (startTime - (oldStart or startTime))
+		else
+			data.delay = 0
+		end
+		if guid == playerGuid and spell == nextSpell and rank == nextRank then
+			data.target = nextTarget
+		end
+		data.casting = not channeling
+		data.channeling = channeling
+		data.fadeOut = false
+		data.stopTime = nil
+		data.stopMessage = nil
+		DogTag:FireEvent("Cast", unit)
+		return
+	end
+	
+	if not data.spell then
+		castData[guid] = del(data)
+		DogTag:FireEvent("Cast", unit)
+		return
+	end
+	
+	if event == "UNIT_SPELLCAST_FAILED" then
+		data.stopMessage = _G.FAILED
+	elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
+		data.stopMessage = _G.INTERRUPTED
+	end
+	
+	data.casting = false
+	data.channeling = false
+	data.fadeOut = true
+	if not data.stopTime then
+		data.stopTime = GetTime()
+	end
+	DogTag:FireEvent("Cast", unit)
+end
+
+local function fixCastData()
+	local frame
+	local currentTime = GetTime()
+	for guid, data in pairs(castData) do
+		if data.casting then
+			if currentTime > data.endTime and playerGuid ~= guid then
+				data.casting = false
+				data.fadeOut = true
+				data.stopTime = currentTime
+			end
+		elseif data.channeling then
+			if currentTime > data.endTime then
+				data.channeling = false
+				data.fadeOut = true
+				data.stopTime = currentTime
+			end
+		elseif data.fadeOut then
+			local alpha = 0
+			local stopTime = data.stopTime
+			if stopTime then
+				alpha = stopTime - currentTime + 1
+			end
+		
+			if alpha <= 0 then
+				castData[guid] = del(data)
+			end
+		else
+			castData[guid] = del(data)
+		end
+		local found = false
+		local normal = false
+		for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
+			found = unit
+			if IsNormalUnit[unit] then
+				normal = true
+				break
+			end
+		end
+		if not found then
+			castData[guid] = del(data)
+		else
+			if not normal then
+				updateInfo(nil, found)
+			end
+			
+			for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
+				DogTag:FireEvent("Cast", unit)
+			end
+		end
+	end
+end
+DogTag:AddTimerHandler("Unit", fixCastData)
+
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_START", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_START", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_STOP", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_FAILED", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_INTERRUPTED", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_DELAYED", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_UPDATE", updateInfo)
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", updateInfo)
+
+DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", function(event, unit, spell, rank, target)
 	if unit == "player" then
 		nextSpell = spell
 		nextRank = rank and tonumber(rank:match("%d+"))
 		nextTarget = target ~= "" and target or nil
-		lastPlayerEvent = "UNIT_SPELLCAST_SENT"
 	end
-	
-	DogTag:FireEvent("Cast", unit)
+end)
+
+local blank = {}
+local function getCastData(unit)
+	return castData[UnitGUID(unit)] or blank
 end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", UNIT_SPELLCAST_SENT)
-
-local function UNIT_SPELLCAST_START(event, unit)
-	if not hasEvent('Cast') then
-		return
-	end
-	if rawget(castData, unit) then
-		castData[unit] = del(castData[unit])
-	end
-	if unit == "player" then
-		if castData[unit].spell == nextSpell and castData[unit].rank == nextRank then
-			castData[unit].target = nextTarget
-		end
-		lastPlayerEvent = "UNIT_SPELLCAST_START"
-	end
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_START", UNIT_SPELLCAST_START)
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_START", UNIT_SPELLCAST_START)
-
-local function UNIT_SPELLCAST_STOP(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].fading then
-		return
-	end
-	castData[unit].stopTime = GetTime()
-	if unit == "player" then
-		lastPlayerEvent = "UNIT_SPELLCAST_STOP"
-	end
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_STOP", UNIT_SPELLCAST_STOP)
-
-local function UNIT_SPELLCAST_SUCCEEDED(event, unit, name, rank)
-	if not hasEvent('Cast') or unit ~= "player" or lastPlayerEvent ~= "UNIT_SPELLCAST_SENT" then
-		return
-	end
-	lastPlayerEvent = "UNIT_SPELLCAST_SUCCEEDED"
-	
-	if rawget(castData, "player") then
-		castData["player"] = del(castData["player"])
-	end
-	
-	local currentTime = GetTime()
-	
-	rank = rank and tonumber(rank:match("%d+"))
-	local t = newList()
-	t.spell = name
-	t.rank = rank
-	t.displayName = name
-	if name == nextSpell and rank == nextRank then
-		t.target = nextTarget
-	end
-	t.startTime = currentTime
-	t.endTime = currentTime
-	t.delay = 0
-	t.casting = true
-	t.stopTime = currentTime
-	t.stopMessage = nil
-	castData["player"] = t
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SUCCEEDED", UNIT_SPELLCAST_SUCCEEDED)
-
-local function UNIT_SPELLCAST_FAILED(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].fading then
-		return
-	end
-	castData[unit].stopTime = GetTime()
-	castData[unit].stopMessage = _G.FAILED
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_FAILED", UNIT_SPELLCAST_FAILED)
-
-local function UNIT_SPELLCAST_INTERRUPTED(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) then
-		return
-	end
-	castData[unit].stopTime = GetTime()
-	castData[unit].stopMessage = _G.INTERRUPTED
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_INTERRUPTED", UNIT_SPELLCAST_INTERRUPTED)
-
-local function UNIT_SPELLCAST_DELAYED(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) or not castData[unit].casting or castData[unit].stopTime then
-		return
-	end
-	
-	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
-
-	if not spell or not startTime or not endTime then
-		return
-	end
-	
-	local oldStart = castData[unit].startTime
-	
-	startTime = startTime / 1000
-	if not oldStart then
-		oldStart = startTime
-	end
-	castData[unit].startTime = startTime
-	castData[unit].endTime = endTime / 1000
-
-	castData[unit].delay = castData[unit].delay + (startTime - oldStart)
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_DELAYED", UNIT_SPELLCAST_DELAYED)
-
-local function UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
-		return
-	end
-	
-	DogTag:FireEvent("Cast", unit)
-	
-	local spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
-	if not spell then
-		for k,v in pairs(castData[unit]) do
-			castData[unit][k] = nil
-		end
-		return
-	end
-	
-	local oldStart = castData[unit].startTime
-	startTime = startTime / 1000
-	if not oldStart then
-		oldStart = startTime
-	end
-	castData[unit].startTime = startTime
-	castData[unit].endTime = endTime / 1000
-	castData[unit].delay = castData[unit].delay + (oldStart - startTime)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_SPELLCAST_CHANNEL_UPDATE)
-
-local function UNIT_SPELLCAST_CHANNEL_STOP(event, unit)
-	if not hasEvent('Cast') or not rawget(castData, unit) or castData[unit].casting or castData[unit].stopTime then
-		return
-	end
-	
-	castData[unit].stopTime = GetTime()
-	
-	DogTag:FireEvent("Cast", unit)
-end
-DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", UNIT_SPELLCAST_CHANNEL_STOP)
 
 DogTag:AddTag("Unit", "CastName", {
 	code = function(unit)
-		return castData[unit].spell
+		return getCastData(unit).spell
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -254,7 +175,7 @@ DogTag:AddTag("Unit", "CastName", {
 
 DogTag:AddTag("Unit", "CastTarget", {
 	code = function(unit)
-		return castData[unit].target
+		return getCastData(unit).target
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -268,7 +189,7 @@ DogTag:AddTag("Unit", "CastTarget", {
 
 DogTag:AddTag("Unit", "CastRank", {
 	code = function(unit)
-		return castData[unit].rank
+		return getCastData(unit).rank
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -282,7 +203,7 @@ DogTag:AddTag("Unit", "CastRank", {
 
 DogTag:AddTag("Unit", "CastStartDuration", {
 	code = function(unit)
-		local t = castData[unit].startTime
+		local t = getCastData(unit).startTime
 		if t then
 			return GetTime() - t
 		else
@@ -301,7 +222,7 @@ DogTag:AddTag("Unit", "CastStartDuration", {
 
 DogTag:AddTag("Unit", "CastEndDuration", {
 	code = function(unit)
-		local t = castData[unit].endTime
+		local t = getCastData(unit).endTime
 		if t then
 			return t - GetTime()
 		else
@@ -321,7 +242,7 @@ DogTag:AddTag("Unit", "CastEndDuration", {
 
 DogTag:AddTag("Unit", "CastDelay", {
 	code = function(unit)
-		return castData[unit].delay
+		return getCastData(unit).delay
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -335,7 +256,7 @@ DogTag:AddTag("Unit", "CastDelay", {
 
 DogTag:AddTag("Unit", "CastIsChanneling", {
 	code = function(unit)
-		return not castData[unit].casting
+		return getCastData(unit).channeling
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -349,7 +270,7 @@ DogTag:AddTag("Unit", "CastIsChanneling", {
 
 DogTag:AddTag("Unit", "CastStopDuration", {
 	code = function(unit)
-		local t = castData[unit].stopTime
+		local t = getCastData(unit).stopTime
 		if t then
 			return GetTime() - t
 		else
@@ -368,7 +289,7 @@ DogTag:AddTag("Unit", "CastStopDuration", {
 
 DogTag:AddTag("Unit", "CastStopMessage", {
 	code = function(unit)
-		return castData[unit].stopMessage
+		return getCastData(unit).stopMessage
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
