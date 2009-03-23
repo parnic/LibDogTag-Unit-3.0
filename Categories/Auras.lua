@@ -18,11 +18,13 @@ local newList, del = DogTag.newList, DogTag.del
 
 local currentAuras, currentDebuffTypes, currentAuraTimes, currentNumDebuffs
 
-local function func(self, unit)
-	local t = newList()
-	local u = newList()
-	local v = newList()
-	for i = 1, 40 do
+local mt = {__index=function(self, unit)
+	local auras = newList()
+	local debuffTypes = newList()
+	local auraTimes = newList()
+	local i = 0
+	while true do
+		i = i + 1
 		local name, _, _, count, _, duration, expirationTime = UnitAura(unit, i, "HELPFUL")
 		if not name then
 			break
@@ -30,15 +32,17 @@ local function func(self, unit)
 		if count == 0 then
 			count = 1
 		end
-		t[name] = (t[name] or 0) + count
+		auras[name] = (auras[name] or 0) + count
 		
-		if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
-			v[name] = expirationTime
+		if expirationTime and expirationTime > 0 and (not auraTimes[name] or auraTimes[name] > expirationTime) then
+			auraTimes[name] = expirationTime
 		end
 	end
 	local numDebuffs = 0
 	local isFriend = UnitIsFriend("player", unit)
-	for i = 1, 40 do
+	local i = 0
+	while true do
+		i = i + 1
 		local name, _, _, count, dispelType, _, expirationTime = UnitAura(unit, i, "HARMFUL")
 		if not name then
 			break
@@ -47,28 +51,26 @@ local function func(self, unit)
 			count = 1
 		end
 		numDebuffs = numDebuffs + 1
-		t[name] = (t[name] or 0) + count
+		auras[name] = (auras[name] or 0) + count
 		if isFriend and dispelType then
-			u[dispelType] = true
+			debuffTypes[dispelType] = true
 		end
 
-		if expirationTime and expirationTime > 0 and (not v[name] or v[name] > expirationTime) then
-			v[name] = expirationTime
+		if expirationTime and expirationTime > 0 and (not auraTimes[name] or auraTimes[name] > expirationTime) then
+			auraTimes[name] = expirationTime
 		end
 	end
-	currentAuras[unit] = t
-	currentDebuffTypes[unit] = u
-	currentAuraTimes[unit] = v
+	currentAuras[unit] = auras
+	currentDebuffTypes[unit] = debuffTypes
+	currentAuraTimes[unit] = auraTimes
 	currentNumDebuffs[unit] = numDebuffs
 	return self[unit]
-end
-
-local x = {__index=func}
-currentAuras = setmetatable({},x)
-currentDebuffTypes = setmetatable({},x)
-currentAuraTimes = setmetatable({},x)
-currentNumDebuffs = setmetatable({},x)
-x = nil
+end}
+currentAuras = setmetatable({}, mt)
+currentDebuffTypes = setmetatable({}, mt)
+currentAuraTimes = setmetatable({}, mt)
+currentNumDebuffs = setmetatable({}, mt)
+mt = nil
 
 local auraQueue = {}
 
