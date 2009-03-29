@@ -48,7 +48,7 @@ DogTag:AddTag("Unit", "CanAttack", {
 })
 
 local function VehicleName(unit)
-	local name = UnitName(unit)
+	local name = UnitName(unit:gsub("vehicle", "pet"))
 	local ownerUnit = unit:gsub("vehicle", "")
 	if ownerUnit == "" then
 		ownerUnit = "player"
@@ -63,12 +63,12 @@ end
 
 DogTag:AddTag("Unit", "Name", {
 	code = function(unit)
-		if unit:match("pet") then
+		if unit:match("%d*pet%d*$") then
 			local vehicle = unit:gsub("pet", "vehicle")
 			if UnitIsUnit(unit, vehicle) then
 				return VehicleName(vehicle)
 			end
-		elseif unit:match("vehicle") then
+		elseif unit:match("%d*vehicle%d*$") then
 			return VehicleName(unit)
 		else
 			return UnitName(unit)
