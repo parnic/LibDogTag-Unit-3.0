@@ -79,8 +79,9 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	-- No need to change: L["Target"] = TARGET
 	-- No need to change: L["Focus-target"] = FOCUS
 	L["Mouse-over"] = "Sous la souris"
-	L["%s's pet"] = "Familier de %s"
-	L["%s's target"] = "Cible de %s"
+	L["%s's pet"] = "Familier |2 %s"
+	L["%s's target"] = "Cible |2 %s"
+	L["%s's %s"] = "%2$s |2 %1$s"
 	L["Party member #%d"] = "Membre du groupe #%d"
 	L["Raid member #%d"] = "Membre du raid #%d"
 

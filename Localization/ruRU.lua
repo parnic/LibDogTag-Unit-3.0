@@ -81,6 +81,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Mouse-over"] = "Наведение указателя мыши"
 	L["%s's pet"] = "Питомец %s"
 	L["%s's target"] = "Цель %s"
+	L["%s's %s"] = "%1$s's %2$s"
 	L["Party member #%d"] = "Член группы #%d"
 	L["Raid member #%d"] = "Член рейда #%d"
 

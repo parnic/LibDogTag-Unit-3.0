@@ -47,7 +47,44 @@ DogTag:AddTag("Unit", "CanAttack", {
 	category = L["Characteristics"]
 })
 
+local function VehicleName(unit)
+	local name = UnitName(unit)
+	local ownerUnit = unit:gsub("vehicle", "")
+	if ownerUnit == "" then
+		ownerUnit = "player"
+	end
+	local owner = UnitName(ownerUnit)
+	if owner then
+		return L["%s's %s"]:format(owner, name)
+	else
+		return name
+	end
+end
+
 DogTag:AddTag("Unit", "Name", {
+	code = function(unit)
+		if unit:match("pet") then
+			local vehicle = unit:gsub("pet", "vehicle")
+			if UnitIsUnit(unit, vehicle) then
+				return VehicleName(vehicle)
+			end
+		elseif unit:match("vehicle") then
+			return VehicleName(unit)
+		else
+			return UnitName(unit)
+		end
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string",
+	events = "UNIT_NAME_UPDATE#$unit",
+	doc = L["Return the name of unit, or if it is a vehicle, show as \"Owner's Vehicle\""],
+	example = ('[Name] => %q'):format(UnitName("player")),
+	category = L["Characteristics"]
+})
+
+DogTag:AddTag("Unit", "SimpleName", {
 	code = UnitName,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -55,7 +92,7 @@ DogTag:AddTag("Unit", "Name", {
 	ret = "string",
 	events = "UNIT_NAME_UPDATE#$unit",
 	doc = L["Return the name of unit"],
-	example = ('[Name] => %q'):format(UnitName("player")),
+	example = ('[SimpleName] => %q'):format(UnitName("player")),
 	category = L["Characteristics"]
 })
 

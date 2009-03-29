@@ -82,6 +82,7 @@ DogTag_Unit.L = {
 	["Mouse-over"] = "Mouse-over",
 	["%s's pet"] = "%s's pet",
 	["%s's target"] = "%s's target",
+	["%s's %s"] = "%s's %s",
 	["Party member #%d"] = "Party member #%d",
 	["Raid member #%d"] = "Raid member #%d",
 
