@@ -70,9 +70,8 @@ DogTag:AddTag("Unit", "Name", {
 			end
 		elseif unit:match("%d*vehicle%d*$") then
 			return VehicleName(unit)
-		else
-			return UnitName(unit)
 		end
+		return UnitName(unit)
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
