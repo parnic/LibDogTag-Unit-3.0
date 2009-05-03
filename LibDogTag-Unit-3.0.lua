@@ -348,6 +348,11 @@ local nsListHasUnit = setmetatable({}, { __index = function(self, key)
 	return false
 end })
 
+local predictedPower = GetCVarBool("predictedPower")
+hooksecurefunc("SetCVar", function()
+	predictedPower = GetCVarBool("predictedPower")
+end)
+
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local mouseoverGUID = UnitGUID("mouseover")
@@ -368,12 +373,14 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 		end
 	end
 	
-	local playerGUID = unitToGUID.player
-	local petGUID = unitToGUID.pet
-	-- Fire FastStats event for units representing player or pet.
-	for unit, guid in pairs(unitToGUID) do
-		if guid == playerGUID or guid == petGUID then
-			DogTag:FireEvent("FastStats", unit)
+	if predictedPower then
+		local playerGUID = unitToGUID.player
+		local petGUID = unitToGUID.pet
+		-- Fire FastPower event for units representing player or pet.
+		for unit, guid in pairs(unitToGUID) do
+			if guid == playerGUID or guid == petGUID then
+				DogTag:FireEvent("FastPower", unit)
+			end
 		end
 	end
 end)

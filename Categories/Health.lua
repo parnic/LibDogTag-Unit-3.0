@@ -22,7 +22,7 @@ DogTag:AddTag("Unit", "HP", {
 		'known', 'boolean', false,
 	},
 	ret = 'number',
-	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit;FastStats#$unit",
+	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
 	doc = L["Return the current health of unit"],
 	example = ('[HP] => "%d"'):format(UnitHealthMax("player")*.758),
 	category = L["Health"],
