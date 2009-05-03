@@ -30,19 +30,34 @@ else
 	frame = CreateFrame("Frame")
 end
 DogTag_Unit.frame = frame
+local normalUnitsWackyDependents = {}
+
+local function fireEventForDependents(event, unit, ...)
+	local wackyDependents = normalUnitsWackyDependents[unit]
+	if wackyDependents then
+		for unit in pairs(wackyDependents) do
+			DogTag:FireEvent(event, unit, ...)
+		end
+	end
+end
 frame:RegisterAllEvents()
 frame:SetScript("OnEvent", function(this, event, ...)
+	fireEventForDependents(event, ...)
 	if (...) == "target" then
 	 	if UnitIsUnit("mouseover", "target") then
 			DogTag:FireEvent(event, "mouseover", select(2, ...))
+			fireEventForDependents(event, "mouseover", select(2, ...))
 		end
 		DogTag:FireEvent(event, "playertarget", select(2, ...))
+		fireEventForDependents(event, "playertarget", select(2, ...))
 	elseif (...) == "pet" then
 		DogTag:FireEvent(event, "playerpet", select(2, ...))
+		fireEventForDependents(event, "playerpet", select(2, ...))
 	elseif type((...)) == "string" then
 	 	local num = (...):match("^partypet(%d)$")
 		if num then
 			DogTag:FireEvent(event, "party" .. num .. "pet", select(2, ...))
+			fireEventForDependents(event, "party" .. num .. "pet", select(2, ...))
 		end
 	end
 end)
@@ -95,6 +110,7 @@ DogTag.UnitToLocale = UnitToLocale
 local IsLegitimateUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true, vehicle = true }
 DogTag.IsLegitimateUnit = IsLegitimateUnit
 local IsNormalUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true }
+local WACKY_UNITS = { targettarget = true, playertargettarget = true, targettargettarget = true, playertargettargettarget = true, pettarget = true, playerpettarget = true, pettargettarget = true, playerpettargettarget = true }
 DogTag.IsNormalUnit = IsNormalUnit
 for i = 1, 4 do
 	IsLegitimateUnit["party" .. i] = true
@@ -103,12 +119,23 @@ for i = 1, 4 do
 	IsNormalUnit["party" .. i] = true
 	IsNormalUnit["partypet" .. i] = true
 	IsNormalUnit["party" .. i .. "pet"] = true
+	WACKY_UNITS["party" .. i .. "target"] = true
+	WACKY_UNITS["partypet" .. i .. "target"] = true
+	WACKY_UNITS["party" .. i .. "pettarget"] = true
+	WACKY_UNITS["party" .. i .. "targettarget"] = true
+	WACKY_UNITS["partypet" .. i .. "targettarget"] = true
+	WACKY_UNITS["party" .. i .. "pettargettarget"] = true
 end
 for i = 1, 40 do
 	IsLegitimateUnit["raid" .. i] = true
 	IsNormalUnit["raid" .. i] = true
 	IsLegitimateUnit["raidpet" .. i] = true
 	IsLegitimateUnit["raid" .. i .. "pet"] = true
+	WACKY_UNITS["raid" .. i .. "target"] = true
+	WACKY_UNITS["raidpet" .. i] = true
+	WACKY_UNITS["raid" .. i .. "pet"] = true
+	WACKY_UNITS["raidpet" .. i .. "target"] = true
+	WACKY_UNITS["raid" .. i .. "pettarget"] = true
 end
 setmetatable(IsLegitimateUnit, { __index = function(self, key)
 	if type(key) ~= "string" then
@@ -126,6 +153,51 @@ end})
 
 local unitToGUID = {}
 local guidToUnits = {}
+local wackyUnitToBestUnit = {}
+
+local function getBestUnit(guid)
+	if not guid then
+		return nil
+	end
+	
+	local guidToUnits__guid = guidToUnits[guid]
+	if not guidToUnits__guid then
+		return nil
+	end
+	
+	for unit in pairs(guidToUnits__guid) do
+		if IsNormalUnit[unit] then
+			return unit
+		end
+	end
+	return nil
+end
+local function calculateBestUnit(unit)
+	local bestUnit = getBestUnit(UnitGUID(unit))
+	local oldBestUnit = wackyUnitToBestUnit[unit]
+	
+	if bestUnit == oldBestUnit then
+		return
+	end
+	
+	wackyUnitToBestUnit[unit] = bestUnit
+	local normalUnitsWackyDependents__oldBestUnit = normalUnitsWackyDependents[oldBestUnit]
+	if normalUnitsWackyDependents__oldBestUnit then
+		normalUnitsWackyDependents__oldBestUnit[unit] = nil
+		if not next(normalUnitsWackyDependents__oldBestUnit) then
+			normalUnitsWackyDependents[oldBestUnit] = del(normalUnitsWackyDependents__oldBestUnit)
+		end
+	end
+	if bestUnit then
+		local normalUnitsWackyDependents__bestUnit = normalUnitsWackyDependents[bestUnit]
+		if not normalUnitsWackyDependents__bestUnit then
+			normalUnitsWackyDependents__bestUnit = newList()
+			normalUnitsWackyDependents[bestUnit] = normalUnitsWackyDependents__bestUnit
+		end
+		normalUnitsWackyDependents__bestUnit[unit] = true
+	end
+end
+
 local function refreshGUID(unit)
 	local guid = UnitGUID(unit)
 	local oldGuid = unitToGUID[unit]
@@ -148,6 +220,12 @@ local function refreshGUID(unit)
 			guidToUnits[guid] = guidToUnits_guid
 		end
 		guidToUnits_guid[unit] = true
+	end
+	
+	for wackyUnit in pairs(WACKY_UNITS) do
+		if wackyUnitToBestUnit[wackyUnit] == unit or unitToGUID[wackyUnit] == guid then
+			calculateBestUnit(wackyUnit)
+		end
 	end
 end
 
@@ -352,6 +430,8 @@ local predictedPower = GetCVarBool("predictedPower")
 hooksecurefunc("SetCVar", function()
 	predictedPower = GetCVarBool("predictedPower")
 end)
+local lastPlayerPower = 0
+local lastPetPower = 0
 
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
@@ -361,12 +441,21 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 		DogTag:FireEvent("UnitChanged", "mouseover")
 	end
 	if currentTime >= nextUpdateWackyUnitsTime then
+		for unit in pairs(WACKY_UNITS) do
+			local oldGUID = unitToGUID[unit]
+			refreshGUID(unit)
+			local newGUID = unitToGUID[unit]
+			if oldGUID ~= newGUID then
+				DogTag:FireEvent("UnitChanged", unit)
+			end
+		end
 		nextUpdateWackyUnitsTime = currentTime + 0.5
 		DogTag:FireEvent("UpdateWackyUnits")
 		for fs, nsList in pairs(fsToNSList) do
 			if nsListHasUnit[nsList] then
 				local kwargs = fsToKwargs[fs]
-				if kwargs and kwargs["unit"] and not IsNormalUnit[kwargs["unit"]] then
+				local unit = kwargs and kwargs["unit"]
+				if unit and not IsNormalUnit[unit] and not wackyUnitToBestUnit[unit] then
 					fsNeedUpdate[fs] = true
 				end
 			end
@@ -374,12 +463,26 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	end
 	
 	if predictedPower then
-		local playerGUID = unitToGUID.player
-		local petGUID = unitToGUID.pet
 		-- Fire FastPower event for units representing player or pet.
-		for unit, guid in pairs(unitToGUID) do
-			if guid == playerGUID or guid == petGUID then
-				DogTag:FireEvent("FastPower", unit)
+		local playerPower = UnitMana("player")
+		if playerPower ~= lastPlayerPower then
+			lastPlayerPower = playerPower
+			local playerGUID = unitToGUID.player
+			for unit, guid in pairs(unitToGUID) do
+				if guid == playerGUID then
+					DogTag:FireEvent("FastPower", unit)
+				end
+			end
+		end
+		
+		local petPower = UnitMana("pet")
+		if petPower ~= lastPetPower then
+			lastPetPower = petPower
+			local petGUID = unitToGUID.pet
+			for unit, guid in pairs(unitToGUID) do
+				if guid == petGUID then
+					DogTag:FireEvent("FastPower", unit)
+				end
 			end
 		end
 	end
