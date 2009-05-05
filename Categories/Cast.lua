@@ -84,6 +84,7 @@ local function updateInfo(event, unit)
 	DogTag:FireEvent("Cast", unit)
 end
 
+local guidsToFire = {}
 local function fixCastData()
 	local frame
 	local currentTime = GetTime()
@@ -129,11 +130,15 @@ local function fixCastData()
 				updateInfo(nil, found)
 			end
 			
-			for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
-				DogTag:FireEvent("Cast", unit)
-			end
+			guidsToFire[guid] = true
 		end
 	end
+	for guid in pairs(guidsToFire) do
+		for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
+			DogTag:FireEvent("Cast", unit)
+		end
+	end
+	wipe(guidsToFire)
 end
 DogTag:AddTimerHandler("Unit", fixCastData)
 
