@@ -1,4 +1,4 @@
-﻿local MAJOR_VERSION = "LibDogTag-Unit-3.0"
+local MAJOR_VERSION = "LibDogTag-Unit-3.0"
 local MINOR_VERSION = 90000 + tonumber(("$Revision$"):match("%d+")) or 0
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
@@ -45,6 +45,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Undead_short"] = "死"
 
 	-- classes
+	L["Death Knight"] = "死亡騎士"
 	L["Warrior"] = "戰士"
 	L["Priest"] = "牧師"
 	L["Mage"] = "法師"
@@ -54,6 +55,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Druid"] = "德魯伊"
 	L["Rogue"] = "盜賊"
 	L["Hunter"] = "獵人"
+	L["Death Knight_female"] = "死亡騎士"
 	L["Warrior_female"] = "戰士"
 	L["Priest_female"] = "牧師"
 	L["Mage_female"] = "法師"
@@ -65,6 +67,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Hunter_female"] = "獵人"
 
 	-- short classes
+	L["Death Knight_short"] = "死騎"
 	L["Warrior_short"] = "戰"
 	L["Priest_short"] = "牧"
 	L["Mage_short"] = "法"
@@ -114,6 +117,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Focus"] = "集中"
 	L["Energy"] = "能量"
 	L["Mana"] = "魔法"
+	L["Runic Power"] = "符能"
 
 	L["PvP"] = PVP
 	L["FFA"] = "自由"..PVP
