@@ -48,7 +48,7 @@ DogTag:AddTag("Unit", "CanAttack", {
 })
 
 local function VehicleName(unit)
-	local name = UnitName(unit:gsub("vehicle", "pet"))
+	local name = UnitName(unit:gsub("vehicle", "pet")) or UnitName(unit) or L["Vehicle"]
 	local ownerUnit = unit:gsub("vehicle", "")
 	if ownerUnit == "" then
 		ownerUnit = "player"
