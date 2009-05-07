@@ -145,6 +145,8 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Curse"] = "저주"
 	L["Poison"] = "독"
 	L["Disease"] = "질병"
+		
+	L["Vehicle"] = "탈것"
 end
 
 end
