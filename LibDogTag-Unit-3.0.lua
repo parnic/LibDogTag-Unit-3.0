@@ -166,7 +166,7 @@ local function getBestUnit(guid)
 	end
 	
 	for unit in pairs(guidToUnits__guid) do
-		if IsNormalUnit[unit] then
+		if IsNormalUnit[unit] and unit ~= "mouseover" then
 			return unit
 		end
 	end
@@ -205,7 +205,7 @@ local function refreshGUID(unit)
 		return
 	end
 	unitToGUID[unit] = guid
-	if old_guid then
+	if oldGuid then
 		local guidToUnits_oldGuid = guidToUnits[oldGuid]
 		guidToUnits_oldGuid[unit] = nil
 		if not next(guidToUnits_oldGuid) then
@@ -231,11 +231,16 @@ end
 
 local function PARTY_MEMBERS_CHANGED()
 	for unit in pairs(IsNormalUnit) do
+		local guid = unitToGUID[unit]
 		refreshGUID(unit)
-		DogTag:FireEvent("UnitChanged", unit)
+		local newGUID = unitToGUID[unit]
+		if guid ~= unitGUID then
+			DogTag:FireEvent("UnitChanged", unit)
+		end
 	end
 end
 DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", "PLAYER_ENTERING_WORLD", PARTY_MEMBERS_CHANGED)
 
 PARTY_MEMBERS_CHANGED()
 DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", PARTY_MEMBERS_CHANGED)
@@ -432,6 +437,16 @@ hooksecurefunc("SetCVar", function()
 end)
 local lastPlayerPower = 0
 local lastPetPower = 0
+
+local nextRefreshGUIDsTime = 0
+DogTag:AddTimerHandler("Unit", function(num, currentTime)
+	if nextRefreshGUIDsTime > currentTime then
+		return
+	end
+	nextRefreshGUIDsTime = currentTime + 15
+	
+	PARTY_MEMBERS_CHANGED()
+end, 1)
 
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
