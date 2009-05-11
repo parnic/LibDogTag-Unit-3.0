@@ -84,7 +84,7 @@ local function updateInfo(event, unit)
 	DogTag:FireEvent("Cast", unit)
 end
 
-local guidsToFire = {}
+local guidsToFire, unitsToUpdate = {}, {}
 local function fixCastData()
 	local frame
 	local currentTime = GetTime()
@@ -127,12 +127,16 @@ local function fixCastData()
 			castData[guid] = del(data)
 		else
 			if not normal then
-				updateInfo(nil, found)
+				unitsToUpdate[found] = true
 			end
 			
 			guidsToFire[guid] = true
 		end
 	end
+	for unit in pairs(unitsToUpdate) do
+		updateInfo(nil, unit)
+	end
+	wipe(unitsToUpdate)
 	for guid in pairs(guidsToFire) do
 		for unit in DogTag_Unit.IterateUnitsWithGUID(guid) do
 			DogTag:FireEvent("Cast", unit)
