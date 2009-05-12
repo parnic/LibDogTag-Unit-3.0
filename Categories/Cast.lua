@@ -124,7 +124,9 @@ local function fixCastData()
 			end
 		end
 		if not found then
-			castData[guid] = del(data)
+			if castData[guid] then
+				castData[guid] = del(data)
+			end
 		else
 			if not normal then
 				unitsToUpdate[found] = true
