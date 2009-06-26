@@ -9,6 +9,15 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
+-- Pre 3.2.0 compatability support
+local wow_320 = select(4, GetBuildInfo()) >= 30200
+local GetQuestDifficultyColor
+if not wow_320 then
+	GetQuestDifficultyColor = _G.GetDifficultyColor
+else
+	GetQuestDifficultyColor = _G.GetQuestDifficultyColor
+end
+
 DogTag:AddTag("Unit", "IsFriend", {
 	code = function(unit)
 		return UnitIsFriend('player', unit)
@@ -580,7 +589,7 @@ DogTag:AddTag("Unit", "DifficultyColor", {
 		if level <= 0 then
 			level = 99
 		end
-		local info = GetDifficultyColor(level)
+		local info = GetQuestDifficultyColor(level)
 		if value then
 			return ("|cff%02x%02x%02x%s|r"):format(info.r * 255, info.g * 255, info.b * 255, value)
 		else
