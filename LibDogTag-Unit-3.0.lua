@@ -116,9 +116,11 @@ for i = 1, 4 do
 	IsLegitimateUnit["party" .. i] = true
 	IsLegitimateUnit["partypet" .. i] = true
 	IsLegitimateUnit["party" .. i .. "pet"] = true
+	IsLegitimateUnit["boss" .. i] = true
 	IsNormalUnit["party" .. i] = true
 	IsNormalUnit["partypet" .. i] = true
 	IsNormalUnit["party" .. i .. "pet"] = true
+	IsNormalUnit["boss" .. i] = true
 	WACKY_UNITS["party" .. i .. "target"] = true
 	WACKY_UNITS["partypet" .. i .. "target"] = true
 	WACKY_UNITS["party" .. i .. "pettarget"] = true
@@ -412,6 +414,13 @@ end)
 DogTag:AddEventHandler("Unit", "UPDATE_MOUSEOVER_UNIT", function(event, ...)
 	refreshGUID("mouseover")
 	DogTag:FireEvent("UnitChanged", "mouseover")
+end)
+
+DogTag:AddEventHandler("Unit", "INSTANCE_ENCOUNTER_ENGAGE_UNIT", function(event, ...)
+	for i = 1, 4 do
+		refreshGUID("boss"..i)
+		DogTag:FireEvent("UnitChanged", "boss"..i)
+	end
 end)
 
 local fsToKwargs = DogTag.fsToKwargs
