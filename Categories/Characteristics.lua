@@ -270,9 +270,36 @@ local Classification_lookup = {
 	worldboss = L["Boss"]
 }
 
+local classification_func = _G.UnitClassification
+
 local function Classification(unit)
-	return Classification_lookup[UnitClassification(unit)]
+	return Classification_lookup[classification_func(unit)]
 end
+
+DogTag:AddAddonFinder("Unit", "LibStub", "LibBossIDs-1.0", function(LibBossIDs)
+    classification_func = function(unit)
+        local classification = UnitClassification(unit)
+
+        if classification == "worldboss" or classification == "normal" then
+            return classification
+        end
+        local guid = UnitGUID(unit)
+        if not guid then
+            return classification
+        end
+        
+        local mob_id = tonumber(guid:sub(-10, -7), 16)
+        if not mob_id then
+            return classification
+        end
+
+        if LibBossIDs.BossIDs[mob_id] then
+            return "worldboss"
+        end
+        
+        return classification
+    end
+end)
 
 DogTag:AddTag("Unit", "Classification", {
 	code = Classification,
