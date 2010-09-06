@@ -9,13 +9,20 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
+-- Parnic: support for Cataclysm; UNIT_MANA et al changed to UNIT_(MAX)POWER
+local wow_400 = select(4, GetBuildInfo()) >= 40000
+local mpEvents = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit"
+if wow_400 then
+	mpEvents = "UNIT_POWER#$unit;UNIT_MAXPOWER#$unit;UNIT_DISPLAYPOWER#$unit"
+end
+
 DogTag:AddTag("Unit", "MP", {
 	code = UnitMana,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit;FastPower#$unit",
+	events = mpEvents .. ";FastPower#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
 	example = ('[MP] => "%d"'):format(UnitManaMax("player")*.632),
 	category = L["Power"]
@@ -27,7 +34,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
-	events = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit",
+	events = mpEvents,
 	doc = L["Return the maximum mana/rage/energy of unit"],
 	example = ('[MaxMP] => "%d"'):format(UnitManaMax("player")),
 	category = L["Power"]

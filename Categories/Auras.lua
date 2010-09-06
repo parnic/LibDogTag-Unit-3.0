@@ -18,6 +18,9 @@ local newList, del = DogTag.newList, DogTag.del
 
 local currentAuras, currentDebuffTypes, currentAuraTimes, currentNumDebuffs
 
+-- Parnic: support for cataclysm; Divine Intervention was removed
+local wow_400 = select(4, GetBuildInfo()) >= 40000
+
 local mt = {__index=function(self, unit)
 	local auras = newList()
 	local debuffTypes = newList()
@@ -401,6 +404,8 @@ DogTag:AddTag("Unit", "HasInvisibility", {
 	category = L["Auras"]
 })
 
+-- Parnic: DI removed in Cataclysm
+if not wow_400 then
 local DIVINE_INTERVENTION = GetSpellInfo(19752)
 DogTag:AddTag("Unit", "HasDivineIntervention", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(DIVINE_INTERVENTION),
@@ -411,6 +416,7 @@ DogTag:AddTag("Unit", "HasDivineIntervention", {
 	example = ('[HasDivineIntervention] => %q; [HasDivineIntervention] => ""'):format(L["True"]),
 	category = L["Auras"]
 })
+end
 
 DogTag:AddTag("Unit", "HasDebuffType", {
 	code = function(type, unit)

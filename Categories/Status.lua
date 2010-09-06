@@ -14,6 +14,14 @@ local offlineTimes = {}
 local afkTimes = {}
 local deadTimes = {}
 
+-- Parnic: support for cataclysm; Divine Intervention was removed
+local wow_400 = select(4, GetBuildInfo()) >= 40000
+local petHappinessEvent = "UNIT_HAPPINESS"
+if wow_400 then
+	petHappinessEvent = "UNIT_POWER"
+end
+
+
 local iterateGroupMembers
 local iterateGroupMembers__t = {}
 do
@@ -376,7 +384,7 @@ DogTag:AddTag("Unit", "HappyNum", {
 		return GetPetHappiness() or 0
 	end,
 	ret = "number",
-	events = "UNIT_HAPPINESS",
+	events = petHappinessEvent,
 	doc = L["Return the happiness number of your pet"],
 	example = '[HappyNum] => "3"',
 	category = L["Status"]
@@ -387,7 +395,7 @@ DogTag:AddTag("Unit", "HappyText", {
 		return _G["PET_HAPPINESS" .. (GetPetHappiness() or 0)]
 	end,
 	ret = "number",
-	events = "UNIT_HAPPINESS",
+	events = petHappinessEvent,
 	doc = L["Return a description of how happy your pet is"],
 	example = ('[HappyText] => %q'):format(_G.PET_HAPPINESS3),
 	category = L["Status"]
@@ -410,7 +418,7 @@ DogTag:AddTag("Unit", "HappyIcon", {
 		'unhappy', 'string', 'B(',
 	},
 	ret = "string;nil",
-	events = "UNIT_HAPPINESS",
+	events = petHappinessEvent,
 	doc = L["Return an icon representative of how happy your pet is"],
 	example = ('[HappyIcon] => ":D"; [HappyIcon] => ":I"; [HappyIcon] => "B("'),
 	category = L["Status"]
@@ -855,12 +863,14 @@ DogTag:AddTag("Unit", "HappyColor", {
 		'value', 'string;undef', "@undef",
 	},
 	ret = "nil;string",
-	events = "UNIT_HAPPINESS",
+	events = petHappinessEvent,
 	doc = L["Return the color or wrap value with the color associated with your pet's happiness"],
 	example = '["Hello":HappyColor] => "|cff00ff00Hello|r"; [HappyColor "Hello"] => "|cff00ff00Hello"',
 	category = L["Status"]
 })
 
+-- Parnic: DI removed in Cataclysm
+if not wow_400 then
 local DIVINE_INTERVENTION = GetSpellInfo(19752)
 DogTag:AddTag("Unit", "Status", {
 	alias = ("Offline(unit=unit) or (HasDivineIntervention(unit=unit) ? %q) or (IsFeignedDeath(unit=unit) ? %q) or [if Dead(unit=unit) then ((HasSoulstone(unit=unit) ? %q) or Dead(unit=unit))]"):format(DIVINE_INTERVENTION, L["Feigned Death"], L["Soulstoned"]),
@@ -871,5 +881,16 @@ DogTag:AddTag("Unit", "Status", {
 	example = ('[Status] => "Offline"; [Status] => "Dead"; [Status] => ""'),
 	category = L["Status"]
 })
+else
+DogTag:AddTag("Unit", "Status", {
+	alias = ("Offline(unit=unit) or (IsFeignedDeath(unit=unit) ? %q) or [if Dead(unit=unit) then ((HasSoulstone(unit=unit) ? %q) or Dead(unit=unit))]"):format(L["Feigned Death"], L["Soulstoned"]),
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return whether unit is offline, is dead, feigning death, or has a soulstone while dead"],
+	example = ('[Status] => "Offline"; [Status] => "Dead"; [Status] => ""'),
+	category = L["Status"]
+})
+end
 
 end

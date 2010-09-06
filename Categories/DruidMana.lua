@@ -29,6 +29,13 @@ if isDruid then
 	end
 end
 
+-- Parnic: support for Cataclysm; UNIT_MANA changed to UNIT_POWER
+local wow_400 = select(4, GetBuildInfo()) >= 40000
+local mpEvents = "DruidMana;UNIT_MANA#$unit;UNIT_MAXMANA#$unit"
+if wow_400 then
+	mpEvents = "DruidMana;UNIT_POWER#$unit;UNIT_MAXPOWER#$unit"
+end
+
 DogTag:AddTag("Unit", "DruidMP", {
 	code = function(args)
 		return DruidMP_func
@@ -38,9 +45,9 @@ DogTag:AddTag("Unit", "DruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "DruidMana;UNIT_MANA#$unit;UNIT_MAXMANA#$unit",
+	events = mpEvents,
 	doc = L["Return the current mana of unit if unit is you and you are a druid"],
-	example = ('[DruidMP] => "%d"'):format(UnitManaMax("player")*.632),
+	example = ('[DruidMP] => "%d"'):format(UnitPowerMax("player",0)*.632),
 	category = L["Druid"],
 })
 
@@ -53,9 +60,9 @@ DogTag:AddTag("Unit", "MaxDruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number;nil",
-	events = "DruidMana;UNIT_MANA#$unit;UNIT_MAXMANA#$unit",
+	events = mpEvents,
 	doc = L["Return the maximum mana of unit if unit is you and you are a druid"],
-	example = ('[MaxDruidMP] => "%d"'):format(UnitManaMax("player")),
+	example = ('[MaxDruidMP] => "%d"'):format(UnitPowerMax("player",0)),
 	category = L["Druid"],
 })
 
@@ -75,7 +82,7 @@ DogTag:AddTag("Unit", "MissingDruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the missing mana of unit if unit is you and you are a druid"],
-	example = ('[MissingDruidMP] => "%d"'):format(UnitManaMax("player")*.368),
+	example = ('[MissingDruidMP] => "%d"'):format(UnitPowerMax("player",0)*.368),
 	category = L["Druid"]
 })
 
@@ -85,7 +92,7 @@ DogTag:AddTag("Unit", "FractionalDruidMP", {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the current and maximum mana of unit if unit is you and you are a druid"],
-	example = ('[FractionalDruidMP] => "%d/%d"'):format(UnitManaMax("player")*.632, UnitManaMax("player")),
+	example = ('[FractionalDruidMP] => "%d/%d"'):format(UnitPowerMax("player",0)*.632, UnitPowerMax("player",0)),
 	category = L["Druid"]
 })
 
