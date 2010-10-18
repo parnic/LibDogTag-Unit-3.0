@@ -40,9 +40,10 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 	LibTalentQuery.RegisterCallback(DogTag_Unit, "TalentQuery_Ready", function(event, name, realm)
 		local fullName = realm and name .. "-" .. realm or name
 		
+		local talentGroup = GetActiveTalentGroup(true)
 		local data = newList()
 		for i = 1, 3 do
-			local _, name, _, _, points = GetTalentTabInfo(i, true)
+			local _, name, _, _, points = GetTalentTabInfo(i, true, false, talentGroup)
 			data[i] = newList(name, points)
 		end
 		update(fullName, data)
