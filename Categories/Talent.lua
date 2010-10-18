@@ -42,7 +42,7 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 		
 		local data = newList()
 		for i = 1, 3 do
-			local name, _, points = GetTalentTabInfo(i, true)
+			local _, name, _, _, points = GetTalentTabInfo(i, true)
 			data[i] = newList(name, points)
 		end
 		update(fullName, data)
@@ -59,7 +59,7 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 		if name == playerName then
 			local data = newList()
 			for i = 1, 3 do
-				local name, _, points = GetTalentTabInfo(i)
+				local _, name, _, _, points = GetTalentTabInfo(i)
 				data[i] = newList(name, points)
 			end
 			update(UnitName("player"), data)
