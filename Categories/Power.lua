@@ -17,26 +17,26 @@ if wow_400 then
 end
 
 DogTag:AddTag("Unit", "MP", {
-	code = UnitMana,
+	code = UnitPower,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = mpEvents .. ";FastPower#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
-	example = ('[MP] => "%d"'):format(UnitManaMax("player")*.632),
+	example = ('[MP] => "%d"'):format(UnitPowerMax("player")*.632),
 	category = L["Power"]
 })
 
 DogTag:AddTag("Unit", "MaxMP", {
-	code = UnitManaMax,
+	code = UnitPowerMax,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
 	ret = "number",
 	events = mpEvents,
 	doc = L["Return the maximum mana/rage/energy of unit"],
-	example = ('[MaxMP] => "%d"'):format(UnitManaMax("player")),
+	example = ('[MaxMP] => "%d"'):format(UnitPowerMax("player")),
 	category = L["Power"]
 })
 
@@ -56,7 +56,7 @@ DogTag:AddTag("Unit", "MissingMP", {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the missing mana/rage/energy of unit"],
-	example = ('[MissingMP] => "%d"'):format(UnitManaMax("player")*.368),
+	example = ('[MissingMP] => "%d"'):format(UnitPowerMax("player")*.368),
 	category = L["Power"]
 })
 
@@ -66,7 +66,63 @@ DogTag:AddTag("Unit", "FractionalMP", {
 		'unit', 'string;undef', 'player'
 	},
 	doc = L["Return the current and maximum mana/rage/energy of unit"],
-	example = ('[FractionalMP] => "%d/%d"'):format(UnitManaMax("player")*.632, UnitManaMax("player")),
+	example = ('[FractionalMP] => "%d/%d"'):format(UnitPowerMax("player")*.632, UnitPowerMax("player")),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "AltP", {
+	code = UnitPower,
+	arg = {
+		'unit', 'string;undef', 'player',
+		'index', 'number;undef', ALTERNATE_POWER_INDEX
+	},
+	ret = "number",
+	events = mpEvents .. ";FastPower#$unit",
+	doc = L["Return the current alternate power of unit"],
+	example = ('[AltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.632),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "MaxAltP", {
+	code = UnitPowerMax,
+	arg = {
+		'unit', 'string;undef', 'player',
+		'index', 'number;undef', ALTERNATE_POWER_INDEX
+	},
+	ret = "number",
+	events = mpEvents,
+	doc = L["Return the maximum alternate power of unit"],
+	example = ('[MaxAltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "PercentAltP", {
+	alias = "[AltP(unit=unit) / MaxAltP(unit=unit) * 100]:Round(1)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the percentage alternate power of unit"],
+	example = '[PercentAltP] => "63.2"; [PercentAltP:Percent] => "63.2%"',
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "MissingAltP", {
+	alias = "MaxAltP(unit=unit) - AltP(unit=unit)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the missing alternate power of unit"],
+	example = ('[MissingAltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.368),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "FractionalAltP", {
+	alias = "Concatenate(AltP(unit=unit), '/', MaxAltP(unit=unit))",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the current and maximum alternate power of unit"],
+	example = ('[FractionalAltP] => "%d/%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.632, UnitPowerMax("player",ALTERNATE_POWER_INDEX)),
 	category = L["Power"]
 })
 
@@ -177,6 +233,26 @@ DogTag:AddTag("Unit", "HasMP", {
 	},
 	doc = L["Return True if unit has any power type at all"],
 	example = ('[HasMP] => %q; [HasMP] => ""'):format(L["True"]),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "IsMaxAltP", {
+	alias = "Boolean(AltP(unit=unit) = MaxAltP(unit=unit))",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return True if unit is at full alternate power"],
+	example = ('[IsMaxAltP] => %q; [IsMaxAltP] => ""'):format(L["True"]),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "HasAltP", {
+	alias = "Boolean(MaxAltP(unit=unit) > 0)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return True if unit has any alternate power"],
+	example = ('[HasAltP] => %q; [HasAltP] => ""'):format(L["True"]),
 	category = L["Power"]
 })
 
