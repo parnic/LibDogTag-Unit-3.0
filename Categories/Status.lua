@@ -331,8 +331,8 @@ DogTag:AddTag("Unit", "PvPIcon", {
 		elseif UnitIsPVP(unit) then
 			has = UnitFactionGroup(unit)
 		end
-		if has then --because the textures for these icons are much larger than the actual icon, and we have no texcoords in font strings, this bit of math helps make it look "right" next to other icons
-			return "|TInterface\\TargetingFrame\\UI-PVP-" .. has .. ":" .. size * 2 .. ":" .. size * 2 .. ":" .. size * 3 / 4 .. ":" .. size / 12 .. "|t"
+		if has then
+			return "|TInterface\\TargetingFrame\\UI-PVP-" .. has .. ":" .. size .. ":".. size .. ":0:0:64:64:3:38:1:36|t"
 		else
 			return nil
 		end
@@ -344,7 +344,7 @@ DogTag:AddTag("Unit", "PvPIcon", {
 	ret = "string;nil",
 	events = "UNIT_FACTION#$unit",
 	doc = L["Display the appropriate PvP icon if the unit is PvP flagged"],
-	example = '[PvPIcon] => "|TInterface\\TargetingFrame\\UI-PVP-Horde:24:24:18:2|t"; [PvPIcon] => ""',
+	example = '[PvPIcon] => "|TInterface\\TargetingFrame\\UI-PVP-Horde:24:24:0:0:64:64:3:38:1:36|t"; [PvPIcon] => ""',
 	category = L["Status"]
 })
 
