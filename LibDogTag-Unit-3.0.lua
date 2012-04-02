@@ -1,13 +1,13 @@
 --[[
 Name: LibDogTag-3.0
-Revision: @project-revision@
+Revision: $Rev$
 Author: Cameron Kenneth Knight (ckknight@gmail.com)
 Website: http://www.wowace.com/
 Description: A library to provide a markup syntax
 ]]
  
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + tonumber(("@project-revision@"):match("%d+")) or 0
+local MINOR_VERSION = 90000 + tonumber(("$Revision$"):match("%d+")) or 0
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
