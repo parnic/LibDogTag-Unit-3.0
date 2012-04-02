@@ -1,13 +1,13 @@
 --[[
 Name: LibDogTag-3.0
-Revision: $Rev$
+Revision: @project-revision@
 Author: Cameron Kenneth Knight (ckknight@gmail.com)
 Website: http://www.wowace.com/
 Description: A library to provide a markup syntax
 ]]
  
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision$"):match("%d+")) or 0
+local MINOR_VERSION = 90000 + tonumber(("@project-revision@"):match("%d+")) or 0
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -289,7 +289,9 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		t[#t+1] = "\n"
 		t[#t+1] = [=[return ("Bad unit: %q"):format(]=]
 		t[#t+1] = extraKwargs["unit"][1]
-		t[#t+1] = [=[), nil;]=]
+		t[#t+1] = [=[ or tostring(]=]
+		t[#t+1] = extraKwargs["unit"][1]
+		t[#t+1] = [=[)), nil;]=]
 		t[#t+1] = "\n"
 		t[#t+1] = [=[end;]=]
 		t[#t+1] = "\n"
