@@ -5,6 +5,16 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, table, next, pairs, ipairs, unpack, select, GetTime = _G, table, next, pairs, ipairs, unpack, select, GetTime
+local UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected = 
+	  UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected
+local UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll = 
+	  UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll
+local GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo = 
+	  GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo
+local UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, GetSpellInfo, IsResting = 
+	  UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, GetSpellInfo, IsResting
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
@@ -588,14 +598,14 @@ DogTag:AddTag("Unit", "IsMainTank", {
 		end
 		if maintanktable then
 			for i = 1, 10 do
-				if maintanktable[i] == name then
+				if maintanktable[i] == n then
 					return true
 				end
-				i = i + 1
+			--	i = i + 1 -- what the fuck is this shit?
 			end
 		else
 			for i = 1, GetNumRaidMembers() do
-				local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i)
+				local name, _, _, _, _, _, _, _, _, role = GetRaidRosterInfo(i)
 				if name == n then
 				 	return role == 'MAINTANK'
 				end
