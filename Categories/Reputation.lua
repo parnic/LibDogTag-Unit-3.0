@@ -5,9 +5,49 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, coroutine = _G, coroutine
+local GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader = 
+	  GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+
+local IterateFactions, TerminateIterateFactions
+do
+	local currentOpenHeader
+	local function iter()
+		for i = 1, GetNumFactions() do
+			local name, description, standingID, min, max, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(i)
+			if isHeader == 1 then
+				if isCollapsed == 1 then
+					local NumFactions = GetNumFactions()
+					ExpandFactionHeader(i)
+					currentOpenHeader = i
+					NumFactions = GetNumFactions() - NumFactions
+					for j = i+1, i+NumFactions do
+						coroutine.yield(GetFactionInfo(j))
+					end
+					CollapseFactionHeader(i)
+					currentOpenHeader = nil
+				end
+			else
+				coroutine.yield(name, description, standingID, min, max, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild)
+			end
+		end
+	end
+	function TerminateIterateFactions()
+		if currentOpenHeader then
+			CollapseFactionHeader(currentOpenHeader)
+			currentOpenHeader = nil
+		end
+	end
+
+	function IterateFactions()
+		currentOpenHeader = nil
+		return coroutine.wrap(iter)
+	end
+end
 
 DogTag:AddTag("Unit", "Reputation", {
 	code = function(faction)
@@ -15,9 +55,9 @@ DogTag:AddTag("Unit", "Reputation", {
 			local _, _, min, _, value = GetWatchedFactionInfo()
 			return value - min
 		else
-			for i = 1, GetNumFactions() do
-				local name, _, _, min, _, value = GetFactionInfo(i)
-				if faction == n then
+			for name, _, _, min, _, value in IterateFactions() do
+				if faction == name then
+					TerminateIterateFactions()
 					return value - min
 				end
 			end
@@ -39,9 +79,9 @@ DogTag:AddTag("Unit", "MaxReputation", {
 			local _, _, min, max = GetWatchedFactionInfo()
 			return max - min
 		else
-			for i = 1, GetNumFactions() do
-				local name, _, _, min, max = GetFactionInfo(i)
-				if faction == n then
+			for name, _, _, min, max in IterateFactions() do
+				if faction == name then
+					TerminateIterateFactions()
 					return max - min
 				end
 			end
@@ -104,9 +144,9 @@ DogTag:AddTag("Unit", "ReputationReaction", {
 			local _, reaction = GetWatchedFactionInfo()
 			return _G["FACTION_STANDING_LABEL" .. reaction]
 		else
-			for i = 1, GetNumFactions() do
-				local name, _, reaction = GetFactionInfo(i)
+			for name, _, reaction in IterateFactions() do
 				if faction == name then
+					TerminateIterateFactions()
 					return _G["FACTION_STANDING_LABEL" .. reaction]
 				end
 			end
@@ -118,27 +158,26 @@ DogTag:AddTag("Unit", "ReputationReaction", {
 	ret = "string;nil",
 	events = "UNIT_FACTION#player;UPDATE_FACTION",
 	doc = L["Return your current reputation rank with the watched faction or argument"],
-	example = ('[ReputationReaction] => %q; [ReputationReaction(%s)] => %q'):format(_G.FACTION_STANDING_LABEL5, "Exodar", _G.FACTION_STANDING_LABEL6),
+	example = ('[ReputationReaction] => %q; [ReputationReaction(%s)] => %q'):format(_G.FACTION_STANDING_LABEL5, L["Exodar"], _G.FACTION_STANDING_LABEL6),
 	category = L["Reputation"]
 })
 
 DogTag:AddTag("Unit", "ReputationColor", {
 	code = function(value, faction)
-		local _, name, reaction
+		local nameResult, reactionResult
 		if not faction then
-			name, reaction = GetWatchedFactionInfo()
+			nameResult, reactionResult = GetWatchedFactionInfo()
 		else
-			for i = 1, GetNumFactions() do
-				local n
-				n, _, reaction = GetFactionInfo(i)
-				if faction == n then
-					name = n
+			for name, _, reaction in IterateFactions() do
+				if faction == name then
+					TerminateIterateFactions()
+					nameResult, reactionResult = name, reaction
 					break
 				end
 			end
 		end
-		if name then
-			local color = FACTION_BAR_COLORS[reaction]
+		if nameResult then
+			local color = FACTION_BAR_COLORS[reactionResult]
 			if value then
 				return ("|cff%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, value)
 			else
