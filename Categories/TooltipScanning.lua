@@ -5,6 +5,12 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, ipairs, type, GetTime = _G, ipairs, type, GetTime
+local UnitName, UnitFactionGroup, UnitPlayerControlled, UnitIsPlayer, UnitIsVisible, UnitIsConnected, UnitPlayerControlled =
+	  UnitName, UnitFactionGroup, UnitPlayerControlled, UnitIsPlayer, UnitIsVisible, UnitIsConnected, UnitPlayerControlled
+local InCombatLockdown, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader, GetGuildInfo =
+	  InCombatLockdown, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader, GetGuildInfo
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
@@ -111,23 +117,11 @@ local function UPDATE_FACTION()
 		should_UPDATE_FACTION = true
 		return
 	end
-	for i = 1, GetNumFactions() do
-		local name,_,_,_,_,_,_,_,isHeader,isCollapsed = GetFactionInfo(i)
-		if isHeader == 1 then
-			if isCollapsed == 1 then
-				local NumFactions = GetNumFactions()
-				ExpandFactionHeader(i)
-				NumFactions = GetNumFactions() - NumFactions
-				for j = i+1, i+NumFactions do
-					local name = GetFactionInfo(j)
-					factionList[name] = true
-				end
-				CollapseFactionHeader(i)
-			end
-		else
-			factionList[name] = true
-		end
+	
+	for name in DogTag.IterateFactions() do
+		factionList[name] = true
 	end
+	
 	in_UNIT_FACTION = false
 end
 DogTag:AddEventHandler("Unit", "UPDATE_FACTION", UPDATE_FACTION)
