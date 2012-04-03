@@ -5,6 +5,10 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, pairs, wipe, tonumber, GetTime = _G, pairs, wipe, tonumber, GetTime
+local UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo = 
+	  UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L

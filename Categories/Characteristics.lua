@@ -5,6 +5,14 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, unpack, select, tonumber = _G, unpack, select, tonumber
+local UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel = 
+	  UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel
+local UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitGUID, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid = 
+	  UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitGUID, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid
+local GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName = 
+	  GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L

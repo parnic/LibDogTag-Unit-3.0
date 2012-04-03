@@ -5,6 +5,10 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local _G, table, setmetatable, rawget = _G, table, setmetatable, rawget
+local UnitName, GetActiveTalentGroup, GetTalentTabInfo, UnitIsPlayer = 
+	  UnitName, GetActiveTalentGroup, GetTalentTabInfo, UnitIsPlayer
+	  
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
