@@ -13,6 +13,10 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
+local select, type, pairs, ipairs, next, setmetatable = select, type, pairs, ipairs, next, setmetatable
+local UnitIsUnit, UnitName, UnitGUID, UnitMana, UnitExists = 
+	  UnitIsUnit, UnitName, UnitGUID, UnitMana, UnitExists
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
@@ -236,7 +240,7 @@ local function PARTY_MEMBERS_CHANGED()
 		local guid = unitToGUID[unit]
 		refreshGUID(unit)
 		local newGUID = unitToGUID[unit]
-		if guid ~= unitGUID then
+		if guid ~= newGUID then
 			DogTag:FireEvent("UnitChanged", unit)
 		end
 	end
