@@ -6,6 +6,7 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, coroutine = _G, coroutine
+local wrap, yield = coroutine.wrap, coroutine.yield
 local GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader = 
 	  GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader
 
@@ -26,13 +27,13 @@ do
 					currentOpenHeader = i
 					NumFactions = GetNumFactions() - NumFactions
 					for j = i+1, i+NumFactions do
-						coroutine.yield(GetFactionInfo(j))
+						yield(GetFactionInfo(j))
 					end
 					CollapseFactionHeader(i)
 					currentOpenHeader = nil
 				end
 			else
-				coroutine.yield(name, description, standingID, min, max, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild)
+				yield(name, description, standingID, min, max, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild)
 			end
 		end
 	end
@@ -45,9 +46,10 @@ do
 
 	function IterateFactions()
 		currentOpenHeader = nil
-		return coroutine.wrap(iter)
+		return wrap(iter)
 	end
 end
+DogTag.IterateFactions = IterateFactions
 
 DogTag:AddTag("Unit", "Reputation", {
 	code = function(faction)
