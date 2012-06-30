@@ -32,6 +32,11 @@ local petHappinessEvent = "UNIT_HAPPINESS"
 if wow_400 then
 	petHappinessEvent = "UNIT_POWER"
 end
+local partyChangedEvent = "PARTY_MEMBERS_CHANGED"
+if wow_500 then
+	UnitIsPartyLeader = UnitIsGroupLeader
+	partyChangedEvent = "GROUP_ROSTER_UPDATE"
+end
 
 -- Parnic: pet happiness removed in 4.1
 local wow_401 = wow_ver >= 40100
@@ -47,9 +52,17 @@ _G.iterateGroupMembers = iterateGroupMembers
 
 local tmp = {}
 local function PARTY_MEMBERS_CHANGED(event)
-	local prefix, min, max = "raid", 1, GetNumRaidMembers()
-	if max == 0 then
-		prefix, min, max = "party", 0, GetNumPartyMembers()
+	local prefix, min, max = "raid", 1, 0
+	if wow_500 then
+		max = GetNumGroupMembers()
+	else
+		max = GetNumRaidMembers()
+	end
+	if wow_500 and max <= 5 or (not wow_500 and max == 0) then
+		prefix, min = "party", 0
+		if not wow_500 then
+			max = GetNumPartyMembers()
+		end
 	end
 
 	for k in pairs(iterateGroupMembers__t) do
@@ -117,19 +130,19 @@ local function PARTY_MEMBERS_CHANGED(event)
 		tmp[guid] = nil
 	end
 end
-DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", partyChangedEvent, PARTY_MEMBERS_CHANGED)
 
 DogTag:AddAddonFinder("Unit", "_G", "oRA", function(v)
 	if AceLibrary and AceLibrary:HasInstance("AceEvent-2.0") then
 		AceLibrary("AceEvent-2.0"):RegisterEvent("oRA_MainTankUpdate", function()
-			DogTag:FireEvent("PARTY_MEMBERS_CHANGED")
+			DogTag:FireEvent(partyChangedEvent)
 		end)
 	end
 end)
 
 DogTag:AddAddonFinder("Unit", "_G", "CT_RAOptions_UpdateMTs", function(v)
 	hooksecurefunc("CT_RAOptions_UpdateMTs", function()
-		DogTag:FireEvent("PARTY_MEMBERS_CHANGED")
+		DogTag:FireEvent(partyChangedEvent)
 	end)
 end)
 
@@ -372,7 +385,7 @@ DogTag:AddTag("Unit", "IsResting", {
 })
 
 DogTag:AddTag("Unit", "IsLeader", {
-	code = wow_500 and UnitIsGroupLeader or UnitIsPartyLeader,
+	code = UnitIsPartyLeader,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
@@ -527,7 +540,7 @@ DogTag:AddTag("Unit", "FKey", {
 })
 
 local raidGroups = {}
-DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", function()
+DogTag:AddEventHandler("Unit", partyChangedEvent, function()
 	for k in pairs(raidGroups) do
 		raidGroups[k] = nil
 	end

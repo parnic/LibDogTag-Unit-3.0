@@ -23,6 +23,13 @@ local L = DogTag_Unit.L
 local newList = DogTag.newList
 local del = DogTag.del
 
+local wow_ver = select(4, GetBuildInfo())
+local wow_500 = wow_ver >= 50000
+local PartyChangedEvent = "PARTY_MEMBERS_CHANGED"
+if wow_500 then
+	PartyChangedEvent = "GROUP_ROSTER_UPDATE"
+end
+
 local frame
 if DogTag_Unit.oldLib and DogTag_Unit.oldLib.frame then
 	frame = DogTag_Unit.oldLib.frame
@@ -245,7 +252,7 @@ local function PARTY_MEMBERS_CHANGED()
 		end
 	end
 end
-DogTag:AddEventHandler("Unit", "PARTY_MEMBERS_CHANGED", PARTY_MEMBERS_CHANGED)
+DogTag:AddEventHandler("Unit", PartyChangedEvent, PARTY_MEMBERS_CHANGED)
 DogTag:AddEventHandler("Unit", "PLAYER_ENTERING_WORLD", PARTY_MEMBERS_CHANGED)
 
 PARTY_MEMBERS_CHANGED()
@@ -536,7 +543,7 @@ end, 9)
 DogTag:AddCompilationStep("Unit", "tagevents", function(ast, t, u, tag, tagData, kwargs, extraKwargs, compiledKwargs, events, returns)
 	if compiledKwargs["unit"] then
 		events["UnitChanged#$unit"] = true
-		events["PARTY_MEMBERS_CHANGED"] = true
+		events[PartyChangedEvent] = true
 		events["PLAYER_ENTERING_WORLD"] = true
 		local kwargs_unit = kwargs["unit"]
 		if (type(kwargs_unit) ~= "table" or kwargs_unit[1] ~= "kwarg" or kwargs_unit[2] ~= "unit") and kwargs_unit ~= extraKwargs and (type(kwargs_unit) ~= "string" or not IsNormalUnit[kwargs_unit]) then
