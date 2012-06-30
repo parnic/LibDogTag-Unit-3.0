@@ -27,6 +27,7 @@ local deadTimes = {}
 -- Parnic: support for cataclysm; Divine Intervention was removed
 local wow_ver = select(4, GetBuildInfo())
 local wow_400 = wow_ver >= 40000
+local wow_500 = wow_ver >= 50000
 local petHappinessEvent = "UNIT_HAPPINESS"
 if wow_400 then
 	petHappinessEvent = "UNIT_POWER"
@@ -371,7 +372,7 @@ DogTag:AddTag("Unit", "IsResting", {
 })
 
 DogTag:AddTag("Unit", "IsLeader", {
-	code = UnitIsPartyLeader,
+	code = wow_500 and UnitIsGroupLeader or UnitIsPartyLeader,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
