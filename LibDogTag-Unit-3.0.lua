@@ -220,9 +220,11 @@ local function refreshGUID(unit)
 	unitToGUID[unit] = guid
 	if oldGuid then
 		local guidToUnits_oldGuid = guidToUnits[oldGuid]
-		guidToUnits_oldGuid[unit] = nil
-		if not next(guidToUnits_oldGuid) then
-			guidToUnits[oldGuid] = del(guidToUnits_oldGuid)
+		if guidToUnits_oldGuid then
+			guidToUnits_oldGuid[unit] = nil
+			if not next(guidToUnits_oldGuid) then
+				guidToUnits[oldGuid] = del(guidToUnits_oldGuid)
+			end
 		end
 	end
 	
