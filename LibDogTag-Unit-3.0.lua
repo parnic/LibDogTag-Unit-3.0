@@ -119,7 +119,7 @@ end})
 DogTag.UnitToLocale = UnitToLocale
 
 -- [""] = true added 8/26 by Cybeloras. TellMeWhen icons (which implement DogTag) don't always check a unit, in which case they fall back on "", not "player".
--- Falling back on "player" (in TellMeWhen) is counter-intuitive. Falling back on "" doesn't seen to cause any issues.
+-- Falling back on "player" (in TellMeWhen) is counter-intuitive. Falling back on "" doesn't seem to cause any issues.
 local IsLegitimateUnit = { [""] = true, player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true, vehicle = true }
 DogTag.IsLegitimateUnit = IsLegitimateUnit
 local IsNormalUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true }
@@ -274,7 +274,7 @@ local function IterateUnitsWithGUID(guid)
 end
 DogTag_Unit.IterateUnitsWithGUID = IterateUnitsWithGUID
 
-local function searchForNameTag(ast)
+--[[local function searchForNameTag(ast)
 	if type(ast) ~= "table" then
 		return false
 	end
@@ -294,7 +294,7 @@ local function searchForNameTag(ast)
 		end
 	end
 	return false
-end
+end]]
 
 DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwargs)
 	if kwargTypes["unit"] then
