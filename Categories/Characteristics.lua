@@ -88,7 +88,7 @@ DogTag:AddTag("Unit", "Name", {
 		elseif unit:match("%d*vehicle%d*$") then
 			return VehicleName(unit)
 		end
-		return UnitName(unit)
+		return UnitName(unit) or DogTag.UnitToLocale[unit]
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
