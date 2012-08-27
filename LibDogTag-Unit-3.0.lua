@@ -52,23 +52,23 @@ local function fireEventForDependents(event, unit, ...)
 	end
 end
 frame:RegisterAllEvents()
-frame:SetScript("OnEvent", function(this, event, ...)
-	fireEventForDependents(event, ...)
-	if (...) == "target" then
+frame:SetScript("OnEvent", function(this, event, unit, ...)
+	fireEventForDependents(event, unit, ...)
+	if unit == "target" then
 	 	if UnitIsUnit("mouseover", "target") then
-			DogTag:FireEvent(event, "mouseover", select(2, ...))
-			fireEventForDependents(event, "mouseover", select(2, ...))
+			DogTag:FireEvent(event, "mouseover", ...)
+			fireEventForDependents(event, "mouseover", ...)
 		end
-		DogTag:FireEvent(event, "playertarget", select(2, ...))
-		fireEventForDependents(event, "playertarget", select(2, ...))
-	elseif (...) == "pet" then
-		DogTag:FireEvent(event, "playerpet", select(2, ...))
-		fireEventForDependents(event, "playerpet", select(2, ...))
-	elseif type((...)) == "string" then
-	 	local num = (...):match("^partypet(%d)$")
+		DogTag:FireEvent(event, "playertarget", ...)
+		fireEventForDependents(event, "playertarget", ...)
+	elseif unit == "pet" then
+		DogTag:FireEvent(event, "playerpet", ...)
+		fireEventForDependents(event, "playerpet", ...)
+	elseif type(unit) == "string" then
+	 	local num = unit:match("^partypet(%d)$")
 		if num then
-			DogTag:FireEvent(event, "party" .. num .. "pet", select(2, ...))
-			fireEventForDependents(event, "party" .. num .. "pet", select(2, ...))
+			DogTag:FireEvent(event, "party" .. num .. "pet", ...)
+			fireEventForDependents(event, "party" .. num .. "pet", ...)
 		end
 	end
 end)
