@@ -118,7 +118,9 @@ setmetatable(UnitToLocale, {__index=function(self, unit)
 end})
 DogTag.UnitToLocale = UnitToLocale
 
-local IsLegitimateUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true, vehicle = true }
+-- [""] = true added 8/26 by Cybeloras. TellMeWhen icons (which implement DogTag) don't always check a unit, in which case they fall back on "", not "player".
+-- Falling back on "player" (in TellMeWhen) is counter-intuitive. Falling back on "" doesn't seen to cause any issues.
+local IsLegitimateUnit = { [""] = true, player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true, npc = true, NPC = true, vehicle = true }
 DogTag.IsLegitimateUnit = IsLegitimateUnit
 local IsNormalUnit = { player = true, target = true, focus = true, pet = true, playerpet = true, mouseover = true }
 local WACKY_UNITS = { targettarget = true, playertargettarget = true, targettargettarget = true, playertargettargettarget = true, pettarget = true, playerpettarget = true, pettargettarget = true, playerpettargettarget = true }
@@ -308,7 +310,12 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		t[#t+1] = "\n"
 		t[#t+1] = [=[end;]=]
 		t[#t+1] = "\n"
-		t[#t+1] = [=[if ]=]
+		
+		
+		-- I really don't see this point to this.
+		-- It just prevents users from using custom tags that override the unit specified by the kwargs passed to AddFontString.
+		-- So I commented it out.
+		--[==[t[#t+1] = [=[if ]=]
 		t[#t+1] = extraKwargs["unit"][1]
 		t[#t+1] = [=[ ~= "player" and not UnitExists(]=]
 		t[#t+1] = extraKwargs["unit"][1]
@@ -324,7 +331,9 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		end
 		t[#t+1] = [=[, nil;]=]
 		t[#t+1] = "\n"
-		t[#t+1] = [=[end;]=]
+		t[#t+1] = [=[end;]=]]==]
+		
+		
 		t[#t+1] = "\n"
 	end
 end)
