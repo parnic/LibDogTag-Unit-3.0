@@ -5,7 +5,7 @@ Author: Cameron Kenneth Knight (ckknight@gmail.com)
 Website: http://www.wowace.com/
 Description: A library to provide a markup syntax
 ]]
- 
+
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
 local MINOR_VERSION = 90000 + tonumber(("$Revision$"):match("%d+")) or 0
 
@@ -14,7 +14,7 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local select, type, pairs, ipairs, next, setmetatable = select, type, pairs, ipairs, next, setmetatable
-local UnitIsUnit, UnitName, UnitGUID, UnitMana, UnitExists = 
+local UnitIsUnit, UnitName, UnitGUID, UnitMana, UnitExists =
 	  UnitIsUnit, UnitName, UnitGUID, UnitMana, UnitExists
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
@@ -174,12 +174,12 @@ local function getBestUnit(guid)
 	if not guid then
 		return nil
 	end
-	
+
 	local guidToUnits__guid = guidToUnits[guid]
 	if not guidToUnits__guid then
 		return nil
 	end
-	
+
 	for unit in pairs(guidToUnits__guid) do
 		if IsNormalUnit[unit] and unit ~= "mouseover" then
 			return unit
@@ -190,11 +190,11 @@ end
 local function calculateBestUnit(unit)
 	local bestUnit = getBestUnit(UnitGUID(unit))
 	local oldBestUnit = wackyUnitToBestUnit[unit]
-	
+
 	if bestUnit == oldBestUnit then
 		return
 	end
-	
+
 	wackyUnitToBestUnit[unit] = bestUnit
 	local normalUnitsWackyDependents__oldBestUnit = normalUnitsWackyDependents[oldBestUnit]
 	if normalUnitsWackyDependents__oldBestUnit then
@@ -229,7 +229,7 @@ local function refreshGUID(unit)
 			end
 		end
 	end
-	
+
 	if guid then
 		local guidToUnits_guid = guidToUnits[guid]
 		if not guidToUnits_guid then
@@ -238,7 +238,7 @@ local function refreshGUID(unit)
 		end
 		guidToUnits_guid[unit] = true
 	end
-	
+
 	for wackyUnit in pairs(WACKY_UNITS) do
 		if wackyUnitToBestUnit[wackyUnit] == unit or unitToGUID[wackyUnit] == guid then
 			calculateBestUnit(wackyUnit)
@@ -274,7 +274,7 @@ local function IterateUnitsWithGUID(guid)
 end
 DogTag_Unit.IterateUnitsWithGUID = IterateUnitsWithGUID
 
---[[local function searchForNameTag(ast)
+local function searchForNameTag(ast)
 	if type(ast) ~= "table" then
 		return false
 	end
@@ -294,7 +294,7 @@ DogTag_Unit.IterateUnitsWithGUID = IterateUnitsWithGUID
 		end
 	end
 	return false
-end]]
+end
 
 DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwargs)
 	if kwargTypes["unit"] then
@@ -310,12 +310,12 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		t[#t+1] = "\n"
 		t[#t+1] = [=[end;]=]
 		t[#t+1] = "\n"
-		
-		
+
+
 		-- I really don't see this point to this.
 		-- It just prevents users from using custom tags that override the unit specified by the kwargs passed to AddFontString.
 		-- So I commented it out.
-		--[==[t[#t+1] = [=[if ]=]
+		t[#t+1] = [=[if ]=]
 		t[#t+1] = extraKwargs["unit"][1]
 		t[#t+1] = [=[ ~= "player" and not UnitExists(]=]
 		t[#t+1] = extraKwargs["unit"][1]
@@ -331,9 +331,9 @@ DogTag:AddCompilationStep("Unit", "start", function(t, ast, kwargTypes, extraKwa
 		end
 		t[#t+1] = [=[, nil;]=]
 		t[#t+1] = "\n"
-		t[#t+1] = [=[end;]=]]==]
-		
-		
+		t[#t+1] = [=[end;]=]
+
+
 		t[#t+1] = "\n"
 	end
 end)
@@ -361,7 +361,7 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 			t[#t+1] = "\n"
 			t[#t+1] = [=[return ]=]
 			t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
-			t[#t+1] = compiledKwargs["unit"][1]	
+			t[#t+1] = compiledKwargs["unit"][1]
 			t[#t+1] = [=[));]=]
 			t[#t+1] = "\n"
 			t[#t+1] = [=[end;]=]
@@ -388,7 +388,7 @@ DogTag:AddCompilationStep("Unit", "tag", function(ast, t, tag, tagData, kwargs, 
 			t[#t+1] = "\n"
 			t[#t+1] = [=[return ]=]
 			t[#t+1] = [=[("Bad unit: %q"):format(tostring(]=]
-			t[#t+1] = compiledKwargs["other"][1]	
+			t[#t+1] = compiledKwargs["other"][1]
 			t[#t+1] = [=[));]=]
 			t[#t+1] = "\n"
 			t[#t+1] = [=[end;]=]
@@ -477,7 +477,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 		return
 	end
 	nextRefreshGUIDsTime = currentTime + 15
-	
+
 	PARTY_MEMBERS_CHANGED()
 end, 1)
 
@@ -509,7 +509,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			end
 		end
 	end
-	
+
 	if predictedPower then
 		-- Fire FastPower event for units representing player or pet.
 		local playerPower = UnitMana("player")
@@ -522,7 +522,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 				end
 			end
 		end
-		
+
 		local petPower = UnitMana("pet")
 		if petPower ~= lastPetPower then
 			lastPetPower = petPower
