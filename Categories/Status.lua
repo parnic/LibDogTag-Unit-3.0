@@ -6,13 +6,13 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, table, next, pairs, ipairs, unpack, select, GetTime = _G, table, next, pairs, ipairs, unpack, select, GetTime
-local UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected = 
+local UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected =
 	  UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected
-local UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll = 
+local UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll =
 	  UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll
-local GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo = 
+local GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo =
 	  GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo
-local UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, GetSpellInfo, IsResting = 
+local UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, GetSpellInfo, IsResting =
 	  UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, GetSpellInfo, IsResting
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
@@ -359,6 +359,9 @@ DogTag:AddTag("Unit", "PvPIcon", {
 			has = UnitFactionGroup(unit)
 		end
 		if has then
+			if has == "Neutral" then
+				has = "FFA"
+			end
 			return "|TInterface\\TargetingFrame\\UI-PVP-" .. has .. ":" .. size .. ":".. size .. ":0:0:64:64:3:38:1:36|t"
 		else
 			return nil
