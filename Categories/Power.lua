@@ -6,9 +6,9 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, select, unpack = _G, select, unpack
-local ALTERNATE_POWER_INDEX, UnitPower, UnitPowerMax, UnitPowerType = 
+local ALTERNATE_POWER_INDEX, UnitPower, UnitPowerMax, UnitPowerType =
 	  ALTERNATE_POWER_INDEX, UnitPower, UnitPowerMax, UnitPowerType
-	  
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
@@ -74,6 +74,7 @@ DogTag:AddTag("Unit", "FractionalMP", {
 	category = L["Power"]
 })
 
+
 DogTag:AddTag("Unit", "AltP", {
 	code = UnitPower,
 	arg = {
@@ -129,6 +130,7 @@ DogTag:AddTag("Unit", "FractionalAltP", {
 	example = ('[FractionalAltP] => "%d/%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.632, UnitPowerMax("player",ALTERNATE_POWER_INDEX)),
 	category = L["Power"]
 })
+
 
 DogTag:AddTag("Unit", "TypePower", {
 	code = function(unit)
@@ -293,5 +295,133 @@ DogTag:AddTag("Unit", "PowerColor", {
 	example = '["Hello":PowerColor] => "|cff3071bfHello|r"; [PowerColor "Hello"] => "|cff3071bfHello"',
 	category = L["Power"]
 })
+
+
+local wow_501 = select(4, GetBuildInfo()) >= 50100
+local specialPowers = {
+	{
+		class = "WARLOCK",
+		tag = "SoulShards",
+		arg2 = SPELL_POWER_SOUL_SHARDS,
+		eventPowerIdentifier = "SOUL_SHARDS",
+	},
+	{
+		class = "WARLOCK",
+		tag = "SoulShardParts",
+		arg2 = SPELL_POWER_SOUL_SHARDS,
+		arg3 = true,
+		eventPowerIdentifier = "SOUL_SHARDS",
+	},
+	{
+		class = "WARLOCK",
+		tag = "BurningEmbers",
+		arg2 = SPELL_POWER_BURNING_EMBERS,
+		eventPowerIdentifier = "BURNING_EMBERS",
+	},
+	{
+		class = "WARLOCK",
+		tag = "BurningEmberParts",
+		arg2 = SPELL_POWER_BURNING_EMBERS,
+		arg3 = true,
+		eventPowerIdentifier = "BURNING_EMBERS",
+	},
+	{
+		class = "WARLOCK",
+		tag = "DemonicFury",
+		arg2 = SPELL_POWER_DEMONIC_FURY,
+		eventPowerIdentifier = "DEMONIC_FURY",
+	},
+	{
+		class = "PRIEST",
+		tag = "ShadowOrbs",
+		arg2 = SPELL_POWER_SHADOW_ORBS,
+		eventPowerIdentifier = "SHADOW_ORBS",
+	},
+	{
+		class = "DRUID",
+		tag = "EclipsePower",
+		arg2 = SPELL_POWER_ECLIPSE,
+		eventPowerIdentifier = "ECLIPSE",
+	},
+	{
+		class = "PALADIN",
+		tag = "HolyPower",
+		arg2 = SPELL_POWER_HOLY_POWER,
+		eventPowerIdentifier = "HOLY_POWER",
+	},
+	{
+		class = "MONK",
+		tag = "Chi",
+		arg2 = SPELL_POWER_CHI or SPELL_POWER_LIGHT_FORCE,
+		eventPowerIdentifier = wow_501 and "CHI" or "LIGHT_FORCE",
+	},
+}
+for _, data in pairs(specialPowers) do
+	local class = data.class
+	local tag = data.tag
+	local arg2 = data.arg2
+	local arg3 = data.arg3
+	
+	local _, pclass = UnitClass("player") 
+	
+	local category = class == pclass and L["Power"] or nil
+	local noDoc = class ~= pclass
+	
+	local specialPowerEvents = "UNIT_POWER#player#" .. data.eventPowerIdentifier .. ";UNIT_MAXPOWER#player#" .. data.eventPowerIdentifier .. ";UNIT_DISPLAYPOWER#player"
+	
+	DogTag:AddTag("Unit", tag, {
+		code = function()
+			return UnitPower("player", arg2, arg3)
+		end,
+		ret = "number",
+		events = specialPowerEvents,
+		doc = class == pclass and L["Return your current special power"] or nil,
+		noDoc = noDoc,
+		example = class == pclass and ('[' .. tag .. '] => "%d"'):format(UnitPowerMax("player",arg2, arg3)*.632) or nil,
+		category = category
+	})
+
+	DogTag:AddTag("Unit", "Max" .. tag, {
+		code = function()
+			return UnitPowerMax("player", arg2, arg3)
+		end,
+		ret = "number",
+		events = specialPowerEvents,
+		doc = class == pclass and L["Return your maximum special power"] or nil,
+		noDoc = noDoc,
+		example = class == pclass and ('[Max' .. tag .. '] => "%d"'):format(UnitPowerMax("player",arg2, arg3)) or nil,
+		category = category
+	})
+
+	--[[
+	-- These are all a little redundant, and since we are creating so many tags here, I don't see much merit in these
+	-- (especially since with small power amounts [holy power max is 4, etc], percentage and such aren't very useful
+	DogTag:AddTag("Unit", "Percent" .. tag, {
+		alias = "[" .. tag .. " / Max" .. tag .. " * 100]:Round(1)",
+		doc = class == pclass and L["Return your percentage of special power"] or nil,
+		noDoc = noDoc,
+		example = class == pclass and '[Percent' .. tag .. '] => "63.2"; [Percent' .. tag .. ':Percent] => "63.2%"' or nil,
+		category = category
+	})
+
+	DogTag:AddTag("Unit", "Missing" .. tag, {
+		alias = "Max" .. tag .. " - " .. tag .. "",
+		doc = class == pclass and L["Return your missing special power"] or nil,
+		noDoc = noDoc,
+		example = class == pclass and ('[Missing' .. tag .. '] => "%d"'):format(UnitPowerMax("player",arg2, arg3)*.368) or nil,
+		category = category
+	})
+
+	DogTag:AddTag("Unit", "Fractional" .. tag, {
+		alias = "Concatenate(" .. tag .. ", '/', Max" .. tag .. ")",
+		doc = class == pclass and L["Return your current and maximum special power"] or nil,
+		noDoc = noDoc,
+		example = class == pclass and ('[Fractional' .. tag .. '] => "%d/%d"'):format(UnitPowerMax("player",arg2, arg3)*.632, UnitPowerMax("player",arg2, arg3)) or nil,
+		category = category,
+	})
+	
+	]]
+
+	end
 
 end
