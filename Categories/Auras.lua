@@ -311,7 +311,7 @@ DogTag:AddTag("Unit", "AuraDuration", {
 		'aura', 'string', '@req',
 		'unit', 'string;undef', 'player'
 	},
-	events = "Update",
+	events = "Update;Aura#$unit",
 	ret = "number;nil",
 	doc = L["Return the duration until the aura for unit is finished"],
 	example = '[AuraDuration("Renew")] => "10.135123"',
