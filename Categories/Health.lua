@@ -6,8 +6,11 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, unpack = _G, unpack
-local UnitHealth, UnitHealthMax, UnitIsGhost = 
-	  UnitHealth, UnitHealthMax, UnitIsGhost
+local UnitHealth, UnitHealthMax, UnitIsGhost, UnitGetTotalAbsorbs = 
+	  UnitHealth, UnitHealthMax, UnitIsGhost, UnitGetTotalAbsorbs
+
+-- Support for new UnitGetTotalAbsorbs functionality
+local wow_502 = select(4, GetBuildInfo()) >= 50200
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -89,6 +92,32 @@ DogTag:AddTag("Unit", "IsMaxHP", {
 	doc = L["Return True if unit is at full health"],
 	example = ('[IsMaxHP] => %q; [IsMaxHP] => ""'):format(L["True"]),
 	category = L["Health"]
+})
+
+DogTag:AddTag("Unit", "TotalAbsorb", {
+	code = UnitGetTotalAbsorbs,
+	arg = {
+		'unit', 'string;undef', 'player',
+	},
+	ret = 'number',
+	events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
+	doc = L["Return the total amount of damage the unit can take without losing health"],
+	example = ('[TotalAbsorb] => "%d"'):format(UnitHealthMax("player")*.258),
+	category = L["Health"],
+})
+
+DogTag:AddTag("Unit", "IncomingHeal", {
+	code = function(unit)
+		return UnitGetIncomingHeals(unit) or 0
+	end,
+	arg = {
+		'unit', 'string;undef', 'player',
+	},
+	ret = 'number',
+	events = "UNIT_HEAL_PREDICTION#$unit",
+	doc = L["Return the total amount of damage the unit can take without losing health"],
+	example = ('[IncomingHeal] => "%d"'):format(UnitHealthMax("player")*.258),
+	category = L["Health"],
 })
 
 DogTag:AddTag("Unit", "HPColor", {
