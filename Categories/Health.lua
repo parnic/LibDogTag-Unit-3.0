@@ -94,17 +94,19 @@ DogTag:AddTag("Unit", "IsMaxHP", {
 	category = L["Health"]
 })
 
-DogTag:AddTag("Unit", "TotalAbsorb", {
-	code = UnitGetTotalAbsorbs,
-	arg = {
-		'unit', 'string;undef', 'player',
-	},
-	ret = 'number',
-	events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
-	doc = L["Return the total amount of damage the unit can take without losing health"],
-	example = ('[TotalAbsorb] => "%d"'):format(UnitHealthMax("player")*.258),
-	category = L["Health"],
-})
+if wow_502 then
+	DogTag:AddTag("Unit", "TotalAbsorb", {
+		code = UnitGetTotalAbsorbs,
+		arg = {
+			'unit', 'string;undef', 'player',
+		},
+		ret = 'number',
+		events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
+		doc = L["Return the total amount of damage the unit can take without losing health"],
+		example = ('[TotalAbsorb] => "%d"'):format(UnitHealthMax("player")*.258),
+		category = L["Health"],
+	})
+end
 
 DogTag:AddTag("Unit", "IncomingHeal", {
 	code = function(unit)
