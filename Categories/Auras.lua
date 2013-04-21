@@ -215,6 +215,43 @@ DogTag:AddTag("Unit", "NumAura", {
 	category = L["Auras"]
 })
 
+DogTag:AddTag("Unit", "RaidStacks", {
+	code = function(aura)
+		local prefix = "raid"
+		local numPlayers = GetNumGroupMembers()
+    
+		local numAuras = 0
+    
+		if not IsInRaid() then
+			prefix = "party"
+			numPlayers = numPlayers-1
+        
+			local _, _, _, _, _, _, expirationTime, _, _, _, _ = UnitAura("player", aura, nil, "PLAYER|HELPFUL")
+			if expirationTime ~= nil then
+				numAuras = numAuras + 1
+			end
+		end
+    
+		for i=1,numPlayers do
+			local unit = prefix..i
+			local _, _, _, _, _, _, expirationTime, _, _, _, _ = UnitAura(unit, aura, nil, "PLAYER|HELPFUL")
+			if expirationTime ~= nil then
+				numAuras = numAuras + 1
+			end
+		end
+		
+		return numAuras
+	end,
+	arg = {
+		'aura', "string", '@req'
+	},
+	ret = "number",
+	events = "Update",
+	doc = L["Return the total number of units in raid/party that have the specified aura"],
+	example = '[RaidStacks("Renewing Mist")] => "5"',
+	category = L["Auras"]
+})
+
 local MOONKIN_FORM = GetSpellInfo(24858)
 local AQUATIC_FORM = GetSpellInfo(1066)
 local FLIGHT_FORM = GetSpellInfo(33943)
