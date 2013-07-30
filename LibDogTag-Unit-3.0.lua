@@ -100,6 +100,10 @@ setmetatable(UnitToLocale, {__index=function(self, unit)
 			local num = unit:match("^raid(%d%d?)$")
 			self[unit] = L["Raid member #%d"]:format(num)
 			return self[unit]
+		elseif unit:find("^boss%d$") then
+			local num = unit:match("^boss(%d)$")
+			self[unit] = L["Boss #%d"]:format(num)
+			return self[unit]
 		elseif unit:find("^partypet%d$") then
 			local num = unit:match("^partypet(%d)$")
 			self[unit] = UnitToLocale["party" .. num .. "pet"]
@@ -430,6 +434,11 @@ end)
 
 DogTag:AddEventHandler("Unit", "UNIT_TARGET", function(event, unit)
 	DogTag:FireEvent("UnitChanged", unit .. "target")
+end)
+
+DogTag:AddEventHandler("Unit", "UNIT_TARGETABLE_CHANGED", function(event, unit)
+	refreshGUID(unit)
+	DogTag:FireEvent("UnitChanged", unit)
 end)
 
 DogTag:AddEventHandler("Unit", "UNIT_PET", function(event, unit)

@@ -85,6 +85,7 @@ DogTag_Unit.L = {
 	["%s's %s"] = "%s's %s",
 	["Party member #%d"] = "Party member #%d",
 	["Raid member #%d"] = "Raid member #%d",
+	["Boss #%d"] = "Boss #%d",
 
 	-- classifications
 	["Rare"] = ITEM_QUALITY3_DESC,

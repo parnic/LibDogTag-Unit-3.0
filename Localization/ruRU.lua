@@ -84,6 +84,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["%s's %s"] = "%1$s's %2$s"
 	L["Party member #%d"] = "Член группы #%d"
 	L["Raid member #%d"] = "Член рейда #%d"
+	L["Boss #%d"] = "Boss #%d"
 
 	-- classifications
 	-- No need to change: L["Rare"] = ITEM_QUALITY3_DESC
