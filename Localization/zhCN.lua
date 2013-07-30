@@ -68,6 +68,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 	L["Party member #%d"] = "队伍成员#%d"
 	L["Raid member #%d"] = "团队成员#%d"
 	L["Boss #%d"] = "Boss #%d"
+	L["Arena enemy #%d"] = "Arena enemy #%d"
 
 	-- classifications
 	L["Rare"] = "稀有"

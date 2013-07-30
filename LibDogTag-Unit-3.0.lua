@@ -100,6 +100,10 @@ setmetatable(UnitToLocale, {__index=function(self, unit)
 			local num = unit:match("^raid(%d%d?)$")
 			self[unit] = L["Raid member #%d"]:format(num)
 			return self[unit]
+		elseif unit:find("^arena%d$") then
+			local num = unit:match("^arena(%d)$")
+			self[unit] = L["Arena enemy #%d"]:format(num)
+			return self[unit]
 		elseif unit:find("^boss%d$") then
 			local num = unit:match("^boss(%d)$")
 			self[unit] = L["Boss #%d"]:format(num)
@@ -111,6 +115,10 @@ setmetatable(UnitToLocale, {__index=function(self, unit)
 		elseif unit:find("^raidpet%d%d?$") then
 			local num = unit:match("^raidpet(%d%d?)$")
 			self[unit] = UnitToLocale["raid" .. num .. "pet"]
+			return self[unit]
+		elseif unit:find("^arenapet%d$") then
+			local num = unit:match("^arenapet(%d)$")
+			self[unit] = UnitToLocale["arena" .. num .. "pet"]
 			return self[unit]
 		end
 		self[unit] = unit
@@ -159,6 +167,20 @@ for i = 1, MAX_BOSS_FRAMES do
 	IsNormalUnit["boss" .. i] = true
 	WACKY_UNITS["boss" .. i .. "target"] = true
 	WACKY_UNITS["boss" .. i .. "targettarget"] = true
+end
+for i = 1, 5 do
+	IsLegitimateUnit["arena" .. i] = true
+	IsLegitimateUnit["arenapet" .. i] = true
+	IsLegitimateUnit["arena" .. i .. "pet"] = true
+	IsNormalUnit["arena" .. i] = true
+	IsNormalUnit["arenapet" .. i] = true
+	IsNormalUnit["arena" .. i .. "pet"] = true
+	WACKY_UNITS["arena" .. i .. "target"] = true
+	WACKY_UNITS["arenapet" .. i .. "target"] = true
+	WACKY_UNITS["arena" .. i .. "pettarget"] = true
+	WACKY_UNITS["arena" .. i .. "targettarget"] = true
+	WACKY_UNITS["arenapet" .. i .. "targettarget"] = true
+	WACKY_UNITS["arena" .. i .. "pettargettarget"] = true
 end
 setmetatable(IsLegitimateUnit, { __index = function(self, key)
 	if type(key) ~= "string" then
