@@ -506,6 +506,13 @@ end)
 local lastPlayerPower = 0
 local lastPetPower = 0
 
+local checkYield = DogTag.checkYield
+if not checkYield then
+	-- If LibDogTag doesn't include checkYield (old version)
+	-- Then just make checkYield an empty function to prevent errors.
+	checkYield = function() end
+end
+
 local nextRefreshGUIDsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	if nextRefreshGUIDsTime > currentTime then
@@ -530,6 +537,10 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			local newGUID = unitToGUID[unit]
 			if oldGUID ~= newGUID then
 				DogTag:FireEvent("UnitChanged", unit)
+
+				-- This loop is where things get hung up all the time,
+				-- so we should check for a yield right here.
+				checkYield()
 			end
 		end
 		nextUpdateWackyUnitsTime = currentTime + 0.5
