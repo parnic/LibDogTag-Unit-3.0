@@ -158,7 +158,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 			currentAuras[unit] = t
 			currentDebuffTypes[unit] = u
 			currentAuraTimes[unit] = v
-			local oldNumDebuffs = currentNumDebuffs[unit]
+			local oldNumDebuffs = rawget(currentNumDebuffs, unit)
 			currentNumDebuffs[unit] = numDebuffs
 			old = del(old)
 			oldType = del(oldType)
