@@ -270,7 +270,7 @@ local function refreshGUID(unit)
 	end
 
 	for wackyUnit in pairs(WACKY_UNITS) do
-		if wackyUnitToBestUnit[wackyUnit] == unit or unitToGUID[wackyUnit] == guid then
+		if wackyUnitToBestUnit[wackyUnit] == unit or (guid and unitToGUID[wackyUnit] == guid) then
 			calculateBestUnit(wackyUnit)
 		end
 	end
