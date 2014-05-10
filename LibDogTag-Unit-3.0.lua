@@ -586,7 +586,7 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local exists = not not UnitExists("mouseover")
 	if not exists then
 		for fs, nsList in pairs(fsToNSList) do
-			if nsListHasUnit[nsList] then
+			if nsListHasUnit[nsList] and not fs.__DT_dontcancelupdatesforMO then
 				local kwargs = fsToKwargs[fs]
 				if kwargs and kwargs["unit"] == "mouseover" then
 					fsNeedUpdate[fs] = nil
