@@ -6,19 +6,29 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G = _G
-local GetComboPoints, GetPetTimeRemaining, UnitHasVehicleUI = 
-	  GetComboPoints, GetPetTimeRemaining, UnitHasVehicleUI
+local GetComboPoints, GetPetTimeRemaining, UnitHasVehicleUI, UnitPower =
+	  GetComboPoints, GetPetTimeRemaining, UnitHasVehicleUI, UnitPower
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+local wow_ver = select(4, GetBuildInfo())
+local wow_600 = wow_ver >= 60000
 
 DogTag:AddTag("Unit", "Combos", {
 	code = function (unit, target)
 		if unit and target then
-			return GetComboPoints(unit, target)
+			if wow_600 then
+				return UnitPower(unit, 4)
+			else
+				return GetComboPoints(unit, target)
+			end
 		else
-			return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target")
+			if wow_600 then
+				return UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", 4)
+			else
+				return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target")
+			end
 		end
 	end,
 	arg = {
