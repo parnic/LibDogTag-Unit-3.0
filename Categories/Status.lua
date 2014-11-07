@@ -385,6 +385,43 @@ DogTag:AddTag("Unit", "PvPIcon", {
 	category = L["Status"]
 })
 
+DogTag:AddTag("Unit", "CombatIcon", {
+	code = function(size, unit)
+		if UnitAffectingCombat(unit) then
+			return ("|TInterface\\CharacterFrame\\UI-StateIcon:%d:%d:0:0:64:64:32:64:0:32|t"):format(size, size)
+		else
+			return nil
+		end
+	end,
+	arg = {
+		'size', 'number', 32,
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	events = "Update",
+	doc = L["Display the combat icon if the unit is in combat"],
+	example = '[CombatIcon] => "|TInterface\\CharacterFrame\\UI-StateIcon:32:32:0:0:64:64:32:64:0:32|t"; [CombatIcon] => ""',
+	category = L["Status"]
+})
+
+DogTag:AddTag("Unit", "RestingIcon", {
+	code = function(size)
+		if IsResting() then
+			return ("|TInterface\\CharacterFrame\\UI-StateIcon:%d:%d:0:0:64:64:0:32:0:32|t"):format(size, size)
+		else
+			return nil
+		end
+	end,
+	arg = {
+		'size', 'number', 32,
+	},
+	ret = "string;nil",
+	events = "PLAYER_UPDATE_RESTING",
+	doc = L["Display the resting icon if the player is resting"],
+	example = '[RestingIcon] => "|TInterface\\CharacterFrame\\UI-StateIcon:32:32:0:0:64:64:0:32:0:32|t"; [RestingIcon] => ""',
+	category = L["Status"]
+})
+
 DogTag:AddTag("Unit", "IsResting", {
 	code = IsResting,
 	ret = "boolean",
