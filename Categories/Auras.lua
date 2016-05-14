@@ -24,6 +24,7 @@ local currentAuras, currentDebuffTypes, currentAuraTimes, currentNumDebuffs
 
 -- Parnic: support for cataclysm; Divine Intervention was removed
 local wow_400 = select(4, GetBuildInfo()) >= 40000
+local wow_700 = select(4, GetBuildInfo()) >= 70000
 
 local mt = {__index=function(self, unit)
 	local auras = newList()
@@ -356,6 +357,7 @@ DogTag:AddTag("Unit", "AuraDuration", {
 })
 
 local SHADOWFORM = GetSpellInfo(15473)
+if not wow_700 then
 DogTag:AddTag("Unit", "IsShadowform", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SHADOWFORM),
 	arg = {
@@ -365,12 +367,13 @@ DogTag:AddTag("Unit", "IsShadowform", {
 	example = ('[IsShadowform] => %q; [IsShadowform] => ""'):format(L["True"]),
 	category = L["Auras"],
 })
+end
 
 local STEALTH = GetSpellInfo(1784)
-local SHADOWFORM = GetSpellInfo(58984)
+local SHADOWMELD = GetSpellInfo(58984)
 local PROWL = GetSpellInfo(5215)
 DogTag:AddTag("Unit", "IsStealthed", {
-	alias = ("HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit)"):format(STEALTH, SHADOWFORM, PROWL),
+	alias = ("HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit)"):format(STEALTH, SHADOWMELD, PROWL),
 	arg = {
 		'unit', 'string;undef', 'player'
 	},

@@ -29,6 +29,7 @@ local wow_ver = select(4, GetBuildInfo())
 local wow_400 = wow_ver >= 40000
 local wow_500 = wow_ver >= 50000
 local wow_600 = wow_ver >= 60000
+local wow_700 = wow_ver >= 60000
 local petHappinessEvent = "UNIT_HAPPINESS"
 if wow_400 then
 	petHappinessEvent = "UNIT_POWER"
@@ -521,31 +522,45 @@ DogTag:AddTag("Unit", "RaidIcon", {
 	category = L["Status"]
 })
 
-DogTag:AddTag("Unit", "IsTappedByMe", {
-	code = UnitIsTappedByPlayer,
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	ret = "boolean",
-	events = "Update",
-	doc = L["Return True if unit is tapped by you"],
-	example = '[IsTappedByMe] => "True"; [IsTappedByMe] => ""',
-	category = L["Status"]
-})
+if wow_700 then
+	DogTag:AddTag("Unit", "IsNotTappableByMe", {
+		code = UnitIsTapDenied,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = "boolean",
+		events = "Update",
+		doc = L["Return True if unit is tapped by someone else and cannot be tapped by you"],
+		example = '[IsNotTappableByMe] => "True"; [IsNotTappableByMe] => ""',
+		category = L["Status"]
+	})
+else
+	DogTag:AddTag("Unit", "IsTappedByMe", {
+		code = UnitIsTappedByPlayer,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = "boolean",
+		events = "Update",
+		doc = L["Return True if unit is tapped by you"],
+		example = '[IsTappedByMe] => "True"; [IsTappedByMe] => ""',
+		category = L["Status"]
+	})
 
-DogTag:AddTag("Unit", "IsTapped", {
-	code = function(unit)
-		return UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
-	end,
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	ret = "boolean",
-	events = "Update",
-	doc = L["Return True if unit is tapped, but not by you"],
-	example = ('[IsTapped] => %q; [IsTapped] => ""'):format(L["True"]),
-	category = L["Status"]
-})
+	DogTag:AddTag("Unit", "IsTapped", {
+		code = function(unit)
+			return UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = "boolean",
+		events = "Update",
+		doc = L["Return True if unit is tapped, but not by you"],
+		example = ('[IsTapped] => %q; [IsTapped] => ""'):format(L["True"]),
+		category = L["Status"]
+	})
+end
 
 DogTag:AddTag("Unit", "InCombat", {
 	code = UnitAffectingCombat,
