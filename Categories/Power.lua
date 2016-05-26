@@ -332,12 +332,6 @@ local specialPowers = {
 		eventPowerIdentifier = "DEMONIC_FURY",
 	},
 	{
-		class = "PRIEST",
-		tag = "ShadowOrbs",
-		arg2 = SPELL_POWER_SHADOW_ORBS,
-		eventPowerIdentifier = "SHADOW_ORBS",
-	},
-	{
 		class = "DRUID",
 		tag = "EclipsePower",
 		arg2 = SPELL_POWER_ECLIPSE,
@@ -356,19 +350,37 @@ local specialPowers = {
 		eventPowerIdentifier = wow_501 and "CHI" or "LIGHT_FORCE",
 	},
 }
+local wow_700 = select(4, GetBuildInfo()) >= 70000
+if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "PRIEST",
+		tag = "ShadowOrbs",
+		arg2 = SPELL_POWER_SHADOW_ORBS,
+		eventPowerIdentifier = "SHADOW_ORBS",
+	}
+else
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "PRIEST",
+		tag = "Insanity",
+		arg2 = SPELL_POWER_INSANITY,
+		eventPowerIdentifier = "INSANITY_POWER",
+	}
+end
 for _, data in pairs(specialPowers) do
 	local class = data.class
 	local tag = data.tag
 	local arg2 = data.arg2
 	local arg3 = data.arg3
-	
-	local _, pclass = UnitClass("player") 
-	
+
+	local _, pclass = UnitClass("player")
+
 	--local category = class == pclass and L["Power"] or nil
 	--local noDoc = class ~= pclass
-	
+
 	local specialPowerEvents = "UNIT_POWER#player#" .. data.eventPowerIdentifier .. ";UNIT_MAXPOWER#player#" .. data.eventPowerIdentifier .. ";UNIT_DISPLAYPOWER#player"
-	
+
 	DogTag:AddTag("Unit", tag, {
 		code = function()
 			return UnitPower("player", arg2, arg3)
@@ -419,7 +431,7 @@ for _, data in pairs(specialPowers) do
 		example = class == pclass and ('[Fractional' .. tag .. '] => "%d/%d"'):format(UnitPowerMax("player",arg2, arg3)*.632, UnitPowerMax("player",arg2, arg3)) or nil,
 		category = category,
 	})
-	
+
 	]]
 
 	end

@@ -19,6 +19,7 @@
 	<Script file="Categories\Power.lua" />
 	<Script file="Categories\Range.lua" />
 	<Script file="Categories\Reputation.lua" />
+	<Script file="Categories\ShadowPriestMana.lua" />
 	<Script file="Categories\Status.lua" />
 	<Script file="Categories\Talent.lua" />
 	<Script file="Categories\Threat.lua" />
