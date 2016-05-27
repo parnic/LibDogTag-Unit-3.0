@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + (tonumber(("@project-timestamp@"):match("%d+")) or 2147000000)
+local MINOR_VERSION = 90000 + (tonumber(("@file-date-integer@"):match("%d+")) or 2147000000)
 
 _G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 
