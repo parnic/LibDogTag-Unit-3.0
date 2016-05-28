@@ -190,6 +190,38 @@ DogTag:AddTag("Unit", "FractionalAltP", {
 	category = L["Power"]
 })
 
+DogTag:AddTag("Unit", "Stagger", {
+	code = UnitStagger,
+	arg = {
+		'unit', 'string;undef', 'player',
+	},
+	ret = "number",
+	events = mpEvents .. ";FastPower#$unit",
+	doc = L["Return the current stagger amount of unit"],
+	example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "PercentStagger", {
+	alias = "(Stagger(unit=unit) / MaxHP(unit=unit) * 100):Round",
+	arg = {
+		'unit', 'string;undef', 'player',
+	},
+	doc = L["Return the current stagger amount of unit"],
+	example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "FractionalStagger", {
+	alias = "Concatenate(Stagger(unit=unit), '/', MaxHP(unit=unit))",
+	arg = {
+		'unit', 'string;undef', 'player',
+	},
+	doc = L["Return the current stagger amount of unit"],
+	example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+	category = L["Power"]
+})
+
 
 DogTag:AddTag("Unit", "TypePower", {
 	code = function(unit)
