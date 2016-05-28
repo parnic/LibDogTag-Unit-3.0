@@ -75,6 +75,65 @@ DogTag:AddTag("Unit", "FractionalMP", {
 })
 
 
+DogTag:AddTag("Unit", "Mana", {
+	code = function(unit)
+		return UnitPower(unit, SPELL_POWER_MANA)
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "number",
+	events = mpEvents .. ";FastPower#$unit",
+	doc = L["Return the current mana of unit, regardless of their current power type"],
+	example = ('[Mana] => "%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)*.632),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "MaxMana", {
+	code = function(unit)
+		return UnitPowerMax(unit, SPELL_POWER_MANA)
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "number",
+	events = mpEvents,
+	doc = L["Return the maximum mana of unit, regardless of their current power type"],
+	example = ('[MaxMana] => "%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "PercentMana", {
+	alias = "[Mana(unit=unit) / MaxMana(unit=unit) * 100]:Round(1)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the percentage mana of unit, regardless of their current power type"],
+	example = '[PercentMana] => "63.2"; [PercentMana:Percent] => "63.2%"',
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "MissingMana", {
+	alias = "MaxMana(unit=unit) - Mana(unit=unit)",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the missing mana of unit, regardless of their current power type"],
+	example = ('[MissingMana] => "%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)*.368),
+	category = L["Power"]
+})
+
+DogTag:AddTag("Unit", "FractionalMana", {
+	alias = "Concatenate(Mana(unit=unit), '/', MaxMana(unit=unit))",
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	doc = L["Return the current and maximum mana of unit, regardless of their current power type"],
+	example = ('[FractionalMana] => "%d/%d"'):format(UnitPowerMax("player", SPELL_POWER_MANA)*.632, UnitPowerMax("player", SPELL_POWER_MANA)),
+	category = L["Power"]
+})
+
+
 DogTag:AddTag("Unit", "AltP", {
 	code = UnitPower,
 	arg = {
