@@ -404,31 +404,6 @@ local specialPowers = {
 		eventPowerIdentifier = "SOUL_SHARDS",
 	},
 	{
-		class = "WARLOCK",
-		tag = "BurningEmbers",
-		arg2 = SPELL_POWER_BURNING_EMBERS,
-		eventPowerIdentifier = "BURNING_EMBERS",
-	},
-	{
-		class = "WARLOCK",
-		tag = "BurningEmberParts",
-		arg2 = SPELL_POWER_BURNING_EMBERS,
-		arg3 = true,
-		eventPowerIdentifier = "BURNING_EMBERS",
-	},
-	{
-		class = "WARLOCK",
-		tag = "DemonicFury",
-		arg2 = SPELL_POWER_DEMONIC_FURY,
-		eventPowerIdentifier = "DEMONIC_FURY",
-	},
-	{
-		class = "DRUID",
-		tag = "EclipsePower",
-		arg2 = SPELL_POWER_ECLIPSE,
-		eventPowerIdentifier = "ECLIPSE",
-	},
-	{
 		class = "PALADIN",
 		tag = "HolyPower",
 		arg2 = SPELL_POWER_HOLY_POWER,
@@ -449,6 +424,35 @@ if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 		tag = "ShadowOrbs",
 		arg2 = SPELL_POWER_SHADOW_ORBS,
 		eventPowerIdentifier = "SHADOW_ORBS",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "WARLOCK",
+		tag = "BurningEmbers",
+		arg2 = SPELL_POWER_BURNING_EMBERS,
+		eventPowerIdentifier = "BURNING_EMBERS",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "WARLOCK",
+		tag = "BurningEmberParts",
+		arg2 = SPELL_POWER_BURNING_EMBERS,
+		arg3 = true,
+		eventPowerIdentifier = "BURNING_EMBERS",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "WARLOCK",
+		tag = "DemonicFury",
+		arg2 = SPELL_POWER_DEMONIC_FURY,
+		eventPowerIdentifier = "DEMONIC_FURY",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "DRUID",
+		tag = "EclipsePower",
+		arg2 = SPELL_POWER_ECLIPSE,
+		eventPowerIdentifier = "ECLIPSE",
 	}
 else
 	specialPowers[#specialPowers + 1] =
