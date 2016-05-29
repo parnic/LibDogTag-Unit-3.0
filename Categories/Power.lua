@@ -397,13 +397,6 @@ local specialPowers = {
 		eventPowerIdentifier = "SOUL_SHARDS",
 	},
 	{
-		class = "WARLOCK",
-		tag = "SoulShardParts",
-		arg2 = SPELL_POWER_SOUL_SHARDS,
-		arg3 = true,
-		eventPowerIdentifier = "SOUL_SHARDS",
-	},
-	{
 		class = "PALADIN",
 		tag = "HolyPower",
 		arg2 = SPELL_POWER_HOLY_POWER,
@@ -449,6 +442,14 @@ if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 	}
 	specialPowers[#specialPowers + 1] =
 	{
+		class = "WARLOCK",
+		tag = "SoulShardParts",
+		arg2 = SPELL_POWER_SOUL_SHARDS,
+		arg3 = true,
+		eventPowerIdentifier = "SOUL_SHARDS",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
 		class = "DRUID",
 		tag = "EclipsePower",
 		arg2 = SPELL_POWER_ECLIPSE,
@@ -457,10 +458,10 @@ if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 else
 	specialPowers[#specialPowers + 1] =
 	{
-		class = "PRIEST",
-		tag = "Insanity",
-		arg2 = SPELL_POWER_INSANITY,
-		eventPowerIdentifier = "INSANITY_POWER",
+		class = "MAGE",
+		tag = "ArcaneCharges",
+		arg2 = SPELL_POWER_ARCANE_CHARGES,
+		eventPowerIdentifier = "ARCANE_CHARGES_POWER",
 	}
 end
 for _, data in pairs(specialPowers) do
