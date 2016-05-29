@@ -10,8 +10,8 @@ local UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase
 	  UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel
 local UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitGUID, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid = 
 	  UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitGUID, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid
-local GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName = 
-	  GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName
+local GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName, UnitIsTapDenied =
+	  GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName, UnitIsTapDenied
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -545,7 +545,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 				-- either enemy or friend, no violence
 				r, g, b = unpack(DogTag.__colors.civilian)
 			end
-		elseif (not wow_700 and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) or UnitIsDead(unit) then
+		elseif (not wow_700 and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) or (wow_700 and UnitIsTapDenied(unit)) or UnitIsDead(unit) then
 			r, g, b = unpack(DogTag.__colors.tapped)
 		else
 			local reaction = UnitReaction(unit, "player")
