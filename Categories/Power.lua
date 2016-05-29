@@ -15,6 +15,7 @@ local L = DogTag_Unit.L
 
 -- Parnic: support for Cataclysm; UNIT_MANA et al changed to UNIT_(MAX)POWER
 local wow_400 = select(4, GetBuildInfo()) >= 40000
+local wow_700 = select(4, GetBuildInfo()) >= 70000
 local mpEvents = "UNIT_MANA#$unit;UNIT_RAGE#$unit;UNIT_FOCUS#$unit;UNIT_ENERGY#$unit;UNIT_RUNIC_POWER#$unit;UNIT_MAXMANA#$unit;UNIT_MAXRAGE#$unit;UNIT_MAXFOCUS#$unit;UNIT_MAXENERGY#$unit;UNIT_MAXRUNIC_POWER#$unit;UNIT_DISPLAYPOWER#$unit"
 if wow_400 then
 	mpEvents = "UNIT_POWER#$unit;UNIT_MAXPOWER#$unit;UNIT_DISPLAYPOWER#$unit"
@@ -313,6 +314,29 @@ if RUNIC_POWER then
 	})
 end
 
+if wow_700 then
+	DogTag:AddTag("Unit", "RunesAvailable", {
+		code = function(unit)
+			local numAvailable = 0
+			for i = 1, UnitPowerMax(unit, SPELL_POWER_RUNES) do
+				local _, _, available = GetRuneCooldown(i)
+				if available then
+					numAvailable = numAvailable + 1
+				end
+			end
+			return numAvailable
+		end,
+		arg = {
+			'unit', 'string;undef', 'player',
+		},
+		ret = "number",
+		events = "RUNE_POWER_UPDATE",
+		doc = L["Return the current number of runes available for unit"],
+		example = ('[RunesAvailable] => "2"'),
+		category = L["Power"]
+	})
+end
+
 DogTag:AddTag("Unit", "IsMaxMP", {
 	alias = "Boolean(MP(unit=unit) = MaxMP(unit=unit))",
 	arg = {
@@ -409,7 +433,6 @@ local specialPowers = {
 		eventPowerIdentifier = wow_501 and "CHI" or "LIGHT_FORCE",
 	},
 }
-local wow_700 = select(4, GetBuildInfo()) >= 70000
 if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 	specialPowers[#specialPowers + 1] =
 	{
