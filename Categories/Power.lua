@@ -484,7 +484,7 @@ else
 		class = "MAGE",
 		tag = "ArcaneCharges",
 		arg2 = SPELL_POWER_ARCANE_CHARGES,
-		eventPowerIdentifier = "ARCANE_CHARGES_POWER",
+		eventPowerIdentifier = "ARCANE_CHARGES",
 	}
 end
 for _, data in pairs(specialPowers) do
