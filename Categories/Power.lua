@@ -486,6 +486,41 @@ else
 		arg2 = SPELL_POWER_ARCANE_CHARGES,
 		eventPowerIdentifier = "ARCANE_CHARGES",
 	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "PRIEST",
+		tag = "Insanity",
+		arg2 = SPELL_POWER_INSANITY,
+		eventPowerIdentifier = "INSANITY",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "DEMONHUNTER",
+		tag = "Fury",
+		arg2 = SPELL_POWER_FURY,
+		eventPowerIdentifier = "FURY",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "DEMONHUNTER",
+		tag = "Pain",
+		arg2 = SPELL_POWER_PAIN,
+		eventPowerIdentifier = "PAIN",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "SHAMAN",
+		tag = "Maelstrom",
+		arg2 = SPELL_POWER_MAELSTROM,
+		eventPowerIdentifier = "MAELSTROM",
+	}
+	specialPowers[#specialPowers + 1] =
+	{
+		class = "DRUID",
+		tag = "LunarPower",
+		arg2 = SPELL_POWER_LUNAR_POWER,
+		eventPowerIdentifier = "LUNAR_POWER",
+	}
 end
 for _, data in pairs(specialPowers) do
 	local class = data.class
