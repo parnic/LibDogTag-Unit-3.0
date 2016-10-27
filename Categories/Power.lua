@@ -192,7 +192,7 @@ DogTag:AddTag("Unit", "Stagger", {
 		'unit', 'string;undef', 'player',
 	},
 	ret = "number",
-	events = "UNIT_ABSORB_AMOUNT_CHANGED#player",
+	events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
 	doc = L["Return the current stagger amount of unit"],
 	example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
 	category = L["Power"]
