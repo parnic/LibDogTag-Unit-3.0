@@ -499,13 +499,6 @@ local nsListHasUnit = setmetatable({}, { __index = function(self, key)
 	return false
 end })
 
-local predictedPower = GetCVarBool("predictedPower")
-hooksecurefunc("SetCVar", function()
-	predictedPower = GetCVarBool("predictedPower")
-end)
-local lastPlayerPower = 0
-local lastPetPower = 0
-
 local checkYield = DogTag.checkYield
 if not checkYield then
 	-- If LibDogTag doesn't include checkYield (old version)
@@ -551,31 +544,6 @@ DogTag:AddTimerHandler("Unit", function(num, currentTime)
 				local unit = kwargs and kwargs["unit"]
 				if unit and not IsNormalUnit[unit] and not wackyUnitToBestUnit[unit] then
 					fsNeedUpdate[fs] = true
-				end
-			end
-		end
-	end
-
-	if predictedPower then
-		-- Fire FastPower event for units representing player or pet.
-		local playerPower = UnitMana("player")
-		if playerPower ~= lastPlayerPower then
-			lastPlayerPower = playerPower
-			local playerGUID = unitToGUID.player
-			for unit, guid in pairs(unitToGUID) do
-				if guid == playerGUID then
-					DogTag:FireEvent("FastPower", unit)
-				end
-			end
-		end
-
-		local petPower = UnitMana("pet")
-		if petPower ~= lastPetPower then
-			lastPetPower = petPower
-			local petGUID = unitToGUID.pet
-			for unit, guid in pairs(unitToGUID) do
-				if guid == petGUID then
-					DogTag:FireEvent("FastPower", unit)
 				end
 			end
 		end
