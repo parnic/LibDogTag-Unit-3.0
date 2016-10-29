@@ -137,7 +137,7 @@ DogTag:AddTag("Unit", "AltP", {
 		'index', 'number;undef', ALTERNATE_POWER_INDEX
 	},
 	ret = "number",
-	events = "UNIT_POWER_FREQUENT#$unit#ALTERNATE",
+	events = "UNIT_POWER_FREQUENT#$unit",
 	doc = L["Return the current alternate power of unit"],
 	example = ('[AltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)*.632),
 	category = L["Power"]
@@ -150,7 +150,7 @@ DogTag:AddTag("Unit", "MaxAltP", {
 		'index', 'number;undef', ALTERNATE_POWER_INDEX
 	},
 	ret = "number",
-	events = "UNIT_MAXPOWER#$unit#ALTERNATE",
+	events = "UNIT_MAXPOWER#$unit",
 	doc = L["Return the maximum alternate power of unit"],
 	example = ('[MaxAltP] => "%d"'):format(UnitPowerMax("player",ALTERNATE_POWER_INDEX)),
 	category = L["Power"]
