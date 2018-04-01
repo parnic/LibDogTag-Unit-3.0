@@ -416,6 +416,13 @@ local specialPowers = {
 		eventPowerIdentifier = "SOUL_SHARDS",
 	},
 	{
+		class = "WARLOCK",
+		tag = "SoulShardParts",
+		arg2 = SPELL_POWER_SOUL_SHARDS,
+		arg3 = true,
+		eventPowerIdentifier = "SOUL_SHARDS",
+	},
+	{
 		class = "PALADIN",
 		tag = "HolyPower",
 		arg2 = SPELL_POWER_HOLY_POWER,
@@ -457,14 +464,6 @@ if not wow_700 then -- Parnic: shadow orbs are no more in 7.0
 		tag = "DemonicFury",
 		arg2 = SPELL_POWER_DEMONIC_FURY,
 		eventPowerIdentifier = "DEMONIC_FURY",
-	}
-	specialPowers[#specialPowers + 1] =
-	{
-		class = "WARLOCK",
-		tag = "SoulShardParts",
-		arg2 = SPELL_POWER_SOUL_SHARDS,
-		arg3 = true,
-		eventPowerIdentifier = "SOUL_SHARDS",
 	}
 	specialPowers[#specialPowers + 1] =
 	{
