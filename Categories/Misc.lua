@@ -26,9 +26,9 @@ DogTag:AddTag("Unit", "Combos", {
 			end
 		else
 			if wow_600 then
-				return UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", 4)
+				return UnitPower((UnitHasVehicleUI and UnitHasVehicleUI("player")) and "vehicle" or "player", 4)
 			else
-				return GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", "target")
+				return GetComboPoints((UnitHasVehicleUI and UnitHasVehicleUI("player")) and "vehicle" or "player", "target")
 			end
 		end
 	end,

@@ -26,7 +26,7 @@ local deadTimes = {}
 
 -- Parnic: support for cataclysm; Divine Intervention was removed
 local wow_ver = select(4, GetBuildInfo())
-local wow_classic = wow_ver < 20000 and wow_ver > 11300
+local wow_classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local wow_400 = wow_ver >= 40000
 local wow_500 = wow_ver >= 50000
 local wow_600 = wow_ver >= 60000

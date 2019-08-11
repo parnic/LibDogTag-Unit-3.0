@@ -21,8 +21,9 @@ local L = DogTag_Unit.L
 local wow_320 = select(4, GetBuildInfo()) >= 30200
 local wow_700 = select(4, GetBuildInfo()) >= 70000
 local wow_800 = select(4, GetBuildInfo()) >= 80000
+local wow_classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local GetQuestDifficultyColor
-if not wow_320 then
+if not wow_320 and not wow_classic then
 	GetQuestDifficultyColor = _G.GetDifficultyColor
 else
 	GetQuestDifficultyColor = _G.GetQuestDifficultyColor
@@ -551,7 +552,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 				-- either enemy or friend, no violence
 				r, g, b = unpack(DogTag.__colors.civilian)
 			end
-		elseif (not wow_700 and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) or (wow_700 and UnitIsTapDenied(unit)) or UnitIsDead(unit) then
+		elseif (not wow_700 and not wow_classic and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) or ((wow_700 or wow_classic) and UnitIsTapDenied(unit)) or UnitIsDead(unit) then
 			r, g, b = unpack(DogTag.__colors.tapped)
 		else
 			local reaction = UnitReaction(unit, "player")
