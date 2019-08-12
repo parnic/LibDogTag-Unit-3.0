@@ -20,7 +20,7 @@ local UnitGUID = UnitGUID
 local IsNormalUnit = DogTag.IsNormalUnit
 
 local wow_ver = select(4, GetBuildInfo())
-local wow_classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local wow_800 = wow_ver >= 80000
 
 local playerGuid = nil

@@ -21,7 +21,7 @@ local L = DogTag_Unit.L
 local wow_320 = select(4, GetBuildInfo()) >= 30200
 local wow_700 = select(4, GetBuildInfo()) >= 70000
 local wow_800 = select(4, GetBuildInfo()) >= 80000
-local wow_classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local GetQuestDifficultyColor
 if not wow_320 and not wow_classic then
 	GetQuestDifficultyColor = _G.GetDifficultyColor
