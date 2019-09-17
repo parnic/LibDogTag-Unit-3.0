@@ -457,7 +457,7 @@ DogTag:AddTag("Unit", "IsFeignedDeath", {
 })
 
 -- Parnic: pet happiness removed in 4.1
-if not wow_401 and not wow_classic then
+if not wow_401 then
 DogTag:AddTag("Unit", "HappyNum", {
 	code = function()
 		return GetPetHappiness() or 0
@@ -935,7 +935,7 @@ DogTag:AddTag("Unit", "StatusColor", {
 })
 
 -- Parnic: pet happiness removed in 4.1
-if not wow_401 and not wow_classic then
+if not wow_401 then
 DogTag:AddTag("Unit", "HappyColor", {
 	code = function(value)
 		local x = GetPetHappiness()
