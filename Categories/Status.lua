@@ -473,7 +473,7 @@ DogTag:AddTag("Unit", "HappyText", {
 	code = function()
 		return _G["PET_HAPPINESS" .. (GetPetHappiness() or 0)]
 	end,
-	ret = "number",
+	ret = "string;nil",
 	events = petHappinessEvent,
 	doc = L["Return a description of how happy your pet is"],
 	example = ('[HappyText] => %q'):format(_G.PET_HAPPINESS3),
