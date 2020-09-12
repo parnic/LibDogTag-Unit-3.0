@@ -6,8 +6,10 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, setmetatable, getmetatable, pairs, GetTime = _G, setmetatable, getmetatable, pairs, GetTime
-local IsInGuild, GetNumGuildMembers, GetGuildRosterInfo, IsInGuild, GuildRoster, UnitName = 
-	  IsInGuild, GetNumGuildMembers, GetGuildRosterInfo, IsInGuild, GuildRoster, UnitName
+local IsInGuild, GetNumGuildMembers, GetGuildRosterInfo, UnitName = 
+	  IsInGuild, GetNumGuildMembers, GetGuildRosterInfo, UnitName
+
+local GuildRoster = C_GuildInfo and C_GuildInfo.GuildRoster or GuildRoster
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
