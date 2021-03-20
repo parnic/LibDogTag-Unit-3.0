@@ -118,7 +118,7 @@ local function UPDATE_FACTION()
 		return
 	end
 	
-	for name in DogTag.IterateFactions() do
+	for name in DogTag_Unit.IterateFactions() do
 		factionList[name] = true
 	end
 	

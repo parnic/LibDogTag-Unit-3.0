@@ -13,11 +13,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-local newList = DogTag.newList
-
-local hasEvent = DogTag.hasEvent
-
-local IsNormalUnit = DogTag.IsNormalUnit
+local IsNormalUnit = DogTag_Unit.IsNormalUnit
 local newList, del = DogTag.newList, DogTag.del
 
 local currentAuras, currentDebuffTypes, currentAuraTimes, currentNumDebuffs
@@ -96,7 +92,7 @@ local auraQueue = {}
 local nextAuraUpdate = 0
 local nextWackyAuraUpdate = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
-	if currentTime >= nextAuraUpdate and hasEvent('Aura') then
+	if currentTime >= nextAuraUpdate and DogTag.hasEvent('Aura') then
 		nextAuraUpdate = currentTime + 0.5
 		if currentTime >= nextWackyAuraUpdate then
 			nextWackyAuraUpdate = currentTime + 2
