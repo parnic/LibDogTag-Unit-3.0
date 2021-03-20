@@ -17,7 +17,7 @@ local newList = DogTag.newList
 local del = DogTag.del
 local castData = {}
 local UnitGUID = UnitGUID
-local IsNormalUnit = DogTag.IsNormalUnit
+local IsNormalUnit = DogTag_Unit.IsNormalUnit
 
 local wow_ver = select(4, GetBuildInfo())
 local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC

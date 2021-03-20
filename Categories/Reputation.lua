@@ -49,7 +49,7 @@ do
 		return wrap(iter)
 	end
 end
-DogTag.IterateFactions = IterateFactions
+DogTag_Unit.IterateFactions = IterateFactions
 
 DogTag:AddTag("Unit", "Reputation", {
 	code = function(faction)
