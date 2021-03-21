@@ -1,9 +1,8 @@
 --[[
-Name: LibDogTag-3.0
-Revision: $Rev$
-Author: Cameron Kenneth Knight (ckknight@gmail.com)
-Website: http://www.wowace.com/
-Description: A library to provide a markup syntax
+Name: LibDogTag-Unit-3.0
+Revision: @project-revision@
+Website: https://www.wowace.com/projects/libdogtag-unit-3-0
+Description: A library to provide a markup syntax - unit-specific tags
 ]]
 
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
