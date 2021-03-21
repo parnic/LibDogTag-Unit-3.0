@@ -17,9 +17,11 @@ if not DogTag_Unit then
 	return
 end
 
-local DogTag = LibStub:GetLibrary(DOGTAG_MAJOR_VERSION)
+local DogTag, DogTag_Minor = LibStub:GetLibrary(DOGTAG_MAJOR_VERSION)
 if not DogTag then
 	error(("Cannot load %s without first loading %s"):format(MAJOR_VERSION, DOGTAG_MAJOR_VERSION))
+elseif DogTag_Minor < 20210319000000 then
+	error(("%s requires a newer version of %s"):format(MAJOR_VERSION, DOGTAG_MAJOR_VERSION))
 end
 
 if oldMinor then

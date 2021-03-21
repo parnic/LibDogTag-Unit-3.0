@@ -41,6 +41,16 @@ else
 	frame = CreateFrame("Frame")
 end
 DogTag_Unit.frame = frame
+
+local usedEvents = {}
+DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
+	if not usedEvents[event] then
+		usedEvents[event] = true
+		pcall(frame.RegisterEvent, frame, event)
+	end
+end)
+
+
 local normalUnitsWackyDependents = {}
 
 local function fireEventForDependents(event, unit, ...)
@@ -51,7 +61,7 @@ local function fireEventForDependents(event, unit, ...)
 		end
 	end
 end
-frame:RegisterAllEvents()
+
 frame:SetScript("OnEvent", function(this, event, unit, ...)
 	fireEventForDependents(event, unit, ...)
 	if unit == "target" then
@@ -70,6 +80,13 @@ frame:SetScript("OnEvent", function(this, event, unit, ...)
 			DogTag:FireEvent(event, "party" .. num .. "pet", ...)
 			fireEventForDependents(event, "party" .. num .. "pet", ...)
 		end
+	else
+		-- event must not be a unit event, so we can unregister it
+		-- as the only purpose of this is to replay unit events
+		-- with different unit IDs. AFAIK there are no unit events
+		-- that are ever fired without a unitid, so this shouldn't
+		-- have any false positives.
+		frame:UnregisterEvent(event)
 	end
 end)
 
