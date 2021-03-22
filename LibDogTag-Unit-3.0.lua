@@ -56,8 +56,11 @@ local normalUnitsWackyDependents = {}
 local function fireEventForDependents(event, unit, ...)
 	local wackyDependents = normalUnitsWackyDependents[unit]
 	if wackyDependents then
-		for unit in pairs(wackyDependents) do
+		unit = next(wackyDependents, nil)
+		while unit ~= nil do
+			local nextUnit = next(wackyDependents, unit)
 			DogTag:FireEvent(event, unit, ...)
+			unit = nextUnit
 		end
 	end
 end
