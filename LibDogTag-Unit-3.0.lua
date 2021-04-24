@@ -22,10 +22,9 @@ local L = DogTag_Unit.L
 local newList = DogTag.newList
 local del = DogTag.del
 
-local wow_ver = select(4, GetBuildInfo())
-local wow_500 = wow_ver >= 50000
 local PartyChangedEvent = "PARTY_MEMBERS_CHANGED"
-if wow_500 then
+if UnitIsGroupLeader then
+	-- Changed in wow 5.0
 	PartyChangedEvent = "GROUP_ROSTER_UPDATE"
 end
 

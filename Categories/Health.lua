@@ -9,8 +9,6 @@ local _G, unpack = _G, unpack
 local UnitHealth, UnitHealthMax, UnitIsGhost, UnitGetTotalAbsorbs = 
 	  UnitHealth, UnitHealthMax, UnitIsGhost, UnitGetTotalAbsorbs
 
--- Support for new UnitGetTotalAbsorbs functionality
-local wow_502 = select(4, GetBuildInfo()) >= 50200
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -94,7 +92,7 @@ DogTag:AddTag("Unit", "IsMaxHP", {
 	category = L["Health"]
 })
 
-if wow_502 then
+if UnitGetTotalAbsorbs then
 	DogTag:AddTag("Unit", "TotalAbsorb", {
 		code = UnitGetTotalAbsorbs,
 		arg = {
