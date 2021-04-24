@@ -46,7 +46,22 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 		
 		local spell, rank, displayName, icon, startTime, endTime
 		local channeling = false
-		if CastingInfo then
+		if UnitCastingInfo then
+			if cast_api_has_ranks then
+				spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+				if not spell then
+					spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+					channeling = true
+				end
+			else
+				spell, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+				rank = nil
+				if not spell then
+					spell, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+					channeling = true
+				end
+			end
+		elseif CastingInfo then
 			-- Classic only has an API for player spellcasts. No API for arbitrary units.
 			if unit == "player" then
 				spell, displayName, icon, startTime, endTime = CastingInfo()
@@ -55,19 +70,6 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 					spell, displayName, icon, startTime, endTime = ChannelInfo()
 					channeling = true
 				end
-			end
-		elseif cast_api_has_ranks then
-			spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
-			if not spell then
-				spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
-				channeling = true
-			end
-		else
-			spell, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
-			rank = nil
-			if not spell then
-				spell, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
-				channeling = true
 			end
 		end
 
