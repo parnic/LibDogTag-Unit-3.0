@@ -11,6 +11,8 @@ local UnitName, UnitFactionGroup, UnitPlayerControlled, UnitIsPlayer, UnitIsVisi
 local InCombatLockdown, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader, GetGuildInfo =
 	  InCombatLockdown, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader, GetGuildInfo
 
+local GetClassicExpansionLevel = GetClassicExpansionLevel
+
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
@@ -33,6 +35,11 @@ local function updateTT(unit)
 	local name = UnitName(unit)
 	local time = GetTime()
 	if lastUnit == unit and lastName == name and nextTime < time then
+		return
+	end
+	-- Parnic: temp: don't do any of this while Wrath Classic is crashing in these functions under certain conditions.
+	-- https://github.com/parnic/LibDogTag-Unit-3.0/issues/8
+	if InCombatLockdown() and GetClassicExpansionLevel and GetClassicExpansionLevel() == LE_EXPANSION_WRATH_OF_THE_LICH_KING then
 		return
 	end
 	lastUnit = unit
