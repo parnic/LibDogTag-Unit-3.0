@@ -17,21 +17,34 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
-local tt = CreateFrame("GameTooltip")
-tt:SetOwner(UIParent, "ANCHOR_NONE")
-tt.left = {}
-tt.right = {}
-for i = 1, 30 do
-	tt.left[i] = tt:CreateFontString()
-	tt.left[i]:SetFontObject(GameFontNormal)
-	tt.right[i] = tt:CreateFontString()
-	tt.right[i]:SetFontObject(GameFontNormal)
-	tt:AddFontStrings(tt.left[i], tt.right[i])
+local tt
+if not C_TooltipInfo then
+	tt = CreateFrame("GameTooltip")
+	tt:SetOwner(UIParent, "ANCHOR_NONE")
+	tt.left = {}
+	tt.right = {}
+	for i = 1, 30 do
+		tt.left[i] = tt:CreateFontString()
+		tt.left[i]:SetFontObject(GameFontNormal)
+		tt.right[i] = tt:CreateFontString()
+		tt.right[i]:SetFontObject(GameFontNormal)
+		tt:AddFontStrings(tt.left[i], tt.right[i])
+	end
 end
 local nextTime = 0
 local lastName
 local lastUnit
 local function updateTT(unit)
+	if C_TooltipInfo then
+		local tooltipData = C_TooltipInfo.GetUnit(unit)
+		TooltipUtil.SurfaceArgs(tooltipData)
+		for _, line in ipairs(tooltipData.lines) do
+			TooltipUtil.SurfaceArgs(line)
+		end
+
+		return tooltipData
+	end
+
 	local name = UnitName(unit)
 	local time = GetTime()
 	if lastUnit == unit and lastName == name and nextTime < time then
@@ -54,8 +67,8 @@ end
 
 local LEVEL_start = "^" .. (type(LEVEL) == "string" and LEVEL or "Level")
 local function FigureNPCGuild(unit)
-	updateTT(unit)
-	local left_2 = tt.left[2]:GetText()
+	local info = updateTT(unit)
+	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
 	if not left_2 or left_2:find(LEVEL_start) then
 		return nil
 	end
@@ -71,14 +84,20 @@ local function FigureFaction(unit)
 		return faction
 	end
 
-	updateTT(unit)
-	local left_2 = tt.left[2]:GetText()
-	local left_3 = tt.left[3]:GetText()
+	local info = updateTT(unit)
+	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
+	local left_3 = info and info.lines[3].leftText or tt.left[3]:GetText()
 	if not left_2 or not left_3 then
 		return faction
 	end
 	local hasGuild = not left_2:find(LEVEL_start)
-	local factionText = not hasGuild and left_3 or tt.left[4]:GetText()
+	local left_4
+	if info and #info.lines > 4 then
+		left_4 = info.lines[4].leftText
+	elseif tt and #tt.left > 4 then
+		left_4 = tt.left[4]:GetText()
+	end
+	local factionText = not hasGuild and left_3 or left_4
 	if factionText == PVP then
 		return faction
 	end
@@ -94,9 +113,9 @@ local function FigureZone(unit)
 	if not UnitIsConnected(unit) then
 		return nil
 	end
-	updateTT(unit)
-	local left_2 = tt.left[2]:GetText()
-	local left_3 = tt.left[3]:GetText()
+	local info = updateTT(unit)
+	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
+	local left_3 = info and info.lines[3].leftText or tt.left[3]:GetText()
 	if not left_2 or not left_3 then
 		return nil
 	end
