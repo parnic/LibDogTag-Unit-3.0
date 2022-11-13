@@ -92,9 +92,9 @@ local function FigureFaction(unit)
 	end
 	local hasGuild = not left_2:find(LEVEL_start)
 	local left_4
-	if info and #info.lines > 4 then
+	if info and #info.lines >= 4 then
 		left_4 = info.lines[4].leftText
-	elseif tt and #tt.left > 4 then
+	elseif tt and #tt.left >= 4 then
 		left_4 = tt.left[4]:GetText()
 	end
 	local factionText = not hasGuild and left_3 or left_4
