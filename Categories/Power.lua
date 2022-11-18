@@ -13,6 +13,10 @@ local SPELL_POWER_MANA, SPELL_POWER_RUNES, SPELL_POWER_CHI, SPELL_POWER_ECLIPSE,
 	  SPELL_POWER_MANA, SPELL_POWER_RUNES, SPELL_POWER_CHI, SPELL_POWER_ECLIPSE, SPELL_POWER_SOUL_SHARDS, SPELL_POWER_ARCANE_CHARGES
 local SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS =
 	  SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS
+local SPELL_POWER_RAGE, SPELL_POWER_FOCUS, SPELL_POWER_ENERGY, SPELL_POWER_COMBO_POINTS, SPELL_POWER_RUNIC_POWER, SPELL_POWER_LUNAR_POWER =
+      SPELL_POWER_RAGE, SPELL_POWER_FOCUS, SPELL_POWER_ENERGY, SPELL_POWER_COMBO_POINTS, SPELL_POWER_RUNIC_POWER, SPELL_POWER_LUNAR_POWER
+local SPELL_POWER_MAELSTROM, SPELL_POWER_INSANITY, SPELL_POWER_FURY, SPELL_POWER_PAIN =
+      SPELL_POWER_MAELSTROM, SPELL_POWER_INSANITY, SPELL_POWER_FURY, SPELL_POWER_PAIN
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -25,24 +29,64 @@ if Enum and Enum.PowerType then
 	Enum.PowerType.Mana, Enum.PowerType.Runes, Enum.PowerType.Chi, Enum.PowerType.LunarPower, Enum.PowerType.SoulShards, Enum.PowerType.ArcaneCharges
 	SPELL_POWER_BURNING_EMBERS, SPELL_POWER_HOLY_POWER, SPELL_POWER_LIGHT_FORCE, SPELL_POWER_SHADOW_ORBS =
 	Enum.PowerType.Obsolete, Enum.PowerType.HolyPower, Enum.PowerType.Obsolete, Enum.PowerType.Obsolete
+	SPELL_POWER_RAGE, SPELL_POWER_FOCUS, SPELL_POWER_ENERGY, SPELL_POWER_COMBO_POINTS, SPELL_POWER_RUNIC_POWER, SPELL_POWER_LUNAR_POWER =
+    Enum.PowerType.Rage, Enum.PowerType.Focus, Enum.PowerType.Energy, Enum.PowerType.ComboPoints, Enum.PowerType.RunicPower, Enum.PowerType.LunarPower
+	SPELL_POWER_MAELSTROM, SPELL_POWER_INSANITY, SPELL_POWER_FURY, SPELL_POWER_PAIN =
+    Enum.PowerType.Maelstrom, Enum.PowerType.Insanity, Enum.PowerType.Fury, Enum.PowerType.Pain
 end
 
+-- copied from Blizzard_CombatText, which isn't exposed anywhere else
+local powerEnumFromStringLookup =
+{
+	[MANA:lower()] = SPELL_POWER_MANA,
+	[RAGE:lower()] = SPELL_POWER_RAGE,
+	[FOCUS:lower()] = SPELL_POWER_FOCUS,
+	[ENERGY:lower()] = SPELL_POWER_ENERGY,
+	[COMBO_POINTS:lower()] = SPELL_POWER_COMBO_POINTS,
+	[RUNES:lower()] = SPELL_POWER_RUNES,
+	[RUNIC_POWER:lower()] = SPELL_POWER_RUNIC_POWER,
+	[SOUL_SHARDS:lower()] = SPELL_POWER_SOUL_SHARDS,
+	[LUNAR_POWER:lower()] = SPELL_POWER_LUNAR_POWER,
+	[HOLY_POWER:lower()] = SPELL_POWER_HOLY_POWER,
+	-- [ALTERNATE:lower()] = SPELL_POWER_ALTERNATE,
+	[MAELSTROM:lower()] = SPELL_POWER_MAELSTROM,
+	[CHI:lower()] = SPELL_POWER_CHI,
+	[INSANITY:lower()] = SPELL_POWER_INSANITY,
+	[ARCANE_CHARGES:lower()] = SPELL_POWER_ARCANE_CHARGES,
+	[FURY:lower()] = SPELL_POWER_FURY,
+	[PAIN:lower()] = SPELL_POWER_PAIN,
+}
+
 DogTag:AddTag("Unit", "MP", {
-	code = UnitPower,
+	code = function(unit, type)
+		local enum
+		if type then
+			enum = powerEnumFromStringLookup[type:lower()]
+		end
+		return UnitPower(unit, enum)
+	end,
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	ret = "number",
 	events = "UNIT_POWER_FREQUENT#$unit;UNIT_DISPLAYPOWER#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
-	example = ('[MP] => "%d"'):format(UnitPowerMax("player")*.632),
+	example = ('[MP] => "%d"'):format(UnitPower("player")*.632),
 	category = L["Power"]
 })
 
 DogTag:AddTag("Unit", "MaxMP", {
-	code = UnitPowerMax,
+	code = function(unit, type)
+		local enum
+		if type then
+			enum = powerEnumFromStringLookup[type:lower()]
+		end
+		return UnitPowerMax(unit, enum)
+	end,
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	ret = "number",
 	events = "UNIT_MAXPOWER#$unit",
@@ -52,9 +96,10 @@ DogTag:AddTag("Unit", "MaxMP", {
 })
 
 DogTag:AddTag("Unit", "PercentMP", {
-	alias = "[MP(unit=unit) / MaxMP(unit=unit) * 100]:Round(1)",
+	alias = "[MP(unit=unit, type=type) / MaxMP(unit=unit, type=type) * 100]:Round(1)",
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the percentage mana/rage/energy of unit"],
 	example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"',
@@ -62,9 +107,10 @@ DogTag:AddTag("Unit", "PercentMP", {
 })
 
 DogTag:AddTag("Unit", "MissingMP", {
-	alias = "MaxMP(unit=unit) - MP(unit=unit)",
+	alias = "MaxMP(unit=unit, type=type) - MP(unit=unit, type=type)",
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the missing mana/rage/energy of unit"],
 	example = ('[MissingMP] => "%d"'):format(UnitPowerMax("player")*.368),
@@ -72,9 +118,10 @@ DogTag:AddTag("Unit", "MissingMP", {
 })
 
 DogTag:AddTag("Unit", "FractionalMP", {
-	alias = "Concatenate(MP(unit=unit), '/', MaxMP(unit=unit))",
+	alias = "Concatenate(MP(unit=unit, type=type), '/', MaxMP(unit=unit, type=type))",
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the current and maximum mana/rage/energy of unit"],
 	example = ('[FractionalMP] => "%d/%d"'):format(UnitPowerMax("player")*.632, UnitPowerMax("player")),
@@ -83,9 +130,7 @@ DogTag:AddTag("Unit", "FractionalMP", {
 
 
 DogTag:AddTag("Unit", "Mana", {
-	code = function(unit)
-		return UnitPower(unit, SPELL_POWER_MANA)
-	end,
+	alias = ("MP(unit=unit, type=%q)"):format(L["Mana"]),
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
@@ -97,9 +142,7 @@ DogTag:AddTag("Unit", "Mana", {
 })
 
 DogTag:AddTag("Unit", "MaxMana", {
-	code = function(unit)
-		return UnitPowerMax(unit, SPELL_POWER_MANA)
-	end,
+	alias = ("MaxMP(unit=unit, type=%q)"):format(L["Mana"]),
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
@@ -348,9 +391,10 @@ if GetRuneCooldown then
 end
 
 DogTag:AddTag("Unit", "IsMaxMP", {
-	alias = "Boolean(MP(unit=unit) = MaxMP(unit=unit))",
+	alias = "Boolean(MP(unit=unit, type=type) = MaxMP(unit=unit, type=type))",
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return True if unit is at full rage/mana/energy"],
 	example = ('[IsMaxMP] => %q; [IsMaxMP] => ""'):format(L["True"]),
@@ -358,9 +402,10 @@ DogTag:AddTag("Unit", "IsMaxMP", {
 })
 
 DogTag:AddTag("Unit", "HasMP", {
-	alias = "Boolean(MaxMP(unit=unit) > 0)",
+	alias = "Boolean(MaxMP(unit=unit, type=type) > 0)",
 	arg = {
-		'unit', 'string;undef', 'player'
+		'unit', 'string;undef', 'player',
+		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return True if unit has any power type at all"],
 	example = ('[HasMP] => %q; [HasMP] => ""'):format(L["True"]),
