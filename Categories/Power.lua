@@ -43,19 +43,41 @@ local powerEnumFromStringLookup =
 	[FOCUS:lower()] = SPELL_POWER_FOCUS,
 	[ENERGY:lower()] = SPELL_POWER_ENERGY,
 	[COMBO_POINTS:lower()] = SPELL_POWER_COMBO_POINTS,
-	[RUNES:lower()] = SPELL_POWER_RUNES,
-	[RUNIC_POWER:lower()] = SPELL_POWER_RUNIC_POWER,
-	[SOUL_SHARDS:lower()] = SPELL_POWER_SOUL_SHARDS,
-	[LUNAR_POWER:lower()] = SPELL_POWER_LUNAR_POWER,
-	[HOLY_POWER:lower()] = SPELL_POWER_HOLY_POWER,
-	-- [ALTERNATE:lower()] = SPELL_POWER_ALTERNATE,
-	[MAELSTROM:lower()] = SPELL_POWER_MAELSTROM,
-	[CHI:lower()] = SPELL_POWER_CHI,
-	[INSANITY:lower()] = SPELL_POWER_INSANITY,
-	[ARCANE_CHARGES:lower()] = SPELL_POWER_ARCANE_CHARGES,
-	[FURY:lower()] = SPELL_POWER_FURY,
-	[PAIN:lower()] = SPELL_POWER_PAIN,
 }
+
+if RUNES then
+	powerEnumFromStringLookup[RUNES:lower()] = SPELL_POWER_RUNES
+end
+if RUNIC_POWER then
+	powerEnumFromStringLookup[RUNIC_POWER:lower()] = SPELL_POWER_RUNIC_POWER
+end
+if SOUL_SHARDS then
+	powerEnumFromStringLookup[SOUL_SHARDS:lower()] = SPELL_POWER_SOUL_SHARDS
+end
+if LUNAR_POWER then
+	powerEnumFromStringLookup[LUNAR_POWER:lower()] = SPELL_POWER_LUNAR_POWER
+end
+if HOLY_POWER then
+	powerEnumFromStringLookup[HOLY_POWER:lower()] = SPELL_POWER_HOLY_POWER
+end
+if MAELSTROM then
+	powerEnumFromStringLookup[MAELSTROM:lower()] = SPELL_POWER_MAELSTROM
+end
+if CHI then
+	powerEnumFromStringLookup[CHI:lower()] = SPELL_POWER_CHI
+end
+if INSANITY then
+	powerEnumFromStringLookup[INSANITY:lower()] = SPELL_POWER_INSANITY
+end
+if ARCANE_CHARGES then
+	powerEnumFromStringLookup[ARCANE_CHARGES:lower()] = SPELL_POWER_ARCANE_CHARGES
+end
+if FURY then
+	powerEnumFromStringLookup[FURY:lower()] = SPELL_POWER_FURY
+end
+if PAIN then
+	powerEnumFromStringLookup[PAIN:lower()] = SPELL_POWER_PAIN
+end
 
 DogTag:AddTag("Unit", "MP", {
 	code = function(unit, type)
@@ -72,7 +94,7 @@ DogTag:AddTag("Unit", "MP", {
 	ret = "number",
 	events = "UNIT_POWER_FREQUENT#$unit;UNIT_DISPLAYPOWER#$unit",
 	doc = L["Return the current mana/rage/energy of unit"],
-	example = ('[MP] => "%d"'):format(UnitPower("player")*.632),
+	example = ('[MP] => "%d"; [MP("player", "Energy")] => "65"'):format(UnitPowerMax("player")*.632),
 	category = L["Power"]
 })
 
@@ -91,7 +113,7 @@ DogTag:AddTag("Unit", "MaxMP", {
 	ret = "number",
 	events = "UNIT_MAXPOWER#$unit",
 	doc = L["Return the maximum mana/rage/energy of unit"],
-	example = ('[MaxMP] => "%d"'):format(UnitPowerMax("player")),
+	example = ('[MaxMP] => "%d"; [MaxMP("player", "Energy")] => "100"'):format(UnitPowerMax("player")),
 	category = L["Power"]
 })
 
@@ -102,7 +124,7 @@ DogTag:AddTag("Unit", "PercentMP", {
 		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the percentage mana/rage/energy of unit"],
-	example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"',
+	example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"; [PercentMP("player", "Energy")] => "65"',
 	category = L["Power"]
 })
 
@@ -113,7 +135,7 @@ DogTag:AddTag("Unit", "MissingMP", {
 		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the missing mana/rage/energy of unit"],
-	example = ('[MissingMP] => "%d"'):format(UnitPowerMax("player")*.368),
+	example = ('[MissingMP] => "%d"; [MissingMP("player", "Energy")] => "35"'):format(UnitPowerMax("player")*.368),
 	category = L["Power"]
 })
 
@@ -124,13 +146,13 @@ DogTag:AddTag("Unit", "FractionalMP", {
 		'type', 'string;undef', '@undef',
 	},
 	doc = L["Return the current and maximum mana/rage/energy of unit"],
-	example = ('[FractionalMP] => "%d/%d"'):format(UnitPowerMax("player")*.632, UnitPowerMax("player")),
+	example = ('[FractionalMP] => "%d/%d"; [FractionalMP("player", "Energy")] => "65/100"'):format(UnitPowerMax("player")*.632, UnitPowerMax("player")),
 	category = L["Power"]
 })
 
 
 DogTag:AddTag("Unit", "Mana", {
-	alias = ("MP(unit=unit, type=%q)"):format(L["Mana"]),
+	alias = ("MP(unit=unit, type=%q)"):format(MANA:lower()),
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
@@ -142,7 +164,7 @@ DogTag:AddTag("Unit", "Mana", {
 })
 
 DogTag:AddTag("Unit", "MaxMana", {
-	alias = ("MaxMP(unit=unit, type=%q)"):format(L["Mana"]),
+	alias = ("MaxMP(unit=unit, type=%q)"):format(MANA:lower()),
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
