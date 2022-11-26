@@ -65,15 +65,36 @@ local function updateTT(unit)
 	end
 end
 
+-- tooltips can contain any data, including quest info, so check for the type of the line before using it, if present
+local function TooltipLineCouldBeGuild(line)
+	if not line then
+		return false
+	end
+	if not Enum or not Enum.TooltipDataLineType then
+		return false
+	end
+
+	return line.type == Enum.TooltipDataLineType.None
+end
+
+-- there's no special flag for factions vs guilds as of this writing, but if that gets added, this will make things easier
+local function TooltipLineCouldBeFaction(line)
+	return TooltipLineCouldBeGuild(TooltipLineCouldBeGuild)
+end
+
 local LEVEL_start = "^" .. (type(LEVEL) == "string" and LEVEL or "Level")
 local function FigureNPCGuild(unit)
 	local info = updateTT(unit)
-	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
+	local left_2
+	if info then
+		left_2 = info.lines[2] and info.lines[2].leftText or nil
+	elseif tt then
+		left_2 = tt.left[2] and tt.left[2]:GetText() or nil
+	end
 	if not left_2 or left_2:find(LEVEL_start) then
 		return nil
 	end
-	-- tooltips can contain any data, including quest info, so check for the type of the line before using it, if present
-	if Enum and Enum.TooltipDataLineType and info and info.lines[2] and info.lines[2].type ~= Enum.TooltipDataLineType.None then
+	if not TooltipLineCouldBeGuild(info and info.lines[2] or nil) then
 		return nil
 	end
 	return left_2
@@ -89,16 +110,23 @@ local function FigureFaction(unit)
 	end
 
 	local info = updateTT(unit)
-	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
-	local left_3 = info and info.lines[3].leftText or tt.left[3]:GetText()
+	local left_2
+	local left_3
+	if info then
+		left_2 = info.lines[2] and info.lines[2].leftText or nil
+		left_3 = info.lines[3] and info.lines[3].leftText or nil
+	elseif tt then
+		left_2 = tt.left[2] and tt.left[2]:GetText() or nil
+		left_3 = tt.left[3] and tt.left[3]:GetText() or nil
+	end
 	if not left_2 or not left_3 then
 		return faction
 	end
 	local hasGuild = not left_2:find(LEVEL_start)
 	local left_4
-	if info and #info.lines >= 4 then
+	if info and info.lines[4] then
 		left_4 = info.lines[4].leftText
-	elseif tt and #tt.left >= 4 then
+	elseif tt and tt.left[4] then
 		left_4 = tt.left[4]:GetText()
 	end
 	local factionText = not hasGuild and left_3 or left_4
@@ -118,21 +146,44 @@ local function FigureZone(unit)
 		return nil
 	end
 	local info = updateTT(unit)
-	local left_2 = info and info.lines[2].leftText or tt.left[2]:GetText()
-	local left_3 = info and info.lines[3].leftText or tt.left[3]:GetText()
+	local left_2
+	local left_3
+	local left_4
+	local left_5
+	if info then
+		left_2 = info.lines[2] and info.lines[2].leftText or nil
+		left_3 = info.lines[3] and info.lines[3].leftText or nil
+		left_4 = info.lines[4] and info.lines[4].leftText or nil
+		left_5 = info.lines[5] and info.lines[5].leftText or nil
+	elseif tt then
+		left_2 = tt.left[2] and tt.left[2]:GetText() or nil
+		left_3 = tt.left[3] and tt.left[3]:GetText() or nil
+		left_4 = tt.left[4] and tt.left[4]:GetText() or nil
+		left_5 = tt.left[5] and tt.left[5]:GetText() or nil
+	end
 	if not left_2 or not left_3 then
 		return nil
 	end
 	local hasGuild = not left_2:find(LEVEL_start)
-	local factionText = not hasGuild and left_3 or tt.left[4]:GetText()
+	if info and not TooltipLineCouldBeGuild(info.lines[2]) then
+		hasGuild = false
+	end
+	local factionText = not hasGuild and left_3 or left_4
+	if info then
+		if not hasGuild then
+			factionText = TooltipLineCouldBeFaction(info.lines[3]) and left_3 or nil
+		else
+			factionText = TooltipLineCouldBeFaction(info.lines[4]) and left_4 or nil
+		end
+	end
 	if factionText == PVP then
 		factionText = nil
 	end
 	local hasFaction = factionText and not UnitPlayerControlled(unit) and not UnitIsPlayer(unit) and (UnitFactionGroup(unit) or factionList[factionText])
 	if hasGuild and hasFaction then
-		return tt.left[5]:GetText()
+		return left_5
 	elseif hasGuild or hasFaction then
-		return tt.left[4]:GetText()
+		return left_4
 	else
 		return left_3
 	end
