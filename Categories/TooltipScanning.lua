@@ -79,7 +79,7 @@ end
 
 -- there's no special flag for factions vs guilds as of this writing, but if that gets added, this will make things easier
 local function TooltipLineCouldBeFaction(line)
-	return TooltipLineCouldBeGuild(TooltipLineCouldBeGuild)
+	return TooltipLineCouldBeGuild(line)
 end
 
 local LEVEL_start = "^" .. (type(LEVEL) == "string" and LEVEL or "Level")
