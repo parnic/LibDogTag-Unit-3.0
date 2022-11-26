@@ -94,7 +94,7 @@ local function FigureNPCGuild(unit)
 	if not left_2 or left_2:find(LEVEL_start) then
 		return nil
 	end
-	if not TooltipLineCouldBeGuild(info and info.lines[2] or nil) then
+	if info and not TooltipLineCouldBeGuild(info.lines[2]) then
 		return nil
 	end
 	return left_2
