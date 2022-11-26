@@ -72,6 +72,10 @@ local function FigureNPCGuild(unit)
 	if not left_2 or left_2:find(LEVEL_start) then
 		return nil
 	end
+	-- tooltips can contain any data, including quest info, so check for the type of the line before using it, if present
+	if Enum and Enum.TooltipDataLineType and info and info.lines[2] and info.lines[2].type ~= Enum.TooltipDataLineType.None then
+		return nil
+	end
 	return left_2
 end
 
