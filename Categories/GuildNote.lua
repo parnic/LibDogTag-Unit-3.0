@@ -69,7 +69,11 @@ end)
 
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	if currentTime > nextGuildRosterUpdate then
-		if IsInGuild() then
+		if IsInGuild() 
+		-- CommunitiesFrame check workaround for 
+		-- https://github.com/parnic/LibDogTag-Unit-3.0/issues/12
+		and (not CommunitiesFrame or not CommunitiesFrame:IsVisible()) 
+		then
 			GuildRoster()
 		end
 		nextGuildRosterUpdate = currentTime + 20
