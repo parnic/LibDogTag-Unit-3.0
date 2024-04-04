@@ -25,7 +25,7 @@ local function formatMinMax(min, max)
 end
 
 local found = false
-DogTag:AddAddonFinder("Unit", "LibStub", "LibRangeCheck-2.0", function(RangeCheckLib)
+DogTag:AddAddonFinder("Unit", "LibStub", "LibRangeCheck-3.0", function(RangeCheckLib)
 	found = true
 	function MinRange_func(unit)
 		return (RangeCheckLib:getRange(unit))
