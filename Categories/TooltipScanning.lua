@@ -19,7 +19,7 @@ local L = DogTag_Unit.L
 
 local tt
 if not C_TooltipInfo then
-	tt = CreateFrame("GameTooltip")
+	tt = CreateFrame("GameTooltip", "LibDogTag-Unit-3.0-"..MAJOR_VERSION.."."..MINOR_VERSION)
 	tt:SetOwner(UIParent, "ANCHOR_NONE")
 	tt.left = {}
 	tt.right = {}
