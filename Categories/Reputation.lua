@@ -7,15 +7,59 @@ end
 
 local _G, coroutine = _G, coroutine
 local wrap, yield = coroutine.wrap, coroutine.yield
-local GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader = 
-	  GetWatchedFactionInfo, GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader
+
+local GetWatchedFactionInfo = C_Reputation and C_Reputation.GetWatchedFactionData and function()
+	local data = C_Reputation.GetWatchedFactionData()
+	return data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding
+end or _G.GetWatchedFactionInfo
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
 local IterateFactions, TerminateIterateFactions
-do
+if C_Reputation and C_Reputation.GetNumFactions then
+	local GetNumFactions = C_Reputation.GetNumFactions
+	local GetFactionDataByIndex = C_Reputation.GetFactionDataByIndex
+	local ExpandFactionHeader = C_Reputation.ExpandFactionHeader
+	local CollapseFactionHeader = C_Reputation.CollapseFactionHeader
+
+	local currentOpenHeader
+	local function iter()
+		for i = 1, GetNumFactions() do
+			local data = GetFactionDataByIndex(i)
+			if data.isHeader == 1 then
+				if data.isCollapsed == 1 then
+					local NumFactions = GetNumFactions()
+					ExpandFactionHeader(i)
+					currentOpenHeader = i
+					NumFactions = GetNumFactions() - NumFactions
+					for j = i+1, i+NumFactions do
+						yield(GetFactionInfo(j))
+					end
+					CollapseFactionHeader(i)
+					currentOpenHeader = nil
+				end
+			else
+				yield(data.name, data.description, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding)
+			end
+		end
+	end
+	function TerminateIterateFactions()
+		if currentOpenHeader then
+			CollapseFactionHeader(currentOpenHeader)
+			currentOpenHeader = nil
+		end
+	end
+
+	function IterateFactions()
+		currentOpenHeader = nil
+		return wrap(iter)
+	end
+else
+	local GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader = 
+		  GetNumFactions, GetFactionInfo, ExpandFactionHeader, CollapseFactionHeader
+
 	local currentOpenHeader
 	local function iter()
 		for i = 1, GetNumFactions() do
