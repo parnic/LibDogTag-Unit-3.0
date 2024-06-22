@@ -968,7 +968,7 @@ DogTag:AddTag("Unit", "HappyColor", {
 end
 
 -- Parnic: DI removed in Cataclysm
-local DIVINE_INTERVENTION = GetSpellInfo(19752)
+local DIVINE_INTERVENTION = (GetSpellInfo or C_Spell.GetSpellName)(19752)
 if DIVINE_INTERVENTION then
 DogTag:AddTag("Unit", "Status", {
 	alias = ("Offline(unit=unit) or (HasDivineIntervention(unit=unit) ? %q) or (IsFeignedDeath(unit=unit) ? %q) or [if Dead(unit=unit) then ((HasSoulstone(unit=unit) ? %q) or Dead(unit=unit))]"):format(DIVINE_INTERVENTION, L["Feigned Death"], L["Soulstoned"]),

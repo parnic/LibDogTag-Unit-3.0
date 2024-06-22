@@ -6,8 +6,11 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local select, pairs, rawget, GetTime, setmetatable = select, pairs, rawget, GetTime, setmetatable
-local GetSpellInfo, UnitAura, UnitIsFriend, UnitClass, UnitPowerType = 
-	  GetSpellInfo, UnitAura, UnitIsFriend, UnitClass, UnitPowerType
+local UnitAura, UnitIsFriend, UnitClass, UnitPowerType = 
+	  UnitAura, UnitIsFriend, UnitClass, UnitPowerType
+	  
+-- GetSpellInfo removed in WoW 11.0
+local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -300,12 +303,12 @@ DogTag:AddTag("Unit", "RaidStacks", {
 	category = L["Auras"]
 })
 
-local MOONKIN_FORM = GetSpellInfo(24858)
-local AQUATIC_FORM = GetSpellInfo(1066)
-local FLIGHT_FORM = GetSpellInfo(33943)
-local SWIFT_FLIGHT_FORM = GetSpellInfo(40120)
-local TRAVEL_FORM = GetSpellInfo(783)
-local TREE_OF_LIFE = GetSpellInfo(33891)
+local MOONKIN_FORM = GetSpellName(24858)
+local AQUATIC_FORM = GetSpellName(1066)
+local FLIGHT_FORM = GetSpellName(33943)
+local SWIFT_FLIGHT_FORM = GetSpellName(40120)
+local TRAVEL_FORM = GetSpellName(783)
+local TREE_OF_LIFE = GetSpellName(33891)
 
 local function DruidForm(unit)
 		local _, c = UnitClass(unit)
@@ -403,7 +406,7 @@ DogTag:AddTag("Unit", "AuraDuration", {
 	category = L["Auras"],
 })
 
-local SHADOWFORM = GetSpellInfo(15473) or GetSpellInfo(232698)
+local SHADOWFORM = GetSpellName(15473) or GetSpellName(232698)
 if SHADOWFORM then
 DogTag:AddTag("Unit", "IsShadowform", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SHADOWFORM),
@@ -416,13 +419,13 @@ DogTag:AddTag("Unit", "IsShadowform", {
 })
 end
 
-local STEALTH = GetSpellInfo(1784)
+local STEALTH = GetSpellName(1784)
 local SHADOWMELD =
-	GetSpellInfo(58984)  -- BFA
-	or GetSpellInfo(20580)  -- Classic TBC
-	or GetSpellInfo(743) -- Classic Vanilla
+	GetSpellName(58984)  -- BFA
+	or GetSpellName(20580)  -- Classic TBC
+	or GetSpellName(743) -- Classic Vanilla
 
-local PROWL = GetSpellInfo(5215)
+local PROWL = GetSpellName(5215)
 DogTag:AddTag("Unit", "IsStealthed", {
 	alias = ("HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit) or HasAura(aura=%q, unit=unit)"):format(STEALTH, SHADOWMELD, PROWL),
 	arg = {
@@ -433,7 +436,7 @@ DogTag:AddTag("Unit", "IsStealthed", {
 	category = L["Auras"]
 })
 
-local SHIELD_WALL = GetSpellInfo(871)
+local SHIELD_WALL = GetSpellName(871)
 DogTag:AddTag("Unit", "HasShieldWall", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SHIELD_WALL),
 	arg = {
@@ -444,7 +447,7 @@ DogTag:AddTag("Unit", "HasShieldWall", {
 	category = L["Auras"]
 })
 
-local LAST_STAND = GetSpellInfo(12975)
+local LAST_STAND = GetSpellName(12975)
 DogTag:AddTag("Unit", "HasLastStand", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(LAST_STAND),
 	arg = {
@@ -455,7 +458,7 @@ DogTag:AddTag("Unit", "HasLastStand", {
 	category = L["Auras"]
 })
 
-local SOULSTONE_RESURRECTION = GetSpellInfo(20707)
+local SOULSTONE_RESURRECTION = GetSpellName(20707)
 DogTag:AddTag("Unit", "HasSoulstone", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(SOULSTONE_RESURRECTION),
 	arg = {
@@ -466,7 +469,7 @@ DogTag:AddTag("Unit", "HasSoulstone", {
 	category = L["Auras"]
 })
 
-local MISDIRECTION = GetSpellInfo(34477)
+local MISDIRECTION = GetSpellName(34477)
 if MISDIRECTION then -- WoW Classic compat
 	DogTag:AddTag("Unit", "HasMisdirection", {
 		alias = ("HasAura(aura=%q, unit=unit)"):format(MISDIRECTION),
@@ -479,7 +482,7 @@ if MISDIRECTION then -- WoW Classic compat
 	})
 end
 
-local ICE_BLOCK = GetSpellInfo(27619)
+local ICE_BLOCK = GetSpellName(27619)
 DogTag:AddTag("Unit", "HasIceBlock", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(ICE_BLOCK),
 	arg = {
@@ -490,7 +493,7 @@ DogTag:AddTag("Unit", "HasIceBlock", {
 	category = L["Auras"]
 })
 
-local INVISIBILITY = GetSpellInfo(66)
+local INVISIBILITY = GetSpellName(66)
 DogTag:AddTag("Unit", "HasInvisibility", {
 	alias = ("HasAura(aura=%q, unit=unit)"):format(INVISIBILITY),
 	arg = {
@@ -502,7 +505,7 @@ DogTag:AddTag("Unit", "HasInvisibility", {
 })
 
 -- Parnic: DI removed in Cataclysm
-local DIVINE_INTERVENTION = GetSpellInfo(19752)
+local DIVINE_INTERVENTION = GetSpellName(19752)
 if DIVINE_INTERVENTION then
 	DogTag:AddTag("Unit", "HasDivineIntervention", {
 		alias = ("HasAura(aura=%q, unit=unit)"):format(DIVINE_INTERVENTION),
