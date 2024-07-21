@@ -37,9 +37,11 @@ local lastUnit
 local function updateTT(unit)
 	if C_TooltipInfo then
 		local tooltipData = C_TooltipInfo.GetUnit(unit)
-		TooltipUtil.SurfaceArgs(tooltipData)
-		for _, line in ipairs(tooltipData.lines) do
-			TooltipUtil.SurfaceArgs(line)
+		if TooltipUtil.SurfaceArgs then
+			TooltipUtil.SurfaceArgs(tooltipData)
+			for _, line in ipairs(tooltipData.lines) do
+				TooltipUtil.SurfaceArgs(line)
+			end
 		end
 
 		return tooltipData
