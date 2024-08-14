@@ -8,6 +8,17 @@ end
 local select, pairs, rawget, GetTime, setmetatable = select, pairs, rawget, GetTime, setmetatable
 local UnitAura, UnitIsFriend, UnitClass, UnitPowerType = 
 	  UnitAura, UnitIsFriend, UnitClass, UnitPowerType
+
+if not UnitAura and C_UnitAuras and C_UnitAuras.GetAuraDataByIndex then
+	UnitAura = function(unitToken, index, filter)
+		local auraData = C_UnitAuras.GetAuraDataByIndex(unitToken, index, filter)
+		if not auraData then
+			return nil
+		end
+
+		return AuraUtil.UnpackAuraData(auraData)
+	end
+end
 	  
 -- GetSpellInfo removed in WoW 11.0
 local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
