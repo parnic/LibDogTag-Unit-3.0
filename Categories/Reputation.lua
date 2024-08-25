@@ -44,7 +44,7 @@ if C_Reputation and C_Reputation.GetNumFactions then
 				else
 					yield(data.name, data.description, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding)
 				end
-				en
+			end
 		end
 	end
 	function TerminateIterateFactions()
