@@ -28,20 +28,22 @@ if C_Reputation and C_Reputation.GetNumFactions then
 	local function iter()
 		for i = 1, GetNumFactions() do
 			local data = GetFactionDataByIndex(i)
-			if data.isHeader == 1 then
-				if data.isCollapsed == 1 then
-					local NumFactions = GetNumFactions()
-					ExpandFactionHeader(i)
-					currentOpenHeader = i
-					NumFactions = GetNumFactions() - NumFactions
-					for j = i+1, i+NumFactions do
-						yield(GetFactionInfo(j))
+			if data then
+				if data.isHeader == 1 then
+					if data.isCollapsed == 1 then
+						local NumFactions = GetNumFactions()
+						ExpandFactionHeader(i)
+						currentOpenHeader = i
+						NumFactions = GetNumFactions() - NumFactions
+						for j = i+1, i+NumFactions do
+							yield(GetFactionInfo(j))
+						end
+						CollapseFactionHeader(i)
+						currentOpenHeader = nil
 					end
-					CollapseFactionHeader(i)
-					currentOpenHeader = nil
+				else
+					yield(data.name, data.description, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding)
 				end
-			else
-				yield(data.name, data.description, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding)
 			end
 		end
 	end
