@@ -103,7 +103,7 @@ DogTag:AddTag("Unit", "SimpleName", {
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
-	ret = "string",
+	ret = "string;nil",
 	events = "UNIT_NAME_UPDATE#$unit",
 	doc = L["Return the name of unit"],
 	example = ('[SimpleName] => %q'):format(UnitName("player")),
