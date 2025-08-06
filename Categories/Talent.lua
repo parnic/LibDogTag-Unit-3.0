@@ -9,8 +9,20 @@ end
 local _G, table, setmetatable, rawget = _G, table, setmetatable, rawget
 local UnitName, GetActiveTalentGroup, GetTalentTabInfo, UnitIsPlayer =
 	  UnitName, GetActiveTalentGroup, GetTalentTabInfo, UnitIsPlayer
-local GetSpecialization, GetSpecializationInfo
-	= GetSpecialization, GetSpecializationInfo
+local GetSpecialization, GetSpecializationInfo, GetActiveSpecGroup
+	= GetSpecialization, GetSpecializationInfo, GetActiveSpecGroup
+
+if not GetSpecialization and C_SpecializationInfo then
+	GetSpecialization = C_SpecializationInfo.GetSpecialization
+end
+
+if not GetSpecializationInfo and C_SpecializationInfo then
+	GetSpecializationInfo = C_SpecializationInfo.GetSpecializationInfo
+end
+
+if not GetActiveSpecGroup and C_SpecializationInfo then
+	GetActiveSpecGroup = C_SpecializationInfo.GetActiveSpecGroup
+end
 
 if GetActiveSpecGroup then
 	GetActiveTalentGroup = GetActiveSpecGroup
