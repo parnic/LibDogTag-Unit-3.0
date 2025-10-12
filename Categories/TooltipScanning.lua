@@ -20,7 +20,7 @@ local L = DogTag_Unit.L
 local tt
 if not C_TooltipInfo then
 	tt = CreateFrame("GameTooltip", "LibDogTag-Unit-3.0-"..MAJOR_VERSION.."."..MINOR_VERSION)
-	tt:SetOwner(UIParent, "ANCHOR_NONE")
+	tt:SetOwner(WorldFrame, "ANCHOR_NONE")
 	tt.left = {}
 	tt.right = {}
 	for i = 1, 30 do
@@ -62,8 +62,8 @@ local function updateTT(unit)
 	nextTime = time + 1
 	tt:ClearLines()
 	tt:SetUnit(unit)
-	if not tt:IsOwned(UIParent) then
-		tt:SetOwner(UIParent, "ANCHOR_NONE")
+	if not tt:IsOwned(WorldFrame) then
+		tt:SetOwner(WorldFrame, "ANCHOR_NONE")
 	end
 end
 
