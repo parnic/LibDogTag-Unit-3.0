@@ -272,7 +272,7 @@ if UnitStagger then  -- WoW Classic compat
 		ret = "number",
 		events = "UNIT_ABSORB_AMOUNT_CHANGED#$unit",
 		doc = L["Return the current stagger amount of unit"],
-		example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+		example = ('[Stagger] => "%d"'):format(123),
 		category = L["Power"]
 	})
 
@@ -282,7 +282,7 @@ if UnitStagger then  -- WoW Classic compat
 			'unit', 'string;undef', 'player',
 		},
 		doc = L["Return the current stagger amount of unit"],
-		example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+		example = ('[Stagger] => "%d"'):format(123),
 		category = L["Power"]
 	})
 
@@ -292,7 +292,7 @@ if UnitStagger then  -- WoW Classic compat
 			'unit', 'string;undef', 'player',
 		},
 		doc = L["Return the current stagger amount of unit"],
-		example = ('[Stagger] => "%d"'):format(UnitStagger("player")),
+		example = ('[Stagger] => "%d"'):format(123),
 		category = L["Power"]
 	})
 end
