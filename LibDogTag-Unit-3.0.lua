@@ -21,6 +21,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local L = DogTag_Unit.L
 local newList = DogTag.newList
 local del = DogTag.del
+local issecretvalue = DogTag.issecretvalue
 
 local PartyChangedEvent = "PARTY_MEMBERS_CHANGED"
 if UnitIsGroupLeader then
@@ -66,7 +67,8 @@ end
 frame:SetScript("OnEvent", function(this, event, unit, ...)
 	fireEventForDependents(event, unit, ...)
 	if unit == "target" then
-	 	if UnitIsUnit("mouseover", "target") then
+		local isMouseover = UnitIsUnit("mouseover", "target");
+	 	if not issecretvalue(isMouseover) and isMouseover then
 			DogTag:FireEvent(event, "mouseover", ...)
 			fireEventForDependents(event, "mouseover", ...)
 		end
@@ -238,7 +240,7 @@ local guidToUnits = {}
 local wackyUnitToBestUnit = {}
 
 local function getBestUnit(guid)
-	if not guid then
+	if not guid or issecretvalue(guid) then
 		return nil
 	end
 
@@ -282,6 +284,8 @@ end
 
 local function refreshGUID(unit)
 	local guid = UnitGUID(unit)
+	if issecretvalue(guid) then return end
+
 	local oldGuid = unitToGUID[unit]
 	if guid == oldGuid then
 		return
@@ -570,7 +574,7 @@ end, 1)
 local nextUpdateWackyUnitsTime = 0
 DogTag:AddTimerHandler("Unit", function(num, currentTime)
 	local mouseoverGUID = UnitGUID("mouseover")
-	if mouseoverGUID ~= unitToGUID["mouseover"] then
+	if not issecretvalue(mouseoverGUID) and mouseoverGUID ~= unitToGUID["mouseover"] then
 		unitToGUID["mouseover"] = mouseoverGUID
 		DogTag:FireEvent("UnitChanged", "mouseover")
 	end
