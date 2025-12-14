@@ -52,7 +52,7 @@ if UnitHealthPercent then
 local UnitHealthPercent = UnitHealthPercent
 DogTag:AddTag("Unit", "PercentHP", {
 	code = function(unit)
-		return UnitHealthPercent(unit, true, true)
+		return UnitHealthPercent(unit, true)
 	end,
 	arg = {
 		'unit', 'string;undef', 'player',
@@ -156,8 +156,8 @@ DogTag:AddTag("Unit", "IncomingHeal", {
 	category = L["Health"],
 })
 
-if UnitHealthPercentColor then
-local UnitHealthPercentColor = UnitHealthPercentColor
+if UnitHealthPercent then
+local UnitHealthPercent = UnitHealthPercent
 local healthColorCurve = C_CurveUtil.CreateColorCurve()
 healthColorCurve:SetType(Enum.LuaCurveType.Linear)
 healthColorCurve:AddPoint(0, CreateColor(unpack(DogTag.__colors.minHP)))
@@ -166,7 +166,7 @@ healthColorCurve:AddPoint(1, CreateColor(unpack(DogTag.__colors.maxHP)))
 
 DogTag:AddTag("Unit", "HPColor", {
 	code = function(value, unit)
-		local color = UnitHealthPercentColor(unit, healthColorCurve, true)
+		local color = UnitHealthPercent(unit, true, healthColorCurve)
 		if value then
 			return color:WrapTextInColorCode(value)
 		else
