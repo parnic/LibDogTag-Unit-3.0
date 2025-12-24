@@ -117,27 +117,74 @@ DogTag:AddTag("Unit", "MaxMP", {
 	category = L["Power"]
 })
 
-DogTag:AddTag("Unit", "PercentMP", {
-	alias = "[MP(unit=unit, type=type) / MaxMP(unit=unit, type=type) * 100]:Round(1)",
-	arg = {
-		'unit', 'string;undef', 'player',
-		'type', 'string;undef', '@undef',
-	},
-	doc = L["Return the percentage mana/rage/energy of unit"],
-	example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"; [PercentMP("player", "Energy")] => "65"',
-	category = L["Power"]
-})
+if UnitPowerPercent and C_Secrets and C_Secrets.HasSecretRestrictions() then
+	-- NB: We check HasSecretRestrictions because  sometimes
+	-- returns floating point errors 
+	local UnitPowerPercent = UnitPowerPercent
+	local ScaleTo100 = CurveConstants.ScaleTo100
+	DogTag:AddTag("Unit", "PercentMP", {
+		code = function(unit, type)
+			local enum
+			if type then
+				enum = powerEnumFromStringLookup[type:lower()]
+			end
+			return UnitPowerPercent(unit, enum, false, ScaleTo100)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player',
+			'type', 'string;undef', '@undef',
+		},
+		ret = 'number',
+		events = "UNIT_POWER_FREQUENT#$unit;UNIT_DISPLAYPOWER#$unit;UNIT_MAXPOWER#$unit",
+		doc = L["Return the percentage mana/rage/energy of unit"],
+		example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"; [PercentMP("player", "Energy")] => "65"',
+		category = L["Power"]
+	})
+else
+	DogTag:AddTag("Unit", "PercentMP", {
+		alias = "[MP(unit=unit, type=type) / MaxMP(unit=unit, type=type) * 100]:Round(1)",
+		arg = {
+			'unit', 'string;undef', 'player',
+			'type', 'string;undef', '@undef',
+		},
+		doc = L["Return the percentage mana/rage/energy of unit"],
+		example = '[PercentMP] => "63.2"; [PercentMP:Percent] => "63.2%"; [PercentMP("player", "Energy")] => "65"',
+		category = L["Power"]
+	})
+end
 
-DogTag:AddTag("Unit", "MissingMP", {
-	alias = "MaxMP(unit=unit, type=type) - MP(unit=unit, type=type)",
-	arg = {
-		'unit', 'string;undef', 'player',
-		'type', 'string;undef', '@undef',
-	},
-	doc = L["Return the missing mana/rage/energy of unit"],
-	example = ('[MissingMP] => "%d"; [MissingMP("player", "Energy")] => "35"'):format(UnitPowerMax("player")*.368),
-	category = L["Power"]
-})
+if UnitPowerMissing then
+local UnitPowerMissing = UnitPowerMissing
+	DogTag:AddTag("Unit", "MissingMP", {
+		code = function(unit, type)
+			local enum
+			if type then
+				enum = powerEnumFromStringLookup[type:lower()]
+			end
+			return UnitPowerMissing(unit, enum)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player',
+			'type', 'string;undef', '@undef',
+		},
+		ret = "number",
+		events = "UNIT_POWER_FREQUENT#$unit;UNIT_DISPLAYPOWER#$unit;UNIT_MAXPOWER#$unit",
+		doc = L["Return the missing mana/rage/energy of unit"],
+		example = ('[MissingMP] => "%d"; [MissingMP("player", "Energy")] => "35"'):format(UnitPowerMax("player")*.368),
+		category = L["Power"]
+	})
+else
+	DogTag:AddTag("Unit", "MissingMP", {
+		alias = "MaxMP(unit=unit, type=type) - MP(unit=unit, type=type)",
+		arg = {
+			'unit', 'string;undef', 'player',
+			'type', 'string;undef', '@undef',
+		},
+		doc = L["Return the missing mana/rage/energy of unit"],
+		example = ('[MissingMP] => "%d"; [MissingMP("player", "Energy")] => "35"'):format(UnitPowerMax("player")*.368),
+		category = L["Power"]
+	})
+end
 
 DogTag:AddTag("Unit", "FractionalMP", {
 	alias = "Concatenate(MP(unit=unit, type=type), '/', MaxMP(unit=unit, type=type))",

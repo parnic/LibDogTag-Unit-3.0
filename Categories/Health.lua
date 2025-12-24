@@ -48,32 +48,32 @@ DogTag:AddTag("Unit", "MaxHP", {
 	category = L["Health"],
 })
 
-if UnitHealthPercent then
-local UnitHealthPercent = UnitHealthPercent
-DogTag:AddTag("Unit", "PercentHP", {
-	code = function(unit)
-		return UnitHealthPercent(unit, true)
-	end,
-	arg = {
-		'unit', 'string;undef', 'player',
-		'known', 'boolean', false,
-	},
-	ret = 'number',
-	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
-	doc = L["Return the percentage health of unit"],
-	example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
-	category = L["Health"],
-})
+if UnitHealthPercent and C_Secrets and C_Secrets.HasSecretRestrictions() then
+	local UnitHealthPercent = UnitHealthPercent
+	local ScaleTo100 = CurveConstants.ScaleTo100
+	DogTag:AddTag("Unit", "PercentHP", {
+		code = function(unit)
+			return UnitHealthPercent(unit, true, ScaleTo100)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = 'number',
+		events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+		doc = L["Return the percentage health of unit"],
+		example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
+		category = L["Health"],
+	})
 else
-DogTag:AddTag("Unit", "PercentHP", {
-	alias = [=[[HP(unit=unit) / MaxHP(unit=unit) * 100]:Round(1)]=],
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	doc = L["Return the percentage health of unit"],
-	example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
-	category = L["Health"],
-})
+	DogTag:AddTag("Unit", "PercentHP", {
+		alias = [=[[HP(unit=unit) / MaxHP(unit=unit) * 100]:Round(1)]=],
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		doc = L["Return the percentage health of unit"],
+		example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
+		category = L["Health"],
+	})
 end
 
 if UnitHealthMissing then
