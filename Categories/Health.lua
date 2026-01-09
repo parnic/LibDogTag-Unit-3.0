@@ -17,7 +17,7 @@ local L = DogTag_Unit.L
 DogTag:AddTag("Unit", "HP", {
 	code = function(unit)
 		local hp = UnitHealth(unit)
-		if hp == 1 and UnitIsGhost(unit) then
+		if UnitIsGhost(unit) and not issecretvalue(hp) and hp == 1 then
 			return 0
 		end
 		return hp
@@ -48,27 +48,63 @@ DogTag:AddTag("Unit", "MaxHP", {
 	category = L["Health"],
 })
 
-DogTag:AddTag("Unit", "PercentHP", {
-	alias = [=[[HP(unit=unit) / MaxHP(unit=unit) * 100]:Round(1)]=],
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	doc = L["Return the percentage health of unit"],
-	example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
-	category = L["Health"],
-})
+if UnitHealthPercent and C_Secrets and C_Secrets.HasSecretRestrictions() then
+	local UnitHealthPercent = UnitHealthPercent
+	local ScaleTo100 = CurveConstants.ScaleTo100
+	DogTag:AddTag("Unit", "PercentHP", {
+		code = function(unit)
+			return UnitHealthPercent(unit, true, ScaleTo100)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = 'number',
+		events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+		doc = L["Return the percentage health of unit"],
+		example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
+		category = L["Health"],
+	})
+else
+	DogTag:AddTag("Unit", "PercentHP", {
+		alias = [=[[HP(unit=unit) / MaxHP(unit=unit) * 100]:Round(1)]=],
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		doc = L["Return the percentage health of unit"],
+		example = '[PercentHP] => "75.8"; [PercentHP:Percent] => "75.8%"',
+		category = L["Health"],
+	})
+end
 
-DogTag:AddTag("Unit", "MissingHP", {
-	alias = [=[MaxHP(unit=unit) - HP(unit=unit)]=],
-	arg = {
-		'unit', 'string;undef', 'player',
-		'known', 'boolean', false,
-	},
-	ret = "number",
-	doc = L["Return the missing health of unit"],
-	example = ('[MissingHP] => "%d"'):format(UnitHealthMax("player")*.242),
-	category = L["Health"]
-})
+if UnitHealthMissing then
+	local UnitHealthMissing = UnitHealthMissing
+	DogTag:AddTag("Unit", "MissingHP", {
+		code = function(unit)
+			return UnitHealthMissing(unit)
+		end,
+		arg = {
+			'unit', 'string;undef', 'player',
+			'known', 'boolean', false,
+		},
+		ret = "number",
+		events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+		doc = L["Return the missing health of unit"],
+		example = ('[MissingHP] => "%d"'):format(UnitHealthMax("player")*.242),
+		category = L["Health"]
+	})
+else
+	DogTag:AddTag("Unit", "MissingHP", {
+		alias = [=[MaxHP(unit=unit) - HP(unit=unit)]=],
+		arg = {
+			'unit', 'string;undef', 'player',
+			'known', 'boolean', false,
+		},
+		ret = "number",
+		doc = L["Return the missing health of unit"],
+		example = ('[MissingHP] => "%d"'):format(UnitHealthMax("player")*.242),
+		category = L["Health"]
+	})
+end
 
 DogTag:AddTag("Unit", "FractionalHP", {
 	alias = [=[Concatenate(HP(unit=unit), "/", MaxHP(unit=unit))]=],
@@ -120,51 +156,80 @@ DogTag:AddTag("Unit", "IncomingHeal", {
 	category = L["Health"],
 })
 
-DogTag:AddTag("Unit", "HPColor", {
-	code = function(value, unit)
-		local perc = UnitHealth(unit) / UnitHealthMax(unit)
-		local r1, g1, b1
-		local r2, g2, b2
-		if perc <= 0.5 then
-			perc = perc * 2
-			r1, g1, b1 = unpack(DogTag.__colors.minHP)
-			r2, g2, b2 = unpack(DogTag.__colors.midHP)
-		else
-			perc = perc * 2 - 1
-			r1, g1, b1 = unpack(DogTag.__colors.midHP)
-			r2, g2, b2 = unpack(DogTag.__colors.maxHP)
-		end
-		local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
-		if r < 0 then
-			r = 0
-		elseif r > 1 then
-			r = 1
-		end
-		if g < 0 then
-			g = 0
-		elseif g > 1 then
-			g = 1
-		end
-		if b < 0 then
-			b = 0
-		elseif b > 1 then
-			b = 1
-		end
-		if value then
-			return ("|cff%02x%02x%02x%s|r"):format(r*255, g*255, b*255, value)
-		else
-			return ("|cff%02x%02x%02x"):format(r*255, g*255, b*255)
-		end
-	end,
-	arg = {
-		'value', 'string;undef', "@undef",
-		'unit', 'string;undef', 'player'
-	},
-	ret = "string",
-	events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
-	doc = L["Return the color or wrap value with the health color of unit"],
-	example = '["Hello":HPColor] => "|cffff7f00Hello|r"; [HPColor "Hello"] => "|cffff7f00Hello"',
-	category = L["Health"]
-})
+if UnitHealthPercent then
+	local UnitHealthPercent = UnitHealthPercent
+	local healthColorCurve = C_CurveUtil.CreateColorCurve()
+	healthColorCurve:SetType(Enum.LuaCurveType.Linear)
+	healthColorCurve:AddPoint(0, CreateColor(unpack(DogTag.__colors.minHP)))
+	healthColorCurve:AddPoint(0.5, CreateColor(unpack(DogTag.__colors.midHP)))
+	healthColorCurve:AddPoint(1, CreateColor(unpack(DogTag.__colors.maxHP)))
+
+	DogTag:AddTag("Unit", "HPColor", {
+		code = function(value, unit)
+			local color = UnitHealthPercent(unit, true, healthColorCurve)
+			if value then
+				return color:WrapTextInColorCode(value)
+			else
+				return color:GenerateHexColorMarkup()
+			end
+		end,
+		arg = {
+			'value', 'string;undef', "@undef",
+			'unit', 'string;undef', 'player'
+		},
+		ret = "string",
+		events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+		doc = L["Return the color or wrap value with the health color of unit"],
+		example = '["Hello":HPColor] => "|cffff7f00Hello|r"; [HPColor "Hello"] => "|cffff7f00Hello"',
+		category = L["Health"]
+	})
+else
+	DogTag:AddTag("Unit", "HPColor", {
+		code = function(value, unit)
+			local perc = UnitHealth(unit) / UnitHealthMax(unit)
+			local r1, g1, b1
+			local r2, g2, b2
+			if perc <= 0.5 then
+				perc = perc * 2
+				r1, g1, b1 = unpack(DogTag.__colors.minHP)
+				r2, g2, b2 = unpack(DogTag.__colors.midHP)
+			else
+				perc = perc * 2 - 1
+				r1, g1, b1 = unpack(DogTag.__colors.midHP)
+				r2, g2, b2 = unpack(DogTag.__colors.maxHP)
+			end
+			local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
+			if r < 0 then
+				r = 0
+			elseif r > 1 then
+				r = 1
+			end
+			if g < 0 then
+				g = 0
+			elseif g > 1 then
+				g = 1
+			end
+			if b < 0 then
+				b = 0
+			elseif b > 1 then
+				b = 1
+			end
+			if value then
+				return ("|cff%02x%02x%02x%s|r"):format(r*255, g*255, b*255, value)
+			else
+				return ("|cff%02x%02x%02x"):format(r*255, g*255, b*255)
+			end
+		end,
+		arg = {
+			'value', 'string;undef', "@undef",
+			'unit', 'string;undef', 'player'
+		},
+		ret = "string",
+		events = "UNIT_HEALTH#$unit;UNIT_MAXHEALTH#$unit",
+		doc = L["Return the color or wrap value with the health color of unit"],
+		example = '["Hello":HPColor] => "|cffff7f00Hello|r"; [HPColor "Hello"] => "|cffff7f00Hello"',
+		category = L["Health"]
+	})
+end
 
 end
