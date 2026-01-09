@@ -152,7 +152,7 @@ else
 end
 
 if UnitPowerMissing then
-local UnitPowerMissing = UnitPowerMissing
+	local UnitPowerMissing = UnitPowerMissing
 	DogTag:AddTag("Unit", "MissingMP", {
 		code = function(unit, type)
 			local enum
