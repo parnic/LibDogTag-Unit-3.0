@@ -13,6 +13,7 @@ local UnitHealth, UnitHealthMax, UnitIsGhost, UnitGetTotalAbsorbs =
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
+local issecretvalue = DogTag.issecretvalue
 
 DogTag:AddTag("Unit", "HP", {
 	code = function(unit)
