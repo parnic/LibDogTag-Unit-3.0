@@ -18,6 +18,7 @@ local del = DogTag.del
 local castData = {}
 local UnitGUID = UnitGUID
 local IsNormalUnit = DogTag_Unit.IsNormalUnit
+local issecretvalue = DogTag.issecretvalue
 
 local wow_ver = select(4, GetBuildInfo())
 local cast_api_has_ranks = wow_ver < 80000 and WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
@@ -35,7 +36,7 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 	local nextSpell, nextRank, nextTarget
 	local function updateInfo(event, unit)
 		local guid = UnitGUID(unit)
-		if not guid then
+		if not guid or issecretvalue(guid) then
 			return
 		end
 		local data = castData[guid]
