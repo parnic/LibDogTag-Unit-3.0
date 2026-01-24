@@ -37,7 +37,7 @@ local function populateCastData(event, unit, data)
 		return false
 	end
 
-	local spell, rank, displayName, icon, startTime, endTime
+	local spell, rank, displayName, icon, startTime, endTime, _, spellID
 	local channeling = false
 	if UnitCastingInfo then
 		if cast_api_has_ranks then
@@ -47,20 +47,20 @@ local function populateCastData(event, unit, data)
 				channeling = true
 			end
 		else
-			spell, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+			spell, displayName, icon, startTime, endTime, _, _, _, spellID = UnitCastingInfo(unit)
 			rank = nil
 			if not spell then
-				spell, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
+				spell, displayName, icon, startTime, endTime, _, _, spellID = UnitChannelInfo(unit)
 				channeling = true
 			end
 		end
 	elseif CastingInfo then
 		-- Classic only has an API for player spellcasts. No API for arbitrary units.
 		if unit == "player" then
-			spell, displayName, icon, startTime, endTime = CastingInfo()
+			spell, displayName, icon, startTime, endTime, _, _, _, spellID = CastingInfo()
 			rank = nil
 			if not spell then
-				spell, displayName, icon, startTime, endTime = ChannelInfo()
+				spell, displayName, icon, startTime, endTime, _, _, spellID = ChannelInfo()
 				channeling = true
 			end
 		end
@@ -89,7 +89,7 @@ local function populateCastData(event, unit, data)
 		if UnitSpellTargetName then
 			data.target = UnitSpellTargetName(unit)
 		elseif not issecretvalue(guid) and guid == playerGuid
-			and not issecretvalue(spell) and spell == nextSpell
+			and not issecretvalue(spellID) and spellID == nextSpell
 			and rank == nextRank then
 			data.target = nextTarget
 		end
@@ -233,13 +233,11 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 	DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_CHANNEL_STOP", updateInfo)
 	DogTag:AddEventHandler("Unit", "UnitChanged", updateInfo)
 
-	DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", function(event, unit, spell, rank, target)
+	DogTag:AddEventHandler("Unit", "UNIT_SPELLCAST_SENT", function(event, unit, target, castGUID, spellID)
 
 		-- The purpose of this event is to predict the next spell target.
-		-- This seems to be removed in at least wow_800
-		if unit == "player" and cast_api_has_ranks then
-			nextSpell = spell
-			nextRank = rank and tonumber(rank:match("%d+"))
+		if unit == "player" then
+			nextSpell = spellID
 			nextTarget = target ~= "" and target or nil
 		end
 	end)
