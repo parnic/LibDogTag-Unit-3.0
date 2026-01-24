@@ -6,8 +6,8 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, pairs, wipe, tonumber, GetTime = _G, pairs, wipe, tonumber, GetTime
-local UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo, UnitCastingDuration, UnitChannelDuration =
-	  UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo, UnitCastingDuration, UnitChannelDuration
+local UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo, UnitCastingDuration, UnitChannelDuration, UnitSpellTargetName =
+	  UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo, UnitCastingDuration, UnitChannelDuration, UnitSpellTargetName
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -86,7 +86,9 @@ local function populateCastData(event, unit, data)
 		else
 			data.delay = 0
 		end
-		if not issecretvalue(guid) and guid == playerGuid
+		if UnitSpellTargetName then
+			data.target = UnitSpellTargetName(unit)
+		elseif not issecretvalue(guid) and guid == playerGuid
 			and not issecretvalue(spell) and spell == nextSpell
 			and rank == nextRank then
 			data.target = nextTarget
