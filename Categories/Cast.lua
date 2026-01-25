@@ -238,7 +238,7 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 		-- The purpose of this event is to predict the next spell target.
 		if unit == "player" then
 			nextSpell = spellID
-			nextTarget = target ~= "" and target or nil
+			nextTarget = target
 		end
 	end)
 
