@@ -19,6 +19,7 @@ local UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, Ge
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
+local issecretvalue = DogTag.issecretvalue
 local L = DogTag_Unit.L
 local GetNameServer = DogTag_Unit.GetNameServer
 
@@ -92,7 +93,8 @@ local function PARTY_MEMBERS_CHANGED(event)
 			afkTimes[guid] = nil
 		else
 			offlineTimes[guid] = nil
-			if UnitIsAFK(unit) then
+			local afk = UnitIsAFK(unit)
+			if not issecretvalue(afk) and afk then
 				if not afkTimes[guid] then
 					afkTimes[guid] = GetTime()
 				end
@@ -179,7 +181,8 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 				end
 			end
 
-			if UnitIsAFK(unit) then
+			local afk = UnitIsAFK(unit)
+			if not issecretvalue(afk) and afk then
 				if not afkTimes[guid] then
 					afkTimes[guid] = GetTime()
 				end
@@ -308,7 +311,8 @@ DogTag:AddTag("Unit", "AFK", {
 
 DogTag:AddTag("Unit", "DND", {
 	code = function(unit)
-		if UnitIsDND(unit) then
+		local dnd = UnitIsDND(unit)
+		if not issecretvalue(dnd) and dnd then
 			return L["DND"]
 		else
 			return nil
