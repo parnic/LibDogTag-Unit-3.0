@@ -8,8 +8,8 @@ end
 local _G, table, next, pairs, ipairs, unpack, select, GetTime = _G, table, next, pairs, ipairs, unpack, select, GetTime
 local UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected =
 	  UnitIsPartyLeader, UnitIsFeignDeath, UnitIsTappedByPlayer, UnitIsUnit, UnitIsCharmed, UnitIsVisible, UnitHasVehicleUI, UnitIsConnected
-local UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll =
-	  UnitExists, UnitGUID, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll
+local UnitExists, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll =
+	  UnitExists, UnitAffectingCombat, UnitIsAFK, UnitIsDeadOrGhost, UnitIsGhost, UnitIsDead, UnitIsDND, UnitIsPVP, UnitIsPVPFreeForAll
 local GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo =
 	  GetNumRaidMembers, GetNumPartyMembers, GetPetHappiness, GetRaidTargetIndex, UnitIsTapped, GetBindingText, GetBindingKey, GetRaidRosterInfo
 local UnitIsGroupLeader, GetNumGroupMembers =
@@ -22,6 +22,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 local issecretvalue = DogTag.issecretvalue
 local L = DogTag_Unit.L
 local GetNameServer = DogTag_Unit.GetNameServer
+local UnitGUID = DogTag_Unit.UnitGUIDSafe
 
 local offlineTimes = {}
 local afkTimes = {}
