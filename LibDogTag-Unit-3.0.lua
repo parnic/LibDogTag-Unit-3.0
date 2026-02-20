@@ -23,6 +23,16 @@ local newList = DogTag.newList
 local del = DogTag.del
 local issecretvalue = DogTag.issecretvalue
 
+DogTag_Unit.UnitGUIDSafe = function(unit)
+	-- Workaround https://github.com/parnic/LibDogTag-Unit-3.0/issues/25
+	if not UnitExists(unit) then return nil end
+
+	local success, guid = pcall(UnitGUID, unit)
+	if not success then return nil end
+	return guid
+end
+local UnitGUIDSafe = DogTag_Unit.UnitGUIDSafe
+
 local PartyChangedEvent = "PARTY_MEMBERS_CHANGED"
 if UnitIsGroupLeader then
 	-- Changed in wow 5.0
@@ -257,7 +267,7 @@ local function getBestUnit(guid)
 	return nil
 end
 local function calculateBestUnit(unit)
-	local bestUnit = getBestUnit(UnitGUID(unit))
+	local bestUnit = getBestUnit(UnitGUIDSafe(unit))
 	local oldBestUnit = wackyUnitToBestUnit[unit]
 
 	if bestUnit == oldBestUnit then
@@ -283,7 +293,7 @@ local function calculateBestUnit(unit)
 end
 
 local function refreshGUID(unit)
-	local guid = UnitGUID(unit)
+	local guid = UnitGUIDSafe(unit)
 	if issecretvalue(guid) then return end
 
 	local oldGuid = unitToGUID[unit]
