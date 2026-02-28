@@ -10,6 +10,9 @@ local wrap, yield = coroutine.wrap, coroutine.yield
 
 local GetWatchedFactionInfo = C_Reputation and C_Reputation.GetWatchedFactionData and function()
 	local data = C_Reputation.GetWatchedFactionData()
+	if not data then
+		return nil, 0, 0, 0, 0
+	end
 	return data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding
 end or _G.GetWatchedFactionInfo
 
