@@ -8,12 +8,47 @@ end
 local _G, coroutine = _G, coroutine
 local wrap, yield = coroutine.wrap, coroutine.yield
 
+local function ResolveFactionFromID(factionID)
+	local data = C_Reputation.GetFactionDataByID(factionID)
+	if not data or data.factionID == 0 then
+		return "", 0, 0, 0, 0
+	end
+
+	local reputationInfo = C_GossipInfo.GetFriendshipReputation(factionID)
+	local friendshipID = reputationInfo and reputationInfo.friendshipFactionID or 0
+
+	local min, max, value = data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding
+	if C_Reputation.IsFactionParagonForCurrentPlayer(factionID) then
+		local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+		min, max = 0, threshold
+		if currentValue and threshold then
+			value = currentValue % threshold
+		end
+		if hasRewardPending then
+			value = value + threshold
+		end
+	elseif C_Reputation.IsMajorFaction(factionID) then
+		local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
+		if majorFactionData then
+			min, max = 0, majorFactionData.renownLevelThreshold
+			value = majorFactionData.renownReputationEarned
+		end
+	elseif friendshipID > 0 then
+		local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
+		if repInfo.nextThreshold then
+			min, max, value = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
+		else
+			local repRankInfo = C_GossipInfo.GetFriendshipReputationRanks(factionID)
+			min, max, value = 0, repRankInfo.maxLevel, repRankInfo.currentLevel
+		end
+	end
+
+	return data.name, data.reaction, min, max, value
+end
+
 local GetWatchedFactionInfo = C_Reputation and C_Reputation.GetWatchedFactionData and function()
 	local data = C_Reputation.GetWatchedFactionData()
-	if not data then
-		return nil, 0, 0, 0, 0
-	end
-	return data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding
+	return ResolveFactionFromID(data and data.factionID or 0)
 end or _G.GetWatchedFactionInfo
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
@@ -39,13 +74,18 @@ if C_Reputation and C_Reputation.GetNumFactions then
 						currentOpenHeader = i
 						NumFactions = GetNumFactions() - NumFactions
 						for j = i+1, i+NumFactions do
-							yield(GetFactionInfo(j))
+							data = GetFactionDataByIndex(j)
+							if data then
+								local name, reaction, min, max, val = ResolveFactionFromID(data.factionID)
+								yield(name, data.description, reaction, min, max, val)
+							end
 						end
 						CollapseFactionHeader(i)
 						currentOpenHeader = nil
 					end
 				else
-					yield(data.name, data.description, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding)
+					local name, reaction, min, max, val = ResolveFactionFromID(data.factionID)
+					yield(name, data.description, reaction, min, max, val)
 				end
 			end
 		end
