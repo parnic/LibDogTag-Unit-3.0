@@ -11,7 +11,7 @@ local wrap, yield = coroutine.wrap, coroutine.yield
 local function ResolveFactionFromID(factionID)
 	local data = C_Reputation.GetFactionDataByID(factionID)
 	if not data or data.factionID == 0 then
-		return "", 0, 0, 0, 0
+		return nil, 0, 0, 0, 0
 	end
 
 	local reputationInfo = C_GossipInfo.GetFriendshipReputation(factionID)
