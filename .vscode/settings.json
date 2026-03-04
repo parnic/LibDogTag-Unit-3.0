@@ -56,6 +56,7 @@
         "MALE",
         "FEMALE",
         "APIDocumentation",
-        "WorldFrame"
+        "WorldFrame",
+        "RENOWN_LEVEL_LABEL"
     ]
 }

@@ -14,6 +14,8 @@ local function ResolveFactionFromID(factionID)
 		return nil, 0, 0, 0, 0
 	end
 
+	local reactionLabel = _G["FACTION_STANDING_LABEL"..data.reaction]
+	local reactionLevel = data.reaction
 	local reputationInfo = C_GossipInfo.GetFriendshipReputation(factionID)
 	local friendshipID = reputationInfo and reputationInfo.friendshipFactionID or 0
 
@@ -32,9 +34,13 @@ local function ResolveFactionFromID(factionID)
 		if majorFactionData then
 			min, max = 0, majorFactionData.renownLevelThreshold
 			value = majorFactionData.renownReputationEarned
+			if RENOWN_LEVEL_LABEL then
+				reactionLabel = RENOWN_LEVEL_LABEL:format(majorFactionData.renownLevel)
+			end
 		end
 	elseif friendshipID > 0 then
 		local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
+		reactionLabel = repInfo.reaction
 		if repInfo.nextThreshold then
 			min, max, value = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
 		else
@@ -43,7 +49,7 @@ local function ResolveFactionFromID(factionID)
 		end
 	end
 
-	return data.name, data.reaction, min, max, value
+	return data.name, reactionLevel, min, max, value, reactionLabel
 end
 
 local GetWatchedFactionInfo = C_Reputation and C_Reputation.GetWatchedFactionData and function()
@@ -76,16 +82,16 @@ if C_Reputation and C_Reputation.GetNumFactions then
 						for j = i+1, i+NumFactions do
 							data = GetFactionDataByIndex(j)
 							if data then
-								local name, reaction, min, max, val = ResolveFactionFromID(data.factionID)
-								yield(name, data.description, reaction, min, max, val)
+								local name, reactionLevel, min, max, val, reactionLabel = ResolveFactionFromID(data.factionID)
+								yield(name, data.description, reactionLevel, min, max, val, reactionLabel)
 							end
 						end
 						CollapseFactionHeader(i)
 						currentOpenHeader = nil
 					end
 				else
-					local name, reaction, min, max, val = ResolveFactionFromID(data.factionID)
-					yield(name, data.description, reaction, min, max, val)
+					local name, reactionLevel, min, max, val, reactionLabel = ResolveFactionFromID(data.factionID)
+					yield(name, data.description, reactionLevel, min, max, val, reactionLabel)
 				end
 			end
 		end
@@ -232,13 +238,13 @@ DogTag:AddTag("Unit", "ReputationName", {
 DogTag:AddTag("Unit", "ReputationReaction", {
 	code = function(faction)
 		if not faction then
-			local _, reaction = GetWatchedFactionInfo()
-			return _G["FACTION_STANDING_LABEL" .. reaction]
+			local _, _, _, _, _, reactionLabel = GetWatchedFactionInfo()
+			return reactionLabel
 		else
-			for name, _, reaction in IterateFactions() do
+			for name, _, _, _, _, _, reactionLabel in IterateFactions() do
 				if faction == name then
 					TerminateIterateFactions()
-					return _G["FACTION_STANDING_LABEL" .. reaction]
+					return reactionLabel
 				end
 			end
 		end
@@ -255,20 +261,20 @@ DogTag:AddTag("Unit", "ReputationReaction", {
 
 DogTag:AddTag("Unit", "ReputationColor", {
 	code = function(value, faction)
-		local nameResult, reactionResult
+		local nameResult, reactionLevel
 		if not faction then
-			nameResult, reactionResult = GetWatchedFactionInfo()
+			nameResult, reactionLevel = GetWatchedFactionInfo()
 		else
 			for name, _, reaction in IterateFactions() do
 				if faction == name then
 					TerminateIterateFactions()
-					nameResult, reactionResult = name, reaction
+					nameResult, reactionLevel = name, reaction
 					break
 				end
 			end
 		end
 		if nameResult then
-			local color = FACTION_BAR_COLORS[reactionResult]
+			local color = FACTION_BAR_COLORS[reactionLevel]
 			if value then
 				return ("|cff%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, value)
 			else
