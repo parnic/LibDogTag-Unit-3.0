@@ -10,13 +10,13 @@
 ## X-Curse-Project-ID: 14282
 ## Dependencies: LibDogTag-3.0
 ## OptionalDeps: LibDruidMana-1.0, RangeCheck-1.0, LibTalentQuery-1.0
-## Category-enUS: Libraries
+## Category: Libraries
 ## Category-deDE: Bibliotheken
 ## Category-esES: Bibliotecas
 ## Category-esMX: Bibliotecas
 ## Category-frFR: Bibliothèques
-## Category-itIT:
-## Category-koKR:
+## Category-itIT: Librerie
+## Category-koKR: 라이브러리
 ## Category-ptBR: Bibliotecas
 ## Category-ruRU: Библиотеки
 ## Category-zhCN: 函数库
