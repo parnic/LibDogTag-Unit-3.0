@@ -57,6 +57,7 @@
         "FEMALE",
         "APIDocumentation",
         "WorldFrame",
-        "RENOWN_LEVEL_LABEL"
+        "RENOWN_LEVEL_LABEL",
+        "coroutine"
     ]
 }
