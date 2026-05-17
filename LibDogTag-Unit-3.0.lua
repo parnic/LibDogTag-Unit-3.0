@@ -75,6 +75,9 @@ local function fireEventForDependents(event, unit, ...)
 end
 
 frame:SetScript("OnEvent", function(this, event, unit, ...)
+	if issecretvalue(unit) then
+		return
+	end
 	fireEventForDependents(event, unit, ...)
 	if unit == "target" then
 		local isMouseover = UnitIsUnit("mouseover", "target");
