@@ -648,7 +648,7 @@ for _, data in pairs(specialPowers) do
 	local arg2 = data.arg2
 	local arg3 = data.arg3
 
-	local _, pclass = UnitClass("player")
+	-- local _, pclass = UnitClass("player")
 
 	--local category = class == pclass and L["Power"] or nil
 	--local noDoc = class ~= pclass

@@ -67,7 +67,7 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 		if GetInspectSpecialization then
 			local inspectSpec = GetInspectSpecialization(unitId)
 			local roleById = GetSpecializationInfoByID(inspectSpec)
-			if roleById ~= nil then
+			if roleById then
 				talentSpecNames[fullName] = select(2, GetSpecializationInfoByID(roleById))
 			end
 			return

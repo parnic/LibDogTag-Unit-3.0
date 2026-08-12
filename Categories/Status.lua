@@ -346,9 +346,10 @@ DogTag:AddTag("Unit", "PvPDuration", {
 
 DogTag:AddTag("Unit", "PvP", {
 	code = function(unit)
+		local pvp = UnitIsPVP(unit)
 		if UnitIsPVPFreeForAll(unit) then
 			return L["FFA"]
-		elseif UnitIsPVP(unit) then
+		elseif not issecretvalue(pvp) and pvp then
 			return L["PvP"]
 		else
 			return nil
@@ -664,7 +665,8 @@ DogTag:AddTag("Unit", "IsMasterLooter", {
 
 DogTag:AddTag("Unit", "IsMainTank", {
 	code = function(unit)
-		if not UnitInRaid(unit) then
+		local raid = UnitInRaid(unit)
+		if issecretvalue(raid) or not raid then
 			return false
 		end
 		local n, s = UnitName(unit)
@@ -706,7 +708,8 @@ DogTag:AddTag("Unit", "IsMainTank", {
 
 DogTag:AddTag("Unit", "IsMainAssist", {
 	code = function(unit)
-		if not UnitInRaid(unit) then
+		local raid = UnitInRaid(unit)
+		if issecretvalue(raid) or not raid then
 			return false
 		end
 		local n, s = UnitName(unit)

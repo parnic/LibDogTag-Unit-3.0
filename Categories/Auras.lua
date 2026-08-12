@@ -297,6 +297,9 @@ local TREE_OF_LIFE = GetSpellName(33891)
 
 local function DruidForm(unit)
 		local _, c = UnitClass(unit)
+		if issecretvalue(c) then
+			return nil
+		end
 		if c ~= "DRUID" then
 			return nil
 		end

@@ -22,6 +22,7 @@ local wow_800 = wow_build >= 80000
 -- The mere presence of WOW_PROJECT_ID tells us how "modern" the client is.
 local WOW_PROJECT_ID = _G.WOW_PROJECT_ID
 local UnitGUID = DogTag_Unit.UnitGUIDSafe
+local issecretvalue = DogTag.issecretvalue
 
 local GetQuestDifficultyColor = GetQuestDifficultyColor or GetDifficultyColor
 
@@ -181,13 +182,24 @@ DogTag:AddTag("Unit", "IsMaxLevel", {
 
 local function Class(unit)
 	if UnitIsPlayer(unit) then
-		return UnitClass(unit) or UNKNOWN
+		local c = UnitClass(unit)
+		if issecretvalue(c) then
+			return UNKNOWN
+		end
+		return c or UNKNOWN
 	else
 		local classbase, classindex = UnitClassBase(unit)
 		if GetClassInfo then
 			return classbase and GetClassInfo(classindex) or UNKNOWN
 		elseif LOCALIZED_CLASS_NAMES_MALE and LOCALIZED_CLASS_NAMES_FEMALE then
-			if UnitSex and UnitSex(unit) == 3 then
+			local s
+			if UnitSex then
+				s = UnitSex(unit)
+			end
+			if issecretvalue(c) then
+				return UNKNOWN
+			end
+			if s == 3 then
 				return LOCALIZED_CLASS_NAMES_FEMALE[classbase] or UNKNOWN
 			else
 				return LOCALIZED_CLASS_NAMES_MALE[classbase] or UNKNOWN
@@ -390,7 +402,14 @@ local ShortRace_abbrev = {
 
 DogTag:AddTag("Unit", "ShortRace", {
 	code = function(value, unit)
-		return ShortRace_abbrev[value or UnitRace(unit)]
+		local r
+		if not value then
+			r = UnitRace(unit)
+		end
+		if issecretvalue(r) then
+			return nil
+		end
+		return ShortRace_abbrev[value or r]
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
@@ -414,7 +433,9 @@ DogTag:AddTag("Unit", "SmartRace", {
 
 local function Sex(unit)
 		local sex = UnitSex(unit)
-		if sex == 2 then
+		if issecretvalue(sex) then
+			return nil
+		elseif sex == 2 then
 			return L["Male"]
 		elseif sex == 3 then
 			return L["Female"]
@@ -536,6 +557,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 		local r, g, b
 
 		if UnitIsPlayer(unit) or UnitPlayerControlled(unit) then
+			local pvp = UnitIsPVP(unit)
 			if UnitCanAttack(unit, "player") then
 				-- they can attack me
 				if UnitCanAttack("player", unit) then
@@ -548,7 +570,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 			elseif UnitCanAttack("player", unit) then
 				-- they can't attack me, but I can attack them
 				r, g, b = unpack(DogTag.__colors.neutral)
-			elseif UnitIsPVP(unit) then
+			elseif not issecretvalue(pvp) and pvp then
 				-- on my team
 				r, g, b = unpack(DogTag.__colors.friendly)
 			else
