@@ -182,13 +182,14 @@ DogTag:AddTag("Unit", "IsMaxLevel", {
 
 local function Class(unit)
 	if UnitIsPlayer(unit) then
-		local c = UnitClass(unit)
-		if issecretvalue(c) then
-			return UNKNOWN
-		end
-		return c or UNKNOWN
+		return UnitClass(unit) or UNKNOWN
 	else
 		local classbase, classindex = UnitClassBase(unit)
+		-- we can't retrieve the true underlying class of a secret index, so
+		-- return the cosmetic version. e.g. "Training Dummy" vs "Warrior"
+		if issecretvalue(classindex) then
+			return UnitClass(unit)
+		end
 		if GetClassInfo then
 			return classbase and GetClassInfo(classindex) or UNKNOWN
 		elseif LOCALIZED_CLASS_NAMES_MALE and LOCALIZED_CLASS_NAMES_FEMALE then
