@@ -638,7 +638,11 @@ DogTag:AddTag("Unit", "AggroColor", {
 DogTag:AddTag("Unit", "ClassColor", {
 	code = function(value, unit)
 		local _, class = UnitClass(unit)
-		local r, g, b = unpack(DogTag.__colors[class] or DogTag.__colors.unknown)
+		local color = DogTag.__colors.unknown
+		if not issecretvalue(class) and DogTag.__colors[class] then
+			color = DogTag.__colors[class]
+		end
+		local r, g, b = unpack(color)
 		if value then
 			return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)
 		else
