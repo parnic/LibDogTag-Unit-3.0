@@ -4,6 +4,20 @@ TODO:
 AddonVersion? - probably not gonna do this
 ]]
 
+-- A real secret value errors on comparison, table-key use, and boolean tests.
+-- Nothing in plain Lua can do that, so this sentinel only reports itself as
+-- secret and the tests count guard hits to prove each guard was reached.
+SECRET = setmetatable({}, { __tostring = function() return "<secret>" end })
+secretApis = {}
+secretChecks = 0
+function issecretvalue(value)
+	if value ~= SECRET then
+		return false
+	end
+	secretChecks = secretChecks + 1
+	return true
+end
+
 if not DogTag_Unit_SecondTime then
 	local old_dofile = dofile
 
@@ -176,6 +190,9 @@ function UnitName(unit)
 end
 
 function UnitClass(unit)
+	if secretApis.UnitClass then
+		return SECRET, SECRET, SECRET
+	end
 	if units[unit] then
 		local class = units[unit].class or "Warrior"
 		return class, class:upper()
@@ -205,10 +222,16 @@ function UnitCreatureType(unit)
 end
 
 function UnitRace(unit)
+	if secretApis.UnitRace then
+		return SECRET, SECRET, SECRET
+	end
 	return units[unit] and (units[unit].race or "Human")
 end
 
 function UnitSex(unit)
+	if secretApis.UnitSex then
+		return SECRET
+	end
 	return units[unit] and (units[unit].sex or 2)
 end
 
@@ -298,6 +321,9 @@ UnitReactionColor = {
 }
 
 function UnitIsCharmed(unit)
+	if secretApis.UnitIsCharmed then
+		return SECRET
+	end
 	return nil
 end
 
@@ -329,6 +355,9 @@ function IsResting()
 end
 
 function UnitIsPartyLeader(unit)
+	if secretApis.UnitIsPartyLeader then
+		return SECRET
+	end
 	return unit == "player"
 end
 
@@ -686,6 +715,28 @@ assert_equal(DogTag:Evaluate("[[~IsMaxMP:~IsMana] ? PercentMP:Percent] [IsMana ?
 assert_equal(DogTag:Evaluate("[One + NameRealm]", "Unit", { unit = 'target' }), 1)
 
 --[Guild = "player":Guild] [Guild(unit="mouseover"):Angle]
+
+-- 12.1 secret values. Tags are called directly rather than through Evaluate
+-- because the compiled output boolean-tests its arguments, which the sentinel
+-- can't reproduce.
+local function assert_guarded(api, expected, tag, ...)
+	secretApis[api] = true
+	secretChecks = 0
+	local result = DogTag.Tags.Unit[tag].code(...)
+	secretApis[api] = nil
+	assert_equal(result, expected)
+	if secretChecks == 0 then
+		error(("Assertion failed: %s never checked for a secret value"):format(tag), 2)
+	end
+end
+
+assert_guarded("UnitIsPartyLeader", false, "IsLeader", 'player')
+assert_guarded("UnitIsCharmed", false, "IsCharmed", 'player')
+assert_guarded("UnitRace", nil, "ShortRace", nil, 'player')
+assert_guarded("UnitSex", nil, "ShortSex", nil, 'player')
+assert_guarded("UnitClass", nil, "ShortClass", nil, 'player')
+-- A secret class index leaves only the cosmetic name to fall back on.
+assert_guarded("UnitClass", SECRET, "Class", 'pettarget')
 
 print("LibDogTag-Unit-3.0: Tests succeeded")
 
