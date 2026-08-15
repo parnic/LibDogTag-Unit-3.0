@@ -23,6 +23,13 @@ local newList = DogTag.newList
 local del = DogTag.del
 local issecretvalue = DogTag.issecretvalue
 
+-- Boolean tests on a secret boolean are an error, so anything that branches on
+-- an API's truthiness has to launder it through here first.
+DogTag_Unit.SafeBool = function(value)
+	return not issecretvalue(value) and value or false
+end
+local SafeBool = DogTag_Unit.SafeBool
+
 DogTag_Unit.UnitGUIDSafe = function(unit)
 	-- Workaround https://github.com/parnic/LibDogTag-Unit-3.0/issues/25
 	if not UnitExists(unit) then return nil end
@@ -80,8 +87,7 @@ frame:SetScript("OnEvent", function(this, event, unit, ...)
 	end
 	fireEventForDependents(event, unit, ...)
 	if unit == "target" then
-		local isMouseover = UnitIsUnit("mouseover", "target");
-	 	if not issecretvalue(isMouseover) and isMouseover then
+	 	if SafeBool(UnitIsUnit("mouseover", "target")) then
 			DogTag:FireEvent(event, "mouseover", ...)
 			fireEventForDependents(event, "mouseover", ...)
 		end

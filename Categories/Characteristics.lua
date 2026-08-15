@@ -23,6 +23,15 @@ local wow_800 = wow_build >= 80000
 local WOW_PROJECT_ID = _G.WOW_PROJECT_ID
 local UnitGUID = DogTag_Unit.UnitGUIDSafe
 local issecretvalue = DogTag.issecretvalue
+local SafeBool = DogTag_Unit.SafeBool
+
+-- A secret value can't be used as a table key.
+local function SafeLookup(lookup, key)
+	if issecretvalue(key) then
+		return nil
+	end
+	return lookup[key]
+end
 
 local GetQuestDifficultyColor = GetQuestDifficultyColor or GetDifficultyColor
 
@@ -197,7 +206,7 @@ local function Class(unit)
 			if UnitSex then
 				s = UnitSex(unit)
 			end
-			if issecretvalue(c) then
+			if issecretvalue(s) then
 				return UNKNOWN
 			end
 			if s == 3 then
@@ -257,7 +266,7 @@ local ShortClass_abbrev = {
 
 DogTag:AddTag("Unit", "ShortClass", {
 	code = function(value, unit)
-		return ShortClass_abbrev[value or Class(unit)]
+		return SafeLookup(ShortClass_abbrev, value or Class(unit))
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
@@ -403,14 +412,7 @@ local ShortRace_abbrev = {
 
 DogTag:AddTag("Unit", "ShortRace", {
 	code = function(value, unit)
-		local r
-		if not value then
-			r = UnitRace(unit)
-		end
-		if issecretvalue(r) then
-			return nil
-		end
-		return ShortRace_abbrev[value or r]
+		return SafeLookup(ShortRace_abbrev, value or UnitRace(unit))
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
@@ -463,7 +465,7 @@ local ShortSex_abbrev = {
 
 DogTag:AddTag("Unit", "ShortSex", {
 	code = function(value, unit)
-		return ShortSex_abbrev[value or Sex(unit)]
+		return SafeLookup(ShortSex_abbrev, value or Sex(unit))
 	end,
 	arg = {
 		'value', 'string;undef', '@undef',
@@ -558,7 +560,6 @@ DogTag:AddTag("Unit", "HostileColor", {
 		local r, g, b
 
 		if UnitIsPlayer(unit) or UnitPlayerControlled(unit) then
-			local pvp = UnitIsPVP(unit)
 			if UnitCanAttack(unit, "player") then
 				-- they can attack me
 				if UnitCanAttack("player", unit) then
@@ -571,7 +572,7 @@ DogTag:AddTag("Unit", "HostileColor", {
 			elseif UnitCanAttack("player", unit) then
 				-- they can't attack me, but I can attack them
 				r, g, b = unpack(DogTag.__colors.neutral)
-			elseif not issecretvalue(pvp) and pvp then
+			elseif SafeBool(UnitIsPVP(unit)) then
 				-- on my team
 				r, g, b = unpack(DogTag.__colors.friendly)
 			else
@@ -639,10 +640,7 @@ DogTag:AddTag("Unit", "AggroColor", {
 DogTag:AddTag("Unit", "ClassColor", {
 	code = function(value, unit)
 		local _, class = UnitClass(unit)
-		local color = DogTag.__colors.unknown
-		if not issecretvalue(class) and DogTag.__colors[class] then
-			color = DogTag.__colors[class]
-		end
+		local color = SafeLookup(DogTag.__colors, class) or DogTag.__colors.unknown
 		local r, g, b = unpack(color)
 		if value then
 			return ("|cff%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, value)

@@ -33,6 +33,7 @@ DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
 local L = DogTag_Unit.L
 
+local issecretvalue = DogTag.issecretvalue
 local newList, del = DogTag.newList, DogTag.del
 
 local function TalentSpec_func(unit) return nil end
@@ -66,6 +67,9 @@ DogTag:AddAddonFinder("Unit", "LibStub", "LibTalentQuery-1.0", function(LibTalen
 
 		if GetInspectSpecialization then
 			local inspectSpec = GetInspectSpecialization(unitId)
+			if issecretvalue(inspectSpec) then
+				return
+			end
 			local roleById = GetSpecializationInfoByID(inspectSpec)
 			if roleById then
 				talentSpecNames[fullName] = select(2, GetSpecializationInfoByID(roleById))

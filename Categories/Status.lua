@@ -19,10 +19,10 @@ local UnitName, UnitInRaid, UnitFactionGroup, GetPVPTimer, IsPVPTimerRunning, Ge
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
-local issecretvalue = DogTag.issecretvalue
 local L = DogTag_Unit.L
 local GetNameServer = DogTag_Unit.GetNameServer
 local UnitGUID = DogTag_Unit.UnitGUIDSafe
+local SafeBool = DogTag_Unit.SafeBool
 
 local offlineTimes = {}
 local afkTimes = {}
@@ -94,8 +94,7 @@ local function PARTY_MEMBERS_CHANGED(event)
 			afkTimes[guid] = nil
 		else
 			offlineTimes[guid] = nil
-			local afk = UnitIsAFK(unit)
-			if not issecretvalue(afk) and afk then
+			if SafeBool(UnitIsAFK(unit)) then
 				if not afkTimes[guid] then
 					afkTimes[guid] = GetTime()
 				end
@@ -182,8 +181,7 @@ DogTag:AddEventHandler("Unit", "EventRequested", function(_, event)
 				end
 			end
 
-			local afk = UnitIsAFK(unit)
-			if not issecretvalue(afk) and afk then
+			if SafeBool(UnitIsAFK(unit)) then
 				if not afkTimes[guid] then
 					afkTimes[guid] = GetTime()
 				end
@@ -312,8 +310,7 @@ DogTag:AddTag("Unit", "AFK", {
 
 DogTag:AddTag("Unit", "DND", {
 	code = function(unit)
-		local dnd = UnitIsDND(unit)
-		if not issecretvalue(dnd) and dnd then
+		if SafeBool(UnitIsDND(unit)) then
 			return L["DND"]
 		else
 			return nil
@@ -346,10 +343,9 @@ DogTag:AddTag("Unit", "PvPDuration", {
 
 DogTag:AddTag("Unit", "PvP", {
 	code = function(unit)
-		local pvp = UnitIsPVP(unit)
 		if UnitIsPVPFreeForAll(unit) then
 			return L["FFA"]
-		elseif not issecretvalue(pvp) and pvp then
+		elseif SafeBool(UnitIsPVP(unit)) then
 			return L["PvP"]
 		else
 			return nil
@@ -370,7 +366,7 @@ DogTag:AddTag("Unit", "PvPIcon", {
 		local has
 		if UnitIsPVPFreeForAll(unit) then
 			has = 'FFA'
-		elseif UnitIsPVP(unit) then
+		elseif SafeBool(UnitIsPVP(unit)) then
 			has = UnitFactionGroup(unit)
 		end
 		if has then
@@ -440,7 +436,9 @@ DogTag:AddTag("Unit", "IsResting", {
 })
 
 DogTag:AddTag("Unit", "IsLeader", {
-	code = UnitIsPartyLeader,
+	code = function(unit)
+		return SafeBool(UnitIsPartyLeader(unit))
+	end,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
@@ -665,8 +663,7 @@ DogTag:AddTag("Unit", "IsMasterLooter", {
 
 DogTag:AddTag("Unit", "IsMainTank", {
 	code = function(unit)
-		local raid = UnitInRaid(unit)
-		if issecretvalue(raid) or not raid then
+		if not SafeBool(UnitInRaid(unit)) then
 			return false
 		end
 		local n, s = UnitName(unit)
@@ -708,8 +705,7 @@ DogTag:AddTag("Unit", "IsMainTank", {
 
 DogTag:AddTag("Unit", "IsMainAssist", {
 	code = function(unit)
-		local raid = UnitInRaid(unit)
-		if issecretvalue(raid) or not raid then
+		if not SafeBool(UnitInRaid(unit)) then
 			return false
 		end
 		local n, s = UnitName(unit)
@@ -874,7 +870,9 @@ DogTag:AddTag("Unit", "IsUnit", {
 })
 
 DogTag:AddTag("Unit", "IsCharmed", {
-	code = UnitIsCharmed,
+	code = function(unit)
+		return SafeBool(UnitIsCharmed(unit))
+	end,
 	arg = {
 		'unit', 'string;undef', 'player'
 	},
