@@ -6,8 +6,8 @@ if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 end
 
 local _G, unpack, select, tonumber = _G, unpack, select, tonumber
-local UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel = 
-	  UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel
+local UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel, UnitFullName = 
+	  UnitClass, UnitRace, UnitIsPlayer, UnitIsFriend, UnitIsUnit, UnitClassBase, UnitName, UnitExists, GetRealmName, UnitLevel, UnitFullName
 local UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid = 
 	  UnitCanAttack, UnitCreatureFamily, UnitCreatureType, UnitClassification, UnitSex, UnitPlayerControlled, UnitPlayerOrPetInRaid
 local GetGuildInfo, UnitIsPVP, UnitIsTapped, UnitIsTappedByPlayer, UnitIsDead, UnitReaction, UnitSelectionColor, UnitPVPName, UnitIsTapDenied =
@@ -24,6 +24,7 @@ local WOW_PROJECT_ID = _G.WOW_PROJECT_ID
 local UnitGUID = DogTag_Unit.UnitGUIDSafe
 local issecretvalue = DogTag.issecretvalue
 local SafeBool = DogTag_Unit.SafeBool
+local IsForever = WOW_PROJECT_ID and WOW_PROJECT_ID == _G.WOW_PROJECT_CAMELOT
 
 -- A secret value can't be used as a table key.
 local function SafeLookup(lookup, key)
@@ -73,13 +74,14 @@ DogTag:AddTag("Unit", "CanAttack", {
 	category = L["Characteristics"]
 })
 
-local function VehicleName(unit)
-	local name = UnitName(unit:gsub("vehicle", "pet")) or UnitName(unit) or L["Vehicle"]
+local function VehicleName(unit, nameFunc)
+	nameFunc = nameFunc or UnitName
+	local name = nameFunc(unit:gsub("vehicle", "pet")) or nameFunc(unit) or L["Vehicle"]
 	local ownerUnit = unit:gsub("vehicle", "")
 	if ownerUnit == "" then
 		ownerUnit = "player"
 	end
-	local owner = UnitName(ownerUnit)
+	local owner = nameFunc(ownerUnit)
 	if owner then
 		return L["%s's %s"]:format(owner, name)
 	else
@@ -87,17 +89,21 @@ local function VehicleName(unit)
 	end
 end
 
+local function UnitOrVehicleName(unit, nameFunc)
+	if unit:match("%d*pet%d*$") then
+		local vehicle = unit:gsub("pet", "vehicle")
+		if UnitIsUnit(unit, vehicle) then
+			return VehicleName(vehicle, nameFunc)
+		end
+	elseif unit:match("%d*vehicle%d*$") then
+		return VehicleName(unit, nameFunc)
+	end
+	return (nameFunc(unit)) or DogTag_Unit.UnitToLocale[unit]
+end
+
 DogTag:AddTag("Unit", "Name", {
 	code = function(unit)
-		if unit:match("%d*pet%d*$") then
-			local vehicle = unit:gsub("pet", "vehicle")
-			if UnitIsUnit(unit, vehicle) then
-				return VehicleName(vehicle)
-			end
-		elseif unit:match("%d*vehicle%d*$") then
-			return VehicleName(unit)
-		end
-		return UnitName(unit) or DogTag_Unit.UnitToLocale[unit]
+		return UnitOrVehicleName(unit, UnitName)
 	end,
 	arg = {
 		'unit', 'string;undef', 'player'
@@ -106,6 +112,50 @@ DogTag:AddTag("Unit", "Name", {
 	events = "UNIT_NAME_UPDATE#$unit",
 	doc = L["Return the name of unit, or if it is a vehicle, show as \"Owner's Vehicle\""],
 	example = ('[Name] => %q'):format(UnitName("player")),
+	category = L["Characteristics"]
+})
+
+local function NormalizeSurname(surname)
+	if not issecretvalue(surname) and surname == "" then
+		return nil
+	end
+	return surname
+end
+
+local function UnitSurname(unit)
+	if not IsForever then
+		return nil
+	end
+	local _, surname = UnitFullName(unit)
+	return NormalizeSurname(surname)
+end
+
+local function JoinedFullName(unit)
+	if not IsForever then
+		return (UnitName(unit))
+	end
+	local name, surname = UnitFullName(unit)
+	if not name then
+		return nil
+	end
+	surname = NormalizeSurname(surname)
+	if not issecretvalue(surname) and surname == nil then
+		return name
+	end
+	return ("%s %s"):format(name, surname)
+end
+
+DogTag:AddTag("Unit", "FullName", {
+	code = function(unit)
+		return UnitOrVehicleName(unit, JoinedFullName)
+	end,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string",
+	events = "UNIT_NAME_UPDATE#$unit",
+	doc = L["Return the name and surname of unit, or if it is a vehicle, show as \"Owner Surname's Vehicle\""],
+	example = ('[FullName] => %q'):format(JoinedFullName("player") or UnitName("player")),
 	category = L["Characteristics"]
 })
 
@@ -118,6 +168,30 @@ DogTag:AddTag("Unit", "SimpleName", {
 	events = "UNIT_NAME_UPDATE#$unit",
 	doc = L["Return the name of unit"],
 	example = ('[SimpleName] => %q'):format(UnitName("player")),
+	category = L["Characteristics"]
+})
+
+DogTag:AddTag("Unit", "SimpleFullName", {
+	code = JoinedFullName,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	events = "UNIT_NAME_UPDATE#$unit",
+	doc = L["Return the name and surname of unit"],
+	example = ('[SimpleFullName] => %q'):format(JoinedFullName("player") or ""),
+	category = L["Characteristics"]
+})
+
+DogTag:AddTag("Unit", "Surname", {
+	code = UnitSurname,
+	arg = {
+		'unit', 'string;undef', 'player'
+	},
+	ret = "string;nil",
+	events = "UNIT_NAME_UPDATE#$unit",
+	doc = L["Return the surname of unit"],
+	example = ('[Surname] => %q'):format(UnitSurname("player") or ""),
 	category = L["Characteristics"]
 })
 
